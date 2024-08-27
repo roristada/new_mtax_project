@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  company   String
+  email     String   @unique
+  password  String
+  address   String?
+  telephone String?
+  role      String   @default("customer")
+  posts     Post[]
+  employees Employee[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+  content   String?
+  category  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Employee {
+  employeeCode   String
+  companyId      Int
+  cardCode       String
+  title          String?
+  firstName      String
+  lastName       String
+  gender         String?
+  department     String?
+  position       String?
+  startDate      String?
+  endDate        String?
+  citizenId      String?
+  year           Int
+  currentSalary  Float?
+  age            Int?
+  birthDate      String?
+  user           User      @relation(fields: [companyId], references: [id])
+  incomes        Income[]
+  expenses       Expense[]
+  taxes          Tax[]
+
+  @@id([employeeCode, companyId ,year]) // Composite primary key
+}
+
+model Income {
+  id             Int       @id @default(autoincrement())
+  employeeCode   String
+  companyId      Int
+  month          Int?      // Allow null values
+  year           Int
+  salary         Float?    // Allow null values
+  shiftAllowance Float?    // Allow null values
+  foodAllowance  Float?    // Allow null values
+  overtime       Float?    // Allow null values
+  diligence      Float?    // Allow null values
+  beverage       Float?    // Allow null values
+  commission     Float?    // Allow null values
+  brokerFee      Float?    // Allow null values
+  otherIncome    Float?    // Allow null values
+  bonus          Float?    // Allow null values
+  employee       Employee  @relation(fields: [employeeCode, companyId ,year], references: [employeeCode, companyId ,year])
+
+  @@index([employeeCode, companyId, year, month]) // Optional: Add an index for faster queries
+}
+
+model Expense {
+  id               Int       @id @default(autoincrement())
+  employeeCode     String
+  companyId        Int
+  loan             Float?
+  salaryAdvance    Float?
+  commissionDeduction Float?
+  otherDeductions  Float?
+  month            Int?      // Allow null values
+  year             Int
+  employee         Employee  @relation(fields: [employeeCode, companyId,year], references: [employeeCode, companyId,year])
+
+  @@index([employeeCode, companyId, year, month]) // Optional: Add an index for faster queries
+}
+
+model Tax {
+  id                  Int       @id @default(autoincrement())
+  employeeCode        String
+  companyId           Int
+  employeeTax         Float?
+  companyTax          Float?
+  socialSecurityEmployee Float?
+  socialSecurityCompany Float?
+  providentFund       Float?
+  month               Int?      // Allow null values
+  year                Int
+  employee            Employee  @relation(fields: [employeeCode, companyId,year], references: [employeeCode, companyId,year])
+
+  @@index([employeeCode, companyId, year, month]) // Optional: Add an index for faster queries
+}
+
+
+
+model Appointment {
+  id         Int      @id @default(autoincrement())
+  name       String
+  company    String
+  email      String
+  telephone  String
+  startTime  String
+  endTime    String
+  date       DateTime
+  status     String @default("pending")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

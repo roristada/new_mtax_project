@@ -10,6 +10,9 @@ interface MonthlyFinancialSummary {
   totalExpense: number;
   totalTax: number;
   netIncome: number;
+  incomeBreakdown: IncomeBreakdown;
+  expenseBreakdown: ExpenseBreakdown;
+  taxBreakdown: TaxBreakdown;
 }
 
 interface AggregatedData {
@@ -66,7 +69,6 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Fetch employees for the given company ID
     const employees = await prisma.employee.findMany({
       where: {
         companyId: Number(params.id),
@@ -82,7 +84,7 @@ export async function GET(
       select: {
         year: true,
       },
-      distinct: ['year'],
+      distinct: ["year"],
     });
 
     const data_employee_details: EmployeeFinancialData[] = await Promise.all(
@@ -128,49 +130,81 @@ export async function GET(
       })
     );
 
-    // Aggregate data on the server
-    const aggregatedData: AggregatedData = {};
+    const aggregatedYearlyData = uniqueYears.map((year) => {
+      const yearlyIncomeBreakdown: IncomeBreakdown = {
+        salary: 0,
+        shiftAllowance: 0,
+        foodAllowance: 0,
+        overtime: 0,
+        diligence: 0,
+        beverage: 0,
+        commission: 0,
+        brokerFee: 0,
+        otherIncome: 0,
+        bonus: 0,
+      };
+      const yearlyExpenseBreakdown: ExpenseBreakdown = {
+        loan: 0,
+        salaryAdvance: 0,
+        commissionDeduction: 0,
+        otherDeductions: 0,
+      };
+      const yearlyTaxBreakdown: TaxBreakdown = {
+        employeeTax: 0,
+        companyTax: 0,
+        socialSecurityEmployee: 0,
+        socialSecurityCompany: 0,
+        providentFund: 0,
+      };
 
-    data_employee_details.forEach(({ monthlySummaries }) => {
-      monthlySummaries.forEach((summary) => {
-        const key = `${summary.year}-${summary.month}`;
-        if (!aggregatedData[key]) {
-          aggregatedData[key] = {
-            month: summary.month,
-            year: summary.year,
-            totalIncome: 0,
-            totalExpense: 0,
-            totalTax: 0,
-            netIncome: 0,
-          };
-        }
-        aggregatedData[key].totalIncome += summary.totalIncome;
-        aggregatedData[key].totalExpense += summary.totalExpense;
-        aggregatedData[key].totalTax += summary.totalTax;
-        aggregatedData[key].netIncome += summary.netIncome;
+      let totalIncome = 0;
+      let totalExpense = 0;
+      let totalTax = 0;
+      let netIncome = 0;
+
+      data_employee_details.forEach(({ monthlySummaries }) => {
+        monthlySummaries
+          .filter((summary) => summary.year === year.year)
+          .forEach((summary) => {
+            totalIncome += summary.totalIncome;
+            totalExpense += summary.totalExpense;
+            totalTax += summary.totalTax;
+            netIncome += summary.netIncome;
+
+            // Aggregate breakdowns
+            Object.keys(yearlyIncomeBreakdown).forEach((key) => {
+              yearlyIncomeBreakdown[key as keyof IncomeBreakdown] +=
+                summary.incomeBreakdown[key as keyof IncomeBreakdown];
+            });
+            Object.keys(yearlyExpenseBreakdown).forEach((key) => {
+              yearlyExpenseBreakdown[key as keyof ExpenseBreakdown] +=
+                summary.expenseBreakdown[key as keyof ExpenseBreakdown];
+            });
+            Object.keys(yearlyTaxBreakdown).forEach((key) => {
+              yearlyTaxBreakdown[key as keyof TaxBreakdown] +=
+                summary.taxBreakdown[key as keyof TaxBreakdown];
+            });
+          });
       });
-    });
 
-    // Prepare formatted data for the client
-    const formattedChartData = Object.keys(aggregatedData).map((key) => ({
-      month: new Date(
-        aggregatedData[key].year,
-        aggregatedData[key].month - 1
-      ).toLocaleString("default", { month: "short" }),
-      Income: aggregatedData[key].totalIncome,
-      Expense: aggregatedData[key].totalExpense,
-      Tax: aggregatedData[key].totalTax,
-      netIncome: aggregatedData[key].netIncome,
-      year: aggregatedData[key].year,
-      monthIndex: aggregatedData[key].month - 1,
-    }));
+      return {
+        year: year.year,
+        Income:totalIncome,
+        Expense:totalExpense,
+        Tax:totalTax,
+        netIncome,
+        incomeBreakdown: yearlyIncomeBreakdown,
+        expenseBreakdown: yearlyExpenseBreakdown,
+        taxBreakdown: yearlyTaxBreakdown,
+      };
+    });
 
     return NextResponse.json(
       {
         message: "Employee financial data retrieved successfully",
-        data: formattedChartData,
+        data: aggregatedYearlyData,
         uniqueYears: uniqueYears.map((y) => y.year),
-        count: formattedChartData.length,
+        count: aggregatedYearlyData.length,
       },
       { status: 200 }
     );
@@ -200,8 +234,46 @@ function calculateMonthlyFinancialSummaries(
         totalExpense: 0,
         totalTax: 0,
         netIncome: 0,
+        incomeBreakdown: {
+          salary: 0,
+          shiftAllowance: 0,
+          foodAllowance: 0,
+          overtime: 0,
+          diligence: 0,
+          beverage: 0,
+          commission: 0,
+          brokerFee: 0,
+          otherIncome: 0,
+          bonus: 0,
+        },
+        expenseBreakdown: {
+          loan: 0,
+          salaryAdvance: 0,
+          commissionDeduction: 0,
+          otherDeductions: 0,
+        },
+        taxBreakdown: {
+          employeeTax: 0,
+          companyTax: 0,
+          socialSecurityEmployee: 0,
+          socialSecurityCompany: 0,
+          providentFund: 0,
+        },
       };
     }
+
+    // Summing up the income breakdown
+    monthlyData[key].incomeBreakdown.salary += inc.salary || 0;
+    monthlyData[key].incomeBreakdown.shiftAllowance += inc.shiftAllowance || 0;
+    monthlyData[key].incomeBreakdown.foodAllowance += inc.foodAllowance || 0;
+    monthlyData[key].incomeBreakdown.overtime += inc.overtime || 0;
+    monthlyData[key].incomeBreakdown.diligence += inc.diligence || 0;
+    monthlyData[key].incomeBreakdown.beverage += inc.beverage || 0;
+    monthlyData[key].incomeBreakdown.commission += inc.commission || 0;
+    monthlyData[key].incomeBreakdown.brokerFee += inc.brokerFee || 0;
+    monthlyData[key].incomeBreakdown.otherIncome += inc.otherIncome || 0;
+    monthlyData[key].incomeBreakdown.bonus += inc.bonus || 0;
+
     monthlyData[key].totalIncome +=
       inc.salary +
       inc.shiftAllowance +
@@ -218,6 +290,13 @@ function calculateMonthlyFinancialSummaries(
   expense.forEach((exp) => {
     const key = `${exp.year}-${exp.month}`;
     if (monthlyData[key]) {
+      monthlyData[key].expenseBreakdown.loan += exp.loan || 0;
+      monthlyData[key].expenseBreakdown.salaryAdvance += exp.salaryAdvance || 0;
+      monthlyData[key].expenseBreakdown.commissionDeduction +=
+        exp.commissionDeduction || 0;
+      monthlyData[key].expenseBreakdown.otherDeductions +=
+        exp.otherDeductions || 0;
+
       monthlyData[key].totalExpense +=
         exp.loan +
         exp.salaryAdvance +
@@ -229,6 +308,14 @@ function calculateMonthlyFinancialSummaries(
   tax.forEach((t) => {
     const key = `${t.year}-${t.month}`;
     if (monthlyData[key]) {
+      monthlyData[key].taxBreakdown.employeeTax += t.employeeTax || 0;
+      monthlyData[key].taxBreakdown.companyTax += t.companyTax || 0;
+      monthlyData[key].taxBreakdown.socialSecurityEmployee +=
+        t.socialSecurityEmployee || 0;
+      monthlyData[key].taxBreakdown.socialSecurityCompany +=
+        t.socialSecurityCompany || 0;
+      monthlyData[key].taxBreakdown.providentFund += t.providentFund || 0;
+
       monthlyData[key].totalTax +=
         t.employeeTax +
         t.socialSecurityEmployee +

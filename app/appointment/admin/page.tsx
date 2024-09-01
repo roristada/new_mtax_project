@@ -31,6 +31,7 @@ import Loading from "@/components/Loading/Loading";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import Swal from "sweetalert2";
+import useAuthAdmin from "@/lib/useAuthAdmin";
 
 type Appointment = {
   id: number;
@@ -49,6 +50,12 @@ const Appointments_manage = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
+  useAuthAdmin((authenticated) => {
+    setIsAuthChecked(authenticated);
+  });
+
+  
 
   useEffect(() => {
     // Fetch appointments from the API

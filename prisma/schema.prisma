@@ -29,6 +29,7 @@ model Post {
   authorId  Int
   content   String?
   category  String?
+  status String @default("Published")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

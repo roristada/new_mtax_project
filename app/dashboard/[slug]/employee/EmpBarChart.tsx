@@ -626,7 +626,6 @@ const EmployeeChart: React.FC<EmployeeChartDialogProps> = ({
                     </div>
                   </div>
                 </CardContent>
-                
               </Card>
             </TabsContent>
           </Tabs>

@@ -86,13 +86,7 @@ export default function Login() {
               <div className="space-y-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
-                  <Link
-                    href="#"
-                    className="ml-auto inline-block text-sm underline"
-                    prefetch={false}
-                  >
-                    Forgot your password?
-                  </Link>
+                  
                 </div>
                 <Input
                   id="password"
@@ -108,12 +102,7 @@ export default function Login() {
             </div>
           </form>
 
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href="/register" className="underline" prefetch={false}>
-              Sign up
-            </Link>
-          </div>
+          
         </div>
       </div>
     </>

@@ -18,8 +18,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import useAuthAdmin from "@/lib/useAuthAdmin";
+import Sidebar from "@/components/Sidebar";
 
 export default function Register() {
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
+  useAuthAdmin((authenticated) => {
+    setIsAuthChecked(authenticated);
+  });
+
+  
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
@@ -109,7 +117,7 @@ export default function Register() {
 
   return (
     <>
-      <Navbar />
+      
       <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-lg space-y-6 border rounded-lg shadow-lg p-12">
           <div className="space-y-2 text-center">
@@ -213,13 +221,6 @@ export default function Register() {
             </div>
             {error && <p className="text-red-500 mt-6">{error}</p>}
           </form>
-
-          <div className="mt-4 text-center text-sm">
-            Already have an account?{" "}
-            <Link href="/login" className="underline" prefetch={false}>
-              Login
-            </Link>
-          </div>
         </div>
       </div>
     </>

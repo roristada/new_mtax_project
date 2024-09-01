@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Swal from "sweetalert2";
+import useAuthAdmin from "@/lib/useAuthAdmin";
 
 const getCurrentYear = () => new Date().getFullYear();
 const generateYearOptions = (startYear: number) => {
@@ -56,10 +57,16 @@ export default function Component() {
 
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
+
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
+  useAuthAdmin((authenticated) => {
+    setIsAuthChecked(authenticated);
+  });
 
   useEffect(() => {
+    if (!isAuthChecked) return;
     const fetchCompanies = async () => {
+      
       try {
         const res = await fetch("/api/user");
         const users: { id: string; company: string }[] = await res.json();

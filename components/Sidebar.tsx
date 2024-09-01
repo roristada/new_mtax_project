@@ -1,33 +1,20 @@
 "use client";
 import Link from "next/link";
 import {
-  Building2,
   Home,
+  Users2,
   LineChart,
   MessageSquareWarning,
-  Package,
   Package2,
   PanelLeft,
-  Search,
   Settings,
-  ShoppingCart,
-  Users2,
+  CalendarPlus2,
+  UserRoundPen,
+  LibraryBig
 } from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -43,20 +30,58 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useParams, usePathname } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-const links = [
-  { id: 1, title: "Home", url: "/dashboard/:id", slug: "", icon: Home },
-  { id: 2, title: "Employee", url: "/dashboard/:id/employee", slug: "employee", icon: Users2 },
-  { id: 3, title: "Analytics", url: "/dashboard/:id/compare", slug: "compare", icon: LineChart },
-  { id: 4, title: "Support Chat", url: "/dashboard/:id/support", slug: "support", icon: MessageSquareWarning },
+const adminLinks = [
+  { id: 1, title: "Home", url: "/dashboard/admin", icon: Home },
+  { id: 1, title: "Appointment", url: "/appointment/admin", icon: CalendarPlus2 },
+  { id: 2, title: "Register", url: "/register", icon: UserRoundPen },
+  { id: 3, title: "Customer", url: "/dashboard/:id/", icon: Users2 },
+  { id: 4, title: "Blog", url: "/blog/admin", icon: LibraryBig },
+  { id: 5, title: "Chat", url: "/chat", icon: MessageSquareWarning },
+];
+
+const customerLinks = [
+  { id: 1, title: "Home", url: "/dashboard/:id", icon: Home },
+  { id: 2, title: "Employee", url: "/dashboard/:id/employee", icon: Users2 },
+  { id: 3, title: "Analytics", url: "/dashboard/:id/compare", icon: LineChart },
+  {
+    id: 4,
+    title: "Support Chat",
+    url: "/dashboard/:id/support",
+    icon: MessageSquareWarning,
+  },
 ];
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const params = useParams();
   const pathname = usePathname();
   const id = params.slug as string;
 
-  const getUrl = (url: string) => url.replace(':id', id);
+  const getUrl = (url: string) => url.replace(":id", id);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      if (session?.user?.role === "admin") {
+        if (session && session.user) {
+          const expires_session = new Date(session.expires).getTime();
+          const nowDate = Date.now();
+          if (expires_session < nowDate) {
+            signOut({ callbackUrl: "/" });
+          }
+        }
+      }
+    }
+    else if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, []);
+
+  const links = session?.user?.role === "admin" ? adminLinks : customerLinks;
 
   return (
     <TooltipProvider>
@@ -64,7 +89,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
         <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
           <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
             <Link
-              href="#"
+              href="/"
               className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
             >
               <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
@@ -122,96 +147,67 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                     <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
                     <span className="sr-only">Acme Inc</span>
                   </Link>
-                  <Link
-                    href="#"
-                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  >
-                    <Home className="h-5 w-5" />
-                    Dashboard
-                  </Link>
-                  <Link
-                    href="#"
-                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  >
-                    <ShoppingCart className="h-5 w-5" />
-                    Orders
-                  </Link>
-                  <Link
-                    href="#"
-                    className="flex items-center gap-4 px-2.5 text-foreground"
-                  >
-                    <Package className="h-5 w-5" />
-                    Products
-                  </Link>
-                  <Link
-                    href="#"
-                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  >
-                    <Users2 className="h-5 w-5" />
-                    Customers
-                  </Link>
-                  <Link
-                    href="#"
-                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  >
-                    <LineChart className="h-5 w-5" />
-                    Settings
-                  </Link>
+                  {links.map((link) => (
+                    <Link
+                      key={link.id}
+                      href={getUrl(link.url)}
+                      className={`flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground ${
+                        pathname === getUrl(link.url) && "text-foreground"
+                      }`}
+                    >
+                      <link.icon className="h-5 w-5" />
+                      {link.title}
+                    </Link>
+                  ))}
                 </nav>
               </SheetContent>
             </Sheet>
-            <Breadcrumb className="hidden md:flex">
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link href="#">Dashboard</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link href="#">Products</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>All Products</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
             <div className="relative ml-auto flex-1 md:grow-0">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
                 placeholder="Search..."
                 className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
               />
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="overflow-hidden rounded-full"
-                >
-                  {/* <Image
-                    src="#"
-                    width={36}
-                    height={36}
-                    alt="Avatar"
+            <div className="flex items-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
                     className="overflow-hidden rounded-full"
-                  /> */}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem>Support</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="lucide lucide-user"
+                    >
+                      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Support</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                  >
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </header>
           <main className="flex-1">{children}</main>
         </div>

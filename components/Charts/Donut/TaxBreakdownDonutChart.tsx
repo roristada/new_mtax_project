@@ -61,7 +61,7 @@ export const TaxBreakdownDonutChart: React.FC<TaxBreakdownDonutChartProps> = ({ 
       value: value,
       fill: COLORS[index],
     }))
-    .sort((a, b) => b.value - a.value);
+    .sort((a, b) => b.value - a.value).filter(item => item.value > 0);
 
   const chartConfig: ChartConfig = Object.fromEntries(
     categories.map((key, index) => [
@@ -127,10 +127,12 @@ export const TaxBreakdownDonutChart: React.FC<TaxBreakdownDonutChartProps> = ({ 
                 data={chartData}
                 dataKey="value"
                 nameKey="name"
-                innerRadius="60%"
-                outerRadius="80%"
+                cx="50%"
+                cy="50%"
+                outerRadius={150}
+                innerRadius={80}
                 paddingAngle={2}
-                labelLine={false}
+                labelLine={false}        
                 label={<CustomizedLabel />}
               >
                 {chartData.map((entry, index) => (

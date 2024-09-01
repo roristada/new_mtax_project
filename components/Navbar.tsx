@@ -5,6 +5,17 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { signOut, useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Image from "next/image";  // Import the Image component from next/image
 
 interface User {
   id: number;
@@ -45,24 +56,30 @@ const links = [
     url: "/appointment",
   },
 ];
+
 const Navbar = () => {
   const { data: session, status } = useSession();
+  const [dashboardPath, setDashboardPath] = useState("");
 
   useEffect(() => {
     if (session && session.user) {
-      const expires_session = new Date(session.expires).getTime(); 
-      const nowDate = Date.now(); 
-      // console.log("Session expires at:", expires_session);
-      // console.log("Current time:", nowDate);
-  
-      if (expires_session  < nowDate) {
+      const role = session.user.role;
+      if (role === "admin") {
+        setDashboardPath("/dashboard/admin");
+      } else if (role === "customer") {
+        setDashboardPath(`/dashboard/${session.user.id}`);
+      }
+      const expires_session = new Date(session.expires).getTime();
+      const nowDate = Date.now();
+      
+
+      if (expires_session < nowDate) {
         signOut({ callbackUrl: "/" });
       }
     }
   }, [session]);
 
   console.log("session Nav", session);
-  //console.log("status", status);
 
   const smoothScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     const targetId = e.currentTarget.getAttribute("href");
@@ -76,14 +93,14 @@ const Navbar = () => {
   };
 
   return (
-    <nav className=" bg-white border-gray-200 shadow-md">
+    <nav className="bg-white border-gray-200 shadow-md">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-5">
         <Link className="text-2xl font-medium" href="/">
           <span className="text-blue-500">M</span>
           <span className="text-red-500">tax</span>
         </Link>
-        <div className="hidden. w-full md:block md:w-auto" id="navbar-default">
-          <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white ">
+        <div className="hidden w-full md:block md:w-auto" id="navbar-default">
+          <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white">
             {links.map((link) => (
               <li key={link.id} className="my-auto">
                 <Link
@@ -96,48 +113,42 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
-
-            {/* {user ? (
-              <li className="my-auto">
-                {user.role === "admin" ? (
-                  <span className="text-gray-900 mr-2">
-                    <Link href={"/dashboard/admin_db"}>Admin:{user.email}</Link>
-                  </span>
-                ) : (
-                  <Link href={"/dashboard"}>
-                    <span className="text-gray-900 mr-2">
-                      User:{user.email}
-                    </span>
-                  </Link>
-                )}
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                >
-                  Logout
-                </button>
-              </li>
-            ) : (
-              <li className="my-auto">
-                <Link href={"/login"}>
-                  <button
-                    type="button"
-                    className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 "
-                  >
-                    Login
-                  </button>
-                </Link>
-              </li>
-            )} */}
             {status === "authenticated" && session.user ? (
-              <div>
-                <Button
-                  className="w-20"
-                  onClick={() => signOut({ callbackUrl: "/" })}
-                >
-                  Log Out
-                </Button>
+              <div className="flex items-center">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                  <Button
+                      variant="outline"
+                      size="icon"
+                      className="overflow-hidden rounded-full"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-user"
+                      >
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuLabel className="font-normal">{session.user.company}</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem><Link href={dashboardPath}>Dashboard</Link></DropdownMenuItem>
+                    <DropdownMenuItem>Support</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })} >Logout</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ) : (
               <div>

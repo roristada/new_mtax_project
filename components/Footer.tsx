@@ -1,12 +1,18 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/xL6QxwxyIlx
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 import Link from "next/link"
+import { useEffect, useState } from "react"
 import { SVGProps } from "react"
 
-export default function Component() {
+export default function Footer() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null; // or some placeholder/loading UI
+  }
+
   return (
     <footer className="bg-muted py-12">
       <div className="container max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">

@@ -153,6 +153,35 @@ const EmployeeDetailsDialog: React.FC<EmployeeDetailsDialogProps> = ({
                           <strong>Bonus:</strong>{" "}
                           {formatSalary(income.bonus || 0)}
                         </p>
+                        <p>
+                          <strong>ShiftAllowance:</strong>{" "}
+                          {formatSalary(income.shiftAllowance || 0)}
+                        </p>
+                        <p>
+                          <strong>FoodAllowance:</strong>{" "}
+                          {formatSalary(income.foodAllowance || 0)}
+                        </p>
+                        <p>
+                          <strong>Diligence:</strong>{" "}
+                          {formatSalary(income.diligence || 0)}
+                        </p>
+                        <p>
+                          <strong>Beverage:</strong>{" "}
+                          {formatSalary(income.beverage || 0)}
+                        </p>
+                        <p>
+                          <strong>Commission:</strong>{" "}
+                          {formatSalary(income.commission || 0)}
+                        </p>
+                        <p>
+                          <strong>BrokerFee:</strong>{" "}
+                          {formatSalary(income.brokerFee || 0)}
+                        </p>
+                        <p>
+                          <strong>OtherIncome:</strong>{" "}
+                          {formatSalary(income.otherIncome || 0)}
+                        </p>
+                        
                       </div>
                     ))}
                   </div>
@@ -182,6 +211,10 @@ const EmployeeDetailsDialog: React.FC<EmployeeDetailsDialogProps> = ({
                         <p>
                           <strong>Salary Advance:</strong>{" "}
                           {formatSalary(expense.salaryAdvance || 0)}
+                        </p>
+                        <p>
+                          <strong>CommissionDeduction:</strong>{" "}
+                          {formatSalary(expense.commissionDeduction || 0)}
                         </p>
                         <p>
                           <strong>Other Deductions:</strong>{" "}
@@ -223,6 +256,10 @@ const EmployeeDetailsDialog: React.FC<EmployeeDetailsDialogProps> = ({
                         <p>
                           <strong>Social Security (Company):</strong>{" "}
                           {formatSalary(tax.socialSecurityCompany || 0)}
+                        </p>
+                        <p>
+                          <strong>ProvidentFund (Company):</strong>{" "}
+                          {formatSalary(tax.providentFund || 0)}
                         </p>
                       </div>
                     ))}

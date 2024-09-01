@@ -125,7 +125,6 @@ export default function Component() {
 
   return (
     <>
-      <Navbar />
       <Card className="w-full max-w-2xl mx-auto my-auto mt-20">
         <CardHeader>
           <CardTitle>Create New Blog Post</CardTitle>

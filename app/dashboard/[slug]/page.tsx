@@ -1,6 +1,12 @@
 "use client";
 
-import { Loader2, TrendingUp } from "lucide-react";
+import {
+  Loader2,
+  MinusIcon,
+  TrendingDownIcon,
+  TrendingUp,
+  TrendingUpIcon,
+} from "lucide-react";
 
 import IncomeBreakdownDonutChart from "@/components/Charts/Donut/IncomeBreakdownDonutChart";
 import BarChart_Component from "@/components/Charts/Bar/BarChart";
@@ -15,6 +21,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import useAuthEffect from "@/lib/useAuthEffect";
+import { set } from "date-fns";
 
 interface MonthlySummary {
   month: number;
@@ -90,6 +97,11 @@ export default function Component({ params }: { params: { slug: string } }) {
     useState<ExpenseBreakdown | null>(null);
 
   const [taxBreakdown, setTaxBreakdown] = useState<TaxBreakdown | null>(null);
+  const [totalIncomedata, setTotalIncomedata] = useState(0);
+  const [totalExpensedata, setTotalExpensedata] = useState(0);
+  const [totalTaxdata, setTotalTaxdata] = useState(0);
+
+  const [netIncomedata, setNetIncomedata] = useState(0);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -102,14 +114,35 @@ export default function Component({ params }: { params: { slug: string } }) {
         const res = await fetch("/api/dashboard/" + params.slug);
         const jsonResponse = await res.json();
         const data = jsonResponse.data;
+        console.log(data);
 
         const totalIncomeBreakdown = aggregateIncomeBreakdown(data);
         const totalExpenseBreakdown = aggregateExpenseBreakdown(data);
         const totalTaxBreakdown = aggregateTaxBreakdown(data);
 
+        const totalIncome = Object.values(totalIncomeBreakdown).reduce(
+          (sum, value) => sum + value,
+          0
+        );
+        const totalExpense = Object.values(totalExpenseBreakdown).reduce(
+          (sum, value) => sum + value,
+          0
+        );
+        const totalTax = Object.values(totalTaxBreakdown).reduce(
+          (sum, value) => sum + value,
+          0
+        );
+
+        const netIncome = totalIncome - totalExpense;
+
         setIncomeBreakdown(totalIncomeBreakdown);
         setExpenseBreakdown(totalExpenseBreakdown);
         setTaxBreakdown(totalTaxBreakdown);
+
+        setTotalIncomedata(totalIncome);
+        setTotalExpensedata(totalExpense);
+        setTotalTaxdata(totalTax);
+        setNetIncomedata(netIncome);
 
         const formattedChartData = formatChartData(data);
         setChartData(formattedChartData);
@@ -145,117 +178,169 @@ export default function Component({ params }: { params: { slug: string } }) {
     },
   } satisfies ChartConfig;
 
+  const formatThaiCurrency = (amount: number) => {
+    return new Intl.NumberFormat("th-TH", {
+      style: "currency",
+      currency: "THB",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  };
+
+  const getPercentageChange = (current: number, previous: number) => {
+    if (previous === 0) return 0;
+    return ((current - previous) / previous) * 100;
+  };
+
+  type FinancialData = {
+    totalIncome: number;
+    totalExpenses: number;
+    totalTax: number;
+    netIncome: number;
+    year: number;
+    previousYearData?: {
+      totalIncome: number;
+      totalExpenses: number;
+      totalTax: number;
+      netIncome: number;
+    };
+  };
+
+  const FinancialCard = ({
+    title,
+    amount,
+    icon: Icon,
+    year,
+    previousAmount,
+  }: {
+    title: string;
+    amount: number;
+    icon: React.ElementType;
+    year: number;
+    previousAmount?: number;
+  }) => {
+    const percentageChange =
+      previousAmount !== undefined
+        ? getPercentageChange(amount, previousAmount)
+        : undefined;
+
+    return (
+      <Card className="overflow-hidden transition-all hover:shadow-lg">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">{title}</CardTitle>
+          <Icon className="w-4 h-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{formatThaiCurrency(amount)}</div>
+          <p className="text-xs text-muted-foreground mt-1">
+            Data from Year {year}
+          </p>
+          {percentageChange !== undefined && (
+            <div
+              className={`flex items-center mt-2 text-sm ${
+                percentageChange > 0
+                  ? "text-green-600"
+                  : percentageChange < 0
+                  ? "text-red-600"
+                  : "text-gray-600"
+              }`}
+            >
+              {percentageChange > 0 ? (
+                <TrendingUpIcon className="w-4 h-4 mr-1" />
+              ) : percentageChange < 0 ? (
+                <TrendingDownIcon className="w-4 h-4 mr-1" />
+              ) : (
+                <MinusIcon className="w-4 h-4 mr-1" />
+              )}
+              <span>
+                {Math.abs(percentageChange).toFixed(2)}% from previous year
+              </span>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    );
+  };
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Revenue
-                </CardTitle>
-                <DollarSignIcon className="w-4 h-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">$45,231.89</div>
-                <p className="text-xs text-muted-foreground">
-                  +20.1% from last month
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Expenses
-                </CardTitle>
-                <DollarSignIcon className="w-4 h-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">$32,456.12</div>
-                <p className="text-xs text-muted-foreground">
-                  +10.5% from last month
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Total Net</CardTitle>
-                <DollarSignIcon className="w-4 h-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">$12,775.77</div>
-                <p className="text-xs text-muted-foreground">
-                  +35.2% from last month
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Cash Flow</CardTitle>
-                <DollarSignIcon className="w-4 h-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">$28,901.34</div>
-                <p className="text-xs text-muted-foreground">
-                  +15.8% from last month
-                </p>
-              </CardContent>
-            </Card>
+            <FinancialCard
+              title="Total Income"
+              amount={totalIncomedata}
+              icon={DollarSignIcon}
+              year={chartData.length > 0 ? Number(chartData[0].year) : 0}
+              //previousAmount={totalIncomedata * 0.9} // Example: 10% less than current
+            />
+            <FinancialCard
+              title="Total Expenses"
+              amount={totalExpensedata}
+              icon={DollarSignIcon}
+              year={chartData.length > 0 ? Number(chartData[0].year) : 0}
+              //previousAmount={totalExpensedata * 1.1} // Example: 10% more than current
+            />
+            <FinancialCard
+              title="Total Tax"
+              amount={totalTaxdata}
+              icon={DollarSignIcon}
+              year={chartData.length > 0 ? Number(chartData[0].year) : 0}
+              //previousAmount={totalTaxdata} // Example: Same as current
+            />
+            <FinancialCard
+              title="Total Net"
+              amount={netIncomedata}
+              icon={DollarSignIcon}
+              year={chartData.length > 0 ? Number(chartData[0].year) : 0}
+              //previousAmount={netIncomedata * 0.95} // Example: 5% less than current
+            />
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2">
             <Card>
               <CardContent className="mt-8">
                 {isLoading ? (
-                  <div className="flex justify-center items-center h-[400px]">
+                  <div className="flex h-[400px] items-center justify-center">
                     <Loader2 className="h-8 w-8 animate-spin" />
                   </div>
                 ) : (
-                  <BarChart_Component
-                    chartData={memoizedChartData}
-                    chartConfig={chartBarConfig}
-                  />
+                  <BarChart_Component chartData={memoizedChartData} chartConfig={chartBarConfig} />
                 )}
               </CardContent>
             </Card>
-
             <Card>
-              <Tabs defaultValue="income" className="w-full mt-8">
+              <Tabs defaultValue="income" className="mt-8 w-full">
                 <TabsList className="ms-6">
                   <TabsTrigger value="income">Income</TabsTrigger>
                   <TabsTrigger value="expense">Expense</TabsTrigger>
                   <TabsTrigger value="tax">Tax</TabsTrigger>
                 </TabsList>
                 <TabsContent value="income">
-                  <CardContent className="">
+                  <CardContent>
                     {isLoading ? (
-                      <div className="flex justify-center items-center h-[400px]">
+                      <div className="flex h-[400px] items-center justify-center">
                         <Loader2 className="h-8 w-8 animate-spin" />
                       </div>
                     ) : (
-                      <IncomeBreakdownDonutChart
-                        incomeBreakdown={memoizedIncomeBreakdown}
-                      />
+                      <IncomeBreakdownDonutChart incomeBreakdown={memoizedIncomeBreakdown} />
                     )}
                   </CardContent>
                 </TabsContent>
                 <TabsContent value="expense">
-                  <CardContent className="">
+                  <CardContent>
                     {isLoading ? (
-                      <div className="flex justify-center items-center h-[400px]">
+                      <div className="flex h-[400px] items-center justify-center">
                         <Loader2 className="h-8 w-8 animate-spin" />
                       </div>
                     ) : (
-                      <ExpenseBreakdownDonutChart
-                        ExpenseBreakdown={memoizedExpenseBreakdown}
-                      />
+                      <ExpenseBreakdownDonutChart ExpenseBreakdown={memoizedExpenseBreakdown} />
                     )}
                   </CardContent>
                 </TabsContent>
                 <TabsContent value="tax">
-                  <CardContent className="">
+                  <CardContent>
                     {isLoading ? (
-                      <div className="flex justify-center items-center h-[400px]">
+                      <div className="flex h-[400px] items-center justify-center">
                         <Loader2 className="h-8 w-8 animate-spin" />
                       </div>
                     ) : (

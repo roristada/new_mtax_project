@@ -19,7 +19,7 @@ export default function Footer() {
         <div className="flex flex-col items-start gap-4">
           <Link href="#" className="flex items-center gap-2" prefetch={false}>
             <ActivityIcon className="w-8 h-8" />
-            <span className="font-bold text-lg">Acme Accounting</span>
+            <span className="font-bold text-lg">Mtax Online Accounting</span>
           </Link>
           <p className="text-muted-foreground">
             Providing comprehensive accounting services to businesses of all sizes.
@@ -42,6 +42,7 @@ export default function Footer() {
         </div>
         <div className="grid gap-2">
           <h3 className="font-semibold">Services</h3>
+          
           <Link href="#" className="hover:underline" prefetch={false}>
             Tax Preparation
           </Link>

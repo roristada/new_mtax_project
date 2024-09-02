@@ -10,7 +10,9 @@ import {
   Settings,
   CalendarPlus2,
   UserRoundPen,
-  LibraryBig
+  LibraryBig,
+  BarChartBig,
+  LayoutDashboard
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,11 +38,14 @@ import { useRouter } from "next/navigation";
 
 const adminLinks = [
   { id: 1, title: "Home", url: "/dashboard/admin", icon: Home },
-  { id: 1, title: "Appointment", url: "/appointment/admin", icon: CalendarPlus2 },
-  { id: 2, title: "Register", url: "/register", icon: UserRoundPen },
-  { id: 3, title: "Customer", url: "/dashboard/:id/", icon: Users2 },
+  { id: 2, title: "Appointment", url: "/appointment/admin", icon: CalendarPlus2 },
+  { id: 3, title: "Register", url: "/register", icon: UserRoundPen },
   { id: 4, title: "Blog", url: "/blog/admin", icon: LibraryBig },
   { id: 5, title: "Chat", url: "/chat", icon: MessageSquareWarning },
+  // New Overview link for admin
+  { id: 6, title: "Overview", url: "/dashboard/:id", icon: LayoutDashboard },
+  { id: 7, title: "Employee", url: "/dashboard/:id/employee", icon: Users2 },
+  { id: 8, title: "Compare Data", url: "/dashboard/:id/compare", icon: BarChartBig },
 ];
 
 const customerLinks = [
@@ -54,6 +59,8 @@ const customerLinks = [
     icon: MessageSquareWarning,
   },
 ];
+
+
 
 export default function Sidebar({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
@@ -81,7 +88,12 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const links = session?.user?.role === "admin" ? adminLinks : customerLinks;
+  const isAdminOnUserDashboard = session?.user?.role === "admin" && pathname.startsWith("/dashboard/") && pathname !== "/dashboard/admin";
+  const links = session?.user?.role === "admin" 
+  ? isAdminOnUserDashboard 
+    ? [...adminLinks]
+    : adminLinks.filter(link => link.id !== 7 && link.id !== 8 && link.id !== 9)  // Remove Overview link if not on user dashboard
+  : customerLinks;
 
   return (
     <TooltipProvider>
@@ -93,7 +105,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
               className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
             >
               <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
-              <span className="sr-only">Acme Inc</span>
+              <span className="sr-only">Mtax</span>
             </Link>
             {links.map((link) => (
               <Tooltip key={link.id}>
@@ -145,7 +157,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                     className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
                   >
                     <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-                    <span className="sr-only">Acme Inc</span>
+                    <span className="sr-only">Mtax</span>
                   </Link>
                   {links.map((link) => (
                     <Link
@@ -162,14 +174,8 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                 </nav>
               </SheetContent>
             </Sheet>
-            <div className="relative ml-auto flex-1 md:grow-0">
-              <Input
-                type="search"
-                placeholder="Search..."
-                className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-              />
-            </div>
-            <div className="flex items-center">
+           
+            <div className="flex items-center ml-auto">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -196,9 +202,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Support</DropdownMenuItem>
+         
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={() => signOut({ callbackUrl: "/" })}

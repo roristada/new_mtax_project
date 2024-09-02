@@ -341,7 +341,7 @@ export default function Compare({ slug }: { slug: string }) {
             ) : (
               <>
                 <div className="flex justify-end my-5 gap-4">
-                  <Popover
+                  {/* <Popover
                     open={popoverMainOpen}
                     onOpenChange={setPopoverMainOpen}
                   >
@@ -414,7 +414,7 @@ export default function Compare({ slug }: { slug: string }) {
                         </Button>
                       </div>
                     </PopoverContent>
-                  </Popover>
+                  </Popover> */}
                   <Button variant="outline">Export</Button>
                 </div>
                 <div className="grid lg:grid-cols-2 items-start gap-4 md:gap-8 w-full">

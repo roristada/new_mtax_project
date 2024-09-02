@@ -62,7 +62,7 @@ const FinancialAreaChart = ({
         <XAxis dataKey="year" />
         <YAxis
           tickFormatter={(value) => `$${(value / 1000000).toFixed(2)}M`}
-          domain={[0, 250000000]} // Adjust this value based on your data range
+          domain={[0, 350000000]} // Adjust this value based on your data range
         />
         <Tooltip
           formatter={(value) =>

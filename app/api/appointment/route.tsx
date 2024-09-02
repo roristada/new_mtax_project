@@ -1,11 +1,13 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 
 const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, company, email, telephone, startTime, endTime, date } = await request.json();
+    const { name, company, email, telephone, startTime, endTime, date } =
+      await request.json();
 
     const appointment = await prisma.appointment.create({
       data: {
@@ -16,9 +18,36 @@ export async function POST(request: NextRequest) {
         startTime,
         endTime,
         date: new Date(date),
-        
       },
     });
+    const formattedDate = new Intl.DateTimeFormat("th-TH", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "Asia/Bangkok",
+    }).format(new Date(date));
+
+    if (appointment) {
+      const transporter = nodemailer.createTransport({
+        service: "gmail", // or another email service
+        auth: {
+          user: process.env.EMAIL_USER, // your email address
+          pass: process.env.EMAIL_PASS, // your email password or app-specific password
+        },
+      });
+
+      // Define the email options
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Appointment Confirmation",
+        text: `Dear ${name},\n\nYour appointment has been successfully created.\n\nDetails:\nCompany: ${company}\nDate: ${formattedDate}\nStart Time: ${startTime}\nEnd Time: ${endTime}\n\nThank you.`,
+      };
+
+      // Send the email
+      await transporter.sendMail(mailOptions);
+    }
+    // Configure Nodemailer transport
 
     return NextResponse.json(
       {
@@ -58,5 +87,3 @@ export async function GET(request: NextRequest) {
     await prisma.$disconnect();
   }
 }
-
-

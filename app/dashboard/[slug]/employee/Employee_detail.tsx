@@ -1,125 +1,129 @@
-import * as React from "react";
+import * as React from "react"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
+} from "@/components/ui/dialog"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 type Income = {
-  id: number;
-  month: number;
-  year: number;
-  salary?: number;
-  shiftAllowance?: number;
-  foodAllowance?: number;
-  overtime?: number;
-  diligence?: number;
-  beverage?: number;
-  commission?: number;
-  brokerFee?: number;
-  otherIncome?: number;
-  bonus?: number;
-};
+  id: number
+  month: number
+  year: number
+  salary?: number
+  shiftAllowance?: number
+  foodAllowance?: number
+  overtime?: number
+  diligence?: number
+  beverage?: number
+  commission?: number
+  brokerFee?: number
+  otherIncome?: number
+  bonus?: number
+}
 
 type Expense = {
-  id: number;
-  month: number;
-  year: number;
-  loan?: number;
-  salaryAdvance?: number;
-  commissionDeduction?: number;
-  otherDeductions?: number;
-};
+  id: number
+  month: number
+  year: number
+  loan?: number
+  salaryAdvance?: number
+  commissionDeduction?: number
+  otherDeductions?: number
+}
 
 type Tax = {
-  id: number;
-  month: number;
-  year: number;
-  employeeTax?: number;
-  companyTax?: number;
-  socialSecurityEmployee?: number;
-  socialSecurityCompany?: number;
-  providentFund?: number;
-};
+  id: number
+  month: number
+  year: number
+  employeeTax?: number
+  companyTax?: number
+  socialSecurityEmployee?: number
+  socialSecurityCompany?: number
+  providentFund?: number
+}
 
 type Employee = {
-  employeeCode: string;
-  title: string;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  currentSalary: number;
-  year: number;
-  incomes?: Income[];
-  expenses?: Expense[];
-  taxes?: Tax[];
-};
+  employeeCode: string
+  title: string
+  firstName: string
+  lastName: string
+  gender: string
+  currentSalary: number
+  year: number
+  incomes?: Income[]
+  expenses?: Expense[]
+  taxes?: Tax[]
+}
 
 type EmployeeDetailsDialogProps = {
-  employee: Employee | null;
-  open: boolean;
-  onClose: () => void;
-};
+  employee: Employee | null
+  open: boolean
+  onClose: () => void
+}
 
-const EmployeeDetailsDialog: React.FC<EmployeeDetailsDialogProps> = ({
-  employee,
-  open,
-  onClose,
-}) => {
-  if (!employee) return null;
+const formatSalary = (salary: number) => {
+  return new Intl.NumberFormat("th-TH", {
+    style: "currency",
+    currency: "THB",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(salary)
+}
 
-  const formatSalary = (salary: number) => {
-    return new Intl.NumberFormat("th-TH", {
-      style: "currency",
-      currency: "THB",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(salary);
-  };
+const DetailsCard = ({ title, items }: { title: string; items: { label: string; value: string | number }[] }) => (
+  <Card className="w-full">
+    <CardHeader>
+      <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <dl className="grid grid-cols-2 gap-2 text-sm">
+        {items.map((item, index) => (
+          <React.Fragment key={index}>
+            <dt className="font-medium text-muted-foreground">{item.label}</dt>
+            <dd>{typeof item.value === 'number' ? formatSalary(item.value) : item.value}</dd>
+          </React.Fragment>
+        ))}
+      </dl>
+    </CardContent>
+  </Card>
+)
+
+export default function EmployeeDetailsDialog({ employee, open, onClose }: EmployeeDetailsDialogProps) {
+  if (!employee) return null
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-full lg:max-w-7xl p-6 overflow-y-auto max-h-[80vh]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
-            Employee Details
-          </DialogTitle>
-          <DialogDescription className="text-gray-600">
+          <DialogTitle className="text-2xl font-bold">Employee Details</DialogTitle>
+          <DialogDescription className="text-muted-foreground">
             View the details of the employee below:
           </DialogDescription>
         </DialogHeader>
 
         <div className="py-4 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <p>
-                <strong>Employee Code:</strong> {employee.employeeCode}
-              </p>
-              <p>
-                <strong>Name:</strong> {employee.title} {employee.firstName}{" "}
-                {employee.lastName}
-              </p>
-              <p>
-                <strong>Gender:</strong> {employee.gender}
-              </p>
-            </div>
-            <div>
-              <p>
-                <strong>Current Salary:</strong>{" "}
-                {formatSalary(employee.currentSalary)}
-              </p>
-              <p>
-                <strong>Working Year:</strong> {employee.year}
-              </p>
-            </div>
-          </div>
+          <Card>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <p><strong>Employee Code:</strong> {employee.employeeCode}</p>
+                  <p><strong>Name:</strong> {employee.title} {employee.firstName} {employee.lastName}</p>
+                  <p><strong>Gender:</strong> {employee.gender}</p>
+                </div>
+                <div>
+                  <p><strong>Current Salary:</strong> {formatSalary(employee.currentSalary)}</p>
+                  <p><strong>Working Year:</strong> {employee.year}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           <Tabs defaultValue="income" className="w-full">
-            <TabsList className="grid grid-cols-3 w-[80%] mx-auto">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="income">Income</TabsTrigger>
               <TabsTrigger value="expense">Expense</TabsTrigger>
               <TabsTrigger value="tax">Tax</TabsTrigger>
@@ -127,143 +131,64 @@ const EmployeeDetailsDialog: React.FC<EmployeeDetailsDialogProps> = ({
 
             <TabsContent value="income">
               {employee.incomes && employee.incomes.length > 0 && (
-                <div className="mt-4">
-                  <h3 className="text-lg font-semibold border-b pb-2">
-                    Income Details
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                    {employee.incomes.map((income) => (
-                      <div
-                        key={income.id}
-                        className="bg-gray-50 p-4 rounded-lg shadow-md"
-                      >
-                        <p>
-                          <strong>Month/Year:</strong> {income.month}/
-                          {income.year}
-                        </p>
-                        <p>
-                          <strong>Salary:</strong>{" "}
-                          {formatSalary(income.salary || 0)}
-                        </p>
-                        <p>
-                          <strong>Overtime:</strong>{" "}
-                          {formatSalary(income.overtime || 0)}
-                        </p>
-                        <p>
-                          <strong>Bonus:</strong>{" "}
-                          {formatSalary(income.bonus || 0)}
-                        </p>
-                        <p>
-                          <strong>ShiftAllowance:</strong>{" "}
-                          {formatSalary(income.shiftAllowance || 0)}
-                        </p>
-                        <p>
-                          <strong>FoodAllowance:</strong>{" "}
-                          {formatSalary(income.foodAllowance || 0)}
-                        </p>
-                        <p>
-                          <strong>Diligence:</strong>{" "}
-                          {formatSalary(income.diligence || 0)}
-                        </p>
-                        <p>
-                          <strong>Beverage:</strong>{" "}
-                          {formatSalary(income.beverage || 0)}
-                        </p>
-                        <p>
-                          <strong>Commission:</strong>{" "}
-                          {formatSalary(income.commission || 0)}
-                        </p>
-                        <p>
-                          <strong>BrokerFee:</strong>{" "}
-                          {formatSalary(income.brokerFee || 0)}
-                        </p>
-                        <p>
-                          <strong>OtherIncome:</strong>{" "}
-                          {formatSalary(income.otherIncome || 0)}
-                        </p>
-                        
-                      </div>
-                    ))}
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                  {employee.incomes.map((income) => (
+                    <DetailsCard
+                      key={income.id}
+                      title={`Income: ${income.month}/${income.year}`}
+                      items={[
+                        { label: "Salary", value: income.salary || 0 },
+                        { label: "Overtime", value: income.overtime || 0 },
+                        { label: "Bonus", value: income.bonus || 0 },
+                        { label: "Shift Allowance", value: income.shiftAllowance || 0 },
+                        { label: "Food Allowance", value: income.foodAllowance || 0 },
+                        { label: "Diligence", value: income.diligence || 0 },
+                        { label: "Beverage", value: income.beverage || 0 },
+                        { label: "Commission", value: income.commission || 0 },
+                        { label: "Broker Fee", value: income.brokerFee || 0 },
+                        { label: "Other Income", value: income.otherIncome || 0 },
+                      ]}
+                    />
+                  ))}
                 </div>
               )}
             </TabsContent>
+
             <TabsContent value="expense">
               {employee.expenses && employee.expenses.length > 0 && (
-                <div className="mt-4">
-                  <h3 className="text-lg font-semibold border-b pb-2">
-                    Expense Details
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                    {employee.expenses.map((expense) => (
-                      <div
-                        key={expense.id}
-                        className="bg-gray-50 p-4 rounded-lg shadow-md"
-                      >
-                        <p>
-                          <strong>Month/Year:</strong> {expense.month}/
-                          {expense.year}
-                        </p>
-                        <p>
-                          <strong>Loan:</strong>{" "}
-                          {formatSalary(expense.loan || 0)}
-                        </p>
-                        <p>
-                          <strong>Salary Advance:</strong>{" "}
-                          {formatSalary(expense.salaryAdvance || 0)}
-                        </p>
-                        <p>
-                          <strong>CommissionDeduction:</strong>{" "}
-                          {formatSalary(expense.commissionDeduction || 0)}
-                        </p>
-                        <p>
-                          <strong>Other Deductions:</strong>{" "}
-                          {formatSalary(expense.otherDeductions || 0)}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                  {employee.expenses.map((expense) => (
+                    <DetailsCard
+                      key={expense.id}
+                      title={`Expense: ${expense.month}/${expense.year}`}
+                      items={[
+                        { label: "Loan", value: expense.loan || 0 },
+                        { label: "Salary Advance", value: expense.salaryAdvance || 0 },
+                        { label: "Commission Deduction", value: expense.commissionDeduction || 0 },
+                        { label: "Other Deductions", value: expense.otherDeductions || 0 },
+                      ]}
+                    />
+                  ))}
                 </div>
               )}
             </TabsContent>
+
             <TabsContent value="tax">
               {employee.taxes && employee.taxes.length > 0 && (
-                <div className="mt-4">
-                  <h3 className="text-lg font-semibold border-b pb-2">
-                    Tax Details
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                    {employee.taxes.map((tax) => (
-                      <div
-                        key={tax.id}
-                        className="bg-gray-50 p-4 rounded-lg shadow-md"
-                      >
-                        <p>
-                          <strong>Month/Year:</strong> {tax.month}/{tax.year}
-                        </p>
-                        <p>
-                          <strong>Employee Tax:</strong>{" "}
-                          {formatSalary(tax.employeeTax || 0)}
-                        </p>
-                        <p>
-                          <strong>Company Tax:</strong>{" "}
-                          {formatSalary(tax.companyTax || 0)}
-                        </p>
-                        <p>
-                          <strong>Social Security (Employee):</strong>{" "}
-                          {formatSalary(tax.socialSecurityEmployee || 0)}
-                        </p>
-                        <p>
-                          <strong>Social Security (Company):</strong>{" "}
-                          {formatSalary(tax.socialSecurityCompany || 0)}
-                        </p>
-                        <p>
-                          <strong>ProvidentFund (Company):</strong>{" "}
-                          {formatSalary(tax.providentFund || 0)}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                  {employee.taxes.map((tax) => (
+                    <DetailsCard
+                      key={tax.id}
+                      title={`Tax: ${tax.month}/${tax.year}`}
+                      items={[
+                        { label: "Employee Tax", value: tax.employeeTax || 0 },
+                        { label: "Company Tax", value: tax.companyTax || 0 },
+                        { label: "Social Security (Employee)", value: tax.socialSecurityEmployee || 0 },
+                        { label: "Social Security (Company)", value: tax.socialSecurityCompany || 0 },
+                        { label: "Provident Fund", value: tax.providentFund || 0 },
+                      ]}
+                    />
+                  ))}
                 </div>
               )}
             </TabsContent>
@@ -271,7 +196,5 @@ const EmployeeDetailsDialog: React.FC<EmployeeDetailsDialogProps> = ({
         </div>
       </DialogContent>
     </Dialog>
-  );
-};
-
-export default EmployeeDetailsDialog;
+  )
+}

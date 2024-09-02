@@ -111,7 +111,7 @@ export default function Register() {
       icon: "success",
     }).then(() => {
       setLoading(false);
-      router.push("/login");
+      router.push("/dashboard/admin");
     });
   };
 

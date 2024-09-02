@@ -15,16 +15,12 @@ export async function GET(req: NextRequest) {
             where: {
                 role: "customer"
             },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                company: true,
-            }
+            
         });
 
         const totalBlog = await prisma.post.count();
         const totalAppointment = await prisma.appointment.count();
+         
 
         const blog = await prisma.post.findMany({
             include: {
@@ -46,10 +42,14 @@ export async function GET(req: NextRequest) {
             }),
         }));
 
+        
+
+
         return NextResponse.json({
             message: "Fetch customer success",
             totalCustomer,
             users,
+            
             totalBlog,
             totalAppointment,
             blog: blogWithTimezone,

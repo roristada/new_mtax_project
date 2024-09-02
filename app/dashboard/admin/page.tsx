@@ -18,8 +18,23 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { BookOpenText, Building2, CalendarCheck2, Loader2 } from "lucide-react";
+import {
+  BookOpenText,
+  Building2,
+  CalendarCheck2,
+  Loader2,
+  ScanSearch,
+  Bell,
+} from "lucide-react";
 import useAuthAdmin from "@/lib/useAuthAdmin";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface DashboardData {
   totalCustomer: number;
@@ -30,6 +45,9 @@ interface DashboardData {
     name: string;
     email: string;
     company: string;
+    telephone: string;
+    address: string;
+    createdAt: string;
   }[];
   blog: {
     // Note: using `blog` instead of `blogs`
@@ -44,6 +62,16 @@ interface DashboardData {
     };
   }[];
 }
+
+const formatDateInThailand = (dateString: any) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("en-TH", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "Asia/Bangkok",
+  }).format(date);
+};
 
 const Dashboard = () => {
   const [data, setData] = useState<DashboardData | null>(null);
@@ -80,33 +108,29 @@ const Dashboard = () => {
           <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
             <Card x-chunk="dashboard-01-chunk-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Customer
-                </CardTitle>
-                <Building2 />
+                <CardTitle className="text-sm font-medium">Customer</CardTitle>
+                <Building2 className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
                   {data ? data.totalCustomer : "Loading..."}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  +20.1% from last month
+                  Total number of customers currently registered.
                 </p>
               </CardContent>
             </Card>
             <Card x-chunk="dashboard-01-chunk-1">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Blog
-                </CardTitle>
-                <BookOpenText />
+                <CardTitle className="text-sm font-medium">Blog</CardTitle>
+                <BookOpenText className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
                   {data ? data.totalBlog : "Loading..."}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  +180.1% from last month
+                  Total number of blog posts published.
                 </p>
               </CardContent>
             </Card>
@@ -115,28 +139,28 @@ const Dashboard = () => {
                 <CardTitle className="text-sm font-medium">
                   Appointments
                 </CardTitle>
-                <CalendarCheck2 />
+                <CalendarCheck2 className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
                   {data ? data.totalAppointment : "Loading..."}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  +19% from last month
+                  Total number of appointments scheduled.
                 </p>
               </CardContent>
             </Card>
             <Card x-chunk="dashboard-01-chunk-3">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Active Now
+                  Notifications
                 </CardTitle>
-                {/* <ActivityIcon className="h-4 w-4 text-muted-foreground" /> */}
+                <Bell className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+573</div>
+                <div className="text-2xl font-bold">5</div>
                 <p className="text-xs text-muted-foreground">
-                  +201 since last hour
+                  Recent notifications and updates.
                 </p>
               </CardContent>
             </Card>
@@ -150,22 +174,16 @@ const Dashboard = () => {
                     Recent transactions from your store.
                   </CardDescription>
                 </div>
-                <Button asChild size="sm" className="ml-auto gap-1">
-                  <Link href="#" prefetch={false}>
-                    View All
-                    {/* <ArrowUpRightIcon className="h-4 w-4" /> */}
-                  </Link>
-                </Button>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Customer</TableHead>
-                      <TableHead className="">Type</TableHead>
+                      <TableHead className="">Contact</TableHead>
                       <TableHead className="">Status</TableHead>
                       <TableHead className="">Date</TableHead>
-                      <TableHead className="text-right">Employee</TableHead>
+                      <TableHead className="text-center">Details</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -177,14 +195,41 @@ const Dashboard = () => {
                             {user.email}
                           </div>
                         </TableCell>
-                        <TableCell className="">Sale</TableCell>
+                        <TableCell className="">{user.telephone}</TableCell>
                         <TableCell className="">
                           <Badge className="text-xs" variant="outline">
                             Approved
                           </Badge>
                         </TableCell>
-                        <TableCell className="">2023-06-23</TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
+                        <TableCell className="">
+                          {formatDateInThailand(user.createdAt)}
+                        </TableCell>
+                        <TableCell className="flex justify-center">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="outline">
+                                {<ScanSearch className="h-6 w-6 " />}
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <Link href={`/dashboard/${user.id}`}>
+                                <DropdownMenuItem>Overview</DropdownMenuItem>
+                              </Link>
+
+                              <DropdownMenuSeparator />
+                              <Link href={`/dashboard/${user.id}/employee`}>
+                                <DropdownMenuItem>Employee</DropdownMenuItem>
+                              </Link>
+
+                              <DropdownMenuSeparator />
+                              <Link href={`/dashboard/${user.id}/compare`}>
+                                <DropdownMenuItem>
+                                  Compare Data
+                                </DropdownMenuItem>
+                              </Link>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

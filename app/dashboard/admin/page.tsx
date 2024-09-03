@@ -174,6 +174,11 @@ const Dashboard = () => {
                     Recent transactions from your store.
                   </CardDescription>
                 </div>
+                <div className="ml-auto">
+                  <Link href={`/dashboard/formUpload`}>
+                    <Button>Upload File</Button>
+                  </Link>
+                </div>
               </CardHeader>
               <CardContent>
                 <Table>
@@ -212,6 +217,7 @@ const Dashboard = () => {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
+                              <DropdownMenuSeparator />
                               <Link href={`/dashboard/${user.id}`}>
                                 <DropdownMenuItem>Overview</DropdownMenuItem>
                               </Link>

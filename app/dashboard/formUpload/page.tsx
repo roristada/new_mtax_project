@@ -64,18 +64,20 @@ export default function Component() {
   });
 
   useEffect(() => {
-    if (!isAuthChecked) return;
+    
     const fetchCompanies = async () => {
       
       try {
         const res = await fetch("/api/user");
-        const users: { id: string; company: string }[] = await res.json();
-        console.log(users);
+        const users: { id: string; company: string; role : string }[] = await res.json();
+        console.log(users , "users");
 
-        const companyList = users.map((user) => ({
-          id: user.id,
-          name: user.company,
-        }));
+        const companyList = users
+          .filter((user) => user.role === "customer") // Filter by role "customer"
+          .map((user) => ({
+            id: user.id,
+            name: user.company,
+          }));
 
         const uniqueCompanies = Array.from(
           new Map(companyList.map((item) => [item.name, item])).values()

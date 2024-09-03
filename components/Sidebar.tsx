@@ -92,7 +92,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
   const links = session?.user?.role === "admin" 
   ? isAdminOnUserDashboard 
     ? [...adminLinks]
-    : adminLinks.filter(link => link.id !== 7 && link.id !== 8 && link.id !== 9)  // Remove Overview link if not on user dashboard
+    : adminLinks.filter(link => link.id !== 6 && link.id !== 7 && link.id !== 8)  // Remove Overview link if not on user dashboard
   : customerLinks;
 
   return (

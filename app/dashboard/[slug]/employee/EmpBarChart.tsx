@@ -442,7 +442,7 @@ const EmployeeChart: React.FC<EmployeeChartDialogProps> = ({
               ) : (
                 <Card className="lg:max-w-4xl mx-auto">
                   <CardHeader>
-                    <CardTitle>Bar Chart - Multiple</CardTitle>
+                    <CardTitle>Financial of Year {employee.year}</CardTitle>
                     <CardDescription>
                       January - December {employee.year}
                     </CardDescription>
@@ -478,11 +478,11 @@ const EmployeeChart: React.FC<EmployeeChartDialogProps> = ({
                   </CardContent>
                   <CardFooter className="flex-col items-start gap-2 text-sm">
                     <div className="flex gap-2 font-medium leading-none">
-                      Trending up by 5.2% this month{" "}
+                    Financial of Year {employee.year} {" "}
                       <TrendingUp className="h-4 w-4" />
                     </div>
                     <div className="leading-none text-muted-foreground">
-                      Showing total visitors for the last 6 months
+                     Showing Financial each month 
                     </div>
                   </CardFooter>
                 </Card>

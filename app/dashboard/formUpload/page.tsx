@@ -73,7 +73,7 @@ export default function Component() {
         console.log(users , "users");
 
         const companyList = users
-          .filter((user) => user.role === "customer") // Filter by role "customer"
+          .filter((user) => user.role === "customer") 
           .map((user) => ({
             id: user.id,
             name: user.company,

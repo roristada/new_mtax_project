@@ -88,7 +88,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const isAdminOnUserDashboard = session?.user?.role === "admin" && pathname.startsWith("/dashboard/") && pathname !== "/dashboard/admin";
+  const isAdminOnUserDashboard = session?.user?.role === "admin" && pathname.startsWith("/dashboard/") && pathname !== "/dashboard/admin"&& pathname !== "/dashboard/formUpload";
   const links = session?.user?.role === "admin" 
   ? isAdminOnUserDashboard 
     ? [...adminLinks]

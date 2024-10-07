@@ -56,50 +56,6 @@ const storage = new Storage({
 
 const bucketName = 'mtax-storage-file';
 
-async function parseCSV(filePath: string): Promise<CsvRecord[]> {
-  const csvData = fs.readFileSync(filePath, "utf-8");
-  return Papa.parse<CsvRecord>(csvData, {
-    header: true,
-    dynamicTyping: true,
-    skipEmptyLines: true,
-  }).data;
-}
-
-async function parseCSVFromGCS(bucketName: string, fileName: string): Promise<CsvRecord[]> {
-  const bucket = storage.bucket(bucketName);
-  const file = bucket.file(fileName);
-
-  const fileStream = file.createReadStream();
-
-  return new Promise((resolve, reject) => {
-    let dataBuffer = '';
-
-    // Listen to the stream and collect chunks of data
-    fileStream.on('data', (chunk) => {
-      dataBuffer += chunk;
-    });
-
-    // Handle errors in reading the stream
-    fileStream.on('error', (err) => {
-      reject(new Error(`Error reading file from GCS: ${err.message}`));
-    });
-
-    // When the stream ends, parse the CSV
-    fileStream.on('end', () => {
-      Papa.parse<CsvRecord>(dataBuffer, {
-        header: true,
-        dynamicTyping: true,
-        skipEmptyLines: true,
-        complete: (results) => {
-          resolve(results.data as CsvRecord[]);
-        },
-        error: (error: any) => {
-          reject(new Error(`Error parsing CSV: ${error.message}`));
-        },
-      });
-    });
-  });
-}
 
 function chunk<T>(array: T[], size: number): T[][] {
   return Array.from({ length: Math.ceil(array.length / size) }, (v, i) =>
@@ -215,14 +171,140 @@ async function uploadToStorage(req: NextRequest) {
     const batches = chunk(parsedData, batchSize);
     let recordsInserted = 0;
 
+    // for (const batch of batches) {
+    //   try {
+    //     await prisma.$transaction(async (tx) => {
+    //       for (const record of batch) {
+            
+    //         const employeeCode = record["รหัสพนักงาน"].toString();
+    //         console.log("employeeCode", employeeCode)
+            
+    //         // Find existing employee based on composite key
+    //         let employee = await tx.employee.findFirst({
+    //           where: {
+    //             employeeCode: employeeCode,
+    //             companyId: user.id,
+    //             year: year,
+    //           },
+    //         });
+            
+
+    //         if (employee) {
+    //           // Update the existing employee record
+    //           employee = await tx.employee.update({
+    //             where: {
+    //               employeeCode_companyId_year: {
+    //                 employeeCode: employee.employeeCode,
+    //                 companyId: employee.companyId,
+    //                 year: year,
+    //               },
+    //             },
+    //             data: {
+    //               cardCode: record["รหัสบัตรรูด"].toString(),
+    //               title: record["คำนำหน้าไทย"],
+    //               firstName: record["ชื่อภาษาไทย"],
+    //               lastName: record["นามสกุลภาษาไทย"],
+    //               gender: record["เพศ"],
+    //               department: record["แผนก"],
+    //               position: record["ตำแหน่ง"],
+    //               startDate: record["วันเริ่มงาน"],
+    //               endDate: record["วันที่ออก"] ? record["วันที่ออก"] : null,
+    //               citizenId: record["เลขที่บัตรประชาชน"].toString(),
+    //               currentSalary: parseFloat(record["เงินเดือนปัจจุบัน"]) || 0,
+    //               age: parseInt(record["อายุ"], 10) || 0,
+    //               birthDate: record["วันเกิด"],
+    //               year: year,
+    //             },
+    //           });
+    //         } else {
+    //           // Create a new employee record
+    //           employee = await tx.employee.create({
+    //             data: {
+    //               employeeCode,
+    //               year: year,
+    //               cardCode: record["รหัสบัตรรูด"].toString(),
+    //               title: record["คำนำหน้าไทย"],
+    //               firstName: record["ชื่อภาษาไทย"],
+    //               lastName: record["นามสกุลภาษาไทย"],
+    //               gender: record["เพศ"],
+    //               department: record["แผนก"],
+    //               position: record["ตำแหน่ง"],
+    //               startDate: record["วันเริ่มงาน"],
+    //               endDate: record["วันที่ออก"] ? record["วันที่ออก"] : null,
+    //               citizenId: record["เลขที่บัตรประชาชน"].toString(),
+    //               currentSalary: parseFloat(record["เงินเดือนปัจจุบัน"]) || 0,
+    //               age: parseInt(record["อายุ"], 10) || 0,
+    //               birthDate: record["วันเกิด"],
+    //               companyId: user.id,
+    //             },
+    //           });
+    //         }
+
+    //         await tx.income.create({
+    //           data: {
+    //             employeeCode: employee.employeeCode,
+    //             companyId: employee.companyId,
+    //             month: parseInt(record["เดือน"], 10) || 1,
+    //             year: year,
+    //             salary: parseFloat(record["เงินเดือน"]) || 0,
+    //             shiftAllowance: parseFloat(record["ค่ากะ"]) || 0,
+    //             foodAllowance: parseFloat(record["ค่าอาหาร"]) || 0,
+    //             overtime: parseFloat(record["รายได้ 2"]) || 0,
+    //             diligence: parseFloat(record["รายได้ 3"]) || 0,
+    //             beverage: parseFloat(record["รายได้ 4"]) || 0,
+    //             commission: parseFloat(record["รายได้ 5"]) || 0,
+    //             brokerFee: parseFloat(record["รายได้ 6"]) || 0,
+    //             otherIncome: parseFloat(record["รายได้ 7"]) || 0,
+    //             bonus: parseFloat(record["รายได้ 8"]) || 0,
+    //           },
+    //         });
+
+    //         await tx.expense.create({
+    //           data: {
+    //             employeeCode: employee.employeeCode,
+    //             companyId: employee.companyId,
+    //             year: year,
+    //             month: parseInt(record["เดือน"], 10) || 1,
+    //             loan: parseFloat(record["รายหัก 2"]),
+    //             salaryAdvance: parseFloat(record["รายหัก 3"]),
+    //             commissionDeduction: parseFloat(record["รายหัก 4"]),
+    //             otherDeductions: parseFloat(record["รายหัก 1"]),
+    //           },
+    //         });
+
+    //         await tx.tax.create({
+    //           data: {
+    //             employeeCode: employee.employeeCode,
+    //             companyId: employee.companyId,
+    //             year: year,
+    //             month: parseInt(record["เดือน"], 10) || 1,
+    //             employeeTax: parseFloat(record["ภาษีพนักงานจ่าย"]),
+    //             companyTax: parseFloat(record["ภาษีบริษัทจ่ายให้"]),
+    //             socialSecurityEmployee: parseFloat(record["ปกส พนักงาน"]),
+    //             socialSecurityCompany: parseFloat(record["ปกส บริษัท จ่าย"]),
+    //             providentFund: parseFloat(record["กองทุนสำรอง"]),
+    //           },
+    //         });
+
+    //         recordsInserted++;
+    //       }
+    //     });
+    //   } catch (error) {
+    //     console.error(
+    //       `Error processing record: ${JSON.stringify(batch[0])}`,
+    //       error
+    //     );
+    //   }
+    // }
+
     for (const batch of batches) {
       try {
         await prisma.$transaction(async (tx) => {
           for (const record of batch) {
-            
+    
             const employeeCode = record["รหัสพนักงาน"].toString();
-            console.log("employeeCode", employeeCode)
-            
+            console.log("employeeCode", employeeCode);
+    
             // Find existing employee based on composite key
             let employee = await tx.employee.findFirst({
               where: {
@@ -231,10 +313,9 @@ async function uploadToStorage(req: NextRequest) {
                 year: year,
               },
             });
-            
-
+    
             if (employee) {
-              // Update the existing employee record
+              // Update the existing employee record if it already exists
               employee = await tx.employee.update({
                 where: {
                   employeeCode_companyId_year: {
@@ -261,7 +342,7 @@ async function uploadToStorage(req: NextRequest) {
                 },
               });
             } else {
-              // Create a new employee record
+              // Create a new employee record if it doesn't exist
               employee = await tx.employee.create({
                 data: {
                   employeeCode,
@@ -283,7 +364,8 @@ async function uploadToStorage(req: NextRequest) {
                 },
               });
             }
-
+    
+            // Inserting into income, expense, and tax as before
             await tx.income.create({
               data: {
                 employeeCode: employee.employeeCode,
@@ -302,7 +384,7 @@ async function uploadToStorage(req: NextRequest) {
                 bonus: parseFloat(record["รายได้ 8"]) || 0,
               },
             });
-
+    
             await tx.expense.create({
               data: {
                 employeeCode: employee.employeeCode,
@@ -315,7 +397,7 @@ async function uploadToStorage(req: NextRequest) {
                 otherDeductions: parseFloat(record["รายหัก 1"]),
               },
             });
-
+    
             await tx.tax.create({
               data: {
                 employeeCode: employee.employeeCode,
@@ -329,20 +411,14 @@ async function uploadToStorage(req: NextRequest) {
                 providentFund: parseFloat(record["กองทุนสำรอง"]),
               },
             });
-
+    
             recordsInserted++;
           }
         });
       } catch (error) {
-        console.error(
-          `Error processing record: ${JSON.stringify(batch[0])}`,
-          error
-        );
+        console.error(`Error processing record: ${JSON.stringify(batch[0])}`, error);
       }
     }
-
-    console.timeEnd("Data Import");
-    console.log("File processing and data insertion completed.");
 
     return {
       status: "success",

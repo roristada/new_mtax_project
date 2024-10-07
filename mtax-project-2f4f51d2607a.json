@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "mtax-project",
+  "private_key_id": "2f4f51d2607a6d9d83606ce9c9ba1ad2630a7340",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCD5qcDzs4jOna9\nnFhZxIh0eXivvSe6LtUKADyGnAcoSdR2ea+SAlNcGDZdVWSqkesrdlqcNwPP7bif\nH/U2HIKzjOol/l7bFvKXGb2+ESDOiqdMioF5w+lVpASsZbrYAB8wTtsdHhKgQ3JS\nI6V5wYN51JaHC0RBjoa9j3yXDlu3Wxox6cA4ianutY3avK+jvwLhMAf86jL6ktvW\n0QP7c3JK0ZL/tgFi9YcQ1X4sExfogEhXN6HEhcnRlj4bZMs01JbJjbqp9ET+izN4\n+xskVnPXmbEGsA9cINIG+MoTr3YihQSheLsTb9TM8YhgJ/vtlhrJN2adHc9FG/Lq\nVfk/Qmi7AgMBAAECgf9zifTy02TTcQKGMDqLfK6JcJ7snUxopm0kIlYnq7hXCq90\n3A2+5Gi9YVEEjuC3VedJ2bD613JSQZ65fET4UYieT5sr3PpPPjQaymKI6zjFj2/V\nt1+tIq0s0vtFBVMVRcbM84uGm6DubVl3hO9BTr0Ggp4liO8vOHOtkq6QRfR3iSwN\n/imnpEsXqvH2esFWmyGSmwMI7yXJ3ODQ1phQ8xT9E6FoLbyeoUba4cD8IzTRCb0z\n79T21+kqxm/ZAsTH30XNX03YrVezg/8c2eaaEPWgu1wwNO48iZhNZWlSI7TIx41P\nM/Cl+isBEai6Mo4LeBvuinZEPoRW09Ot3suVtXECgYEAuHYFCvyx85dzVovN1g8d\nO5+pV+EoqOtd9AFVWSIr1xBq2dK5qO1/kmupt27ozc8Z59vNYRImQYb4j+sROi9X\nVKn3w95o37kxt7UHraBTKu7xX3eDSkZwRAsOrAjCKHy9F+7PMwl24cLm+m1vUKUg\nWOSPCVhUsaM3Tr3zkhBi6PkCgYEAtw5Gt8IMlJWYEzLt0LkStC6bjMDaN8BKSp66\nYDaeSg6qMK3vgMQRRwnoPMH2ib7QV0oGV+WXi9M9sAeQXIR+7gsv6wkT9OwM6WFX\nyt1gjO9EuzOCQQNOWtJlvJrMKoUIjt1QxB9eKCo4DVrMIVD5cWcXjLXbcL8MFdlM\np5LP4FMCgYEAqVGD7YLo4Z1KfM3VgkDbZ4h2DDmcdfmeg0TaD/hC36WtPwaj70Ea\nEdALuFnxDkGlGOP1EL51KT74WDrA1HTyJ7/gswUrpPi8f1GHm8OHs+gi3au5cutX\nT84KiLV9a2acuCQ4QzPT0QVzubnMLO111MLv3PccvvX/5aKMuq2Z7RkCgYEAi3t8\nVS6uSVWHcDGhViZ/Yv4UlnaokEycDynNV9ymVkXAVqFiWpqLk7av2APvqFvWAn0s\nQjN2exu16HiK/oQS961ckNn08+4dlIMQ00pF9H2owH/qI0Gypa+lx8WoBkoiEEIA\n9b/1DePFnB9wZX5+43MrVZOIputb+RX/u7w5W3MCgYBjRRxO/SbgZph53VJKFRmU\nNbqUqyD2D25a3768g2q6brPvixWkG9nSUkzgM4rhx3G0ZDRTm9TufsNJUyUlvHXq\nEc1OcdpA+6sxFtVrk+ytfEDHS8z4+0g7MBvjd02nNge9zqNvkgazFUS52Eu2y8yQ\n9MpQZ5Qfp5OhuDJYcAQsvw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "mtax-upload@mtax-project.iam.gserviceaccount.com",
+  "client_id": "111125237992086756904",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/mtax-upload%40mtax-project.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

@@ -92,9 +92,10 @@ export default function Sidebar() {
             }
           }
         }
-      } else if (status === "unauthenticated") {
-        router.push("/login");
-      }
+       } 
+       //else if (status === "unauthenticated") {
+      //   router.push("/login");
+      // }
     };
 
     handleAuthentication();

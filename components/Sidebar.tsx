@@ -70,7 +70,7 @@ const customerLinks = [
   },
 ];
 
-export default function Sidebar({ children }: { children: React.ReactNode }) {
+export default function Sidebar() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const params = useParams();

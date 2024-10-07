@@ -271,8 +271,7 @@ const Blog_manage = () => {
                         <DialogHeader>
                           <DialogTitle>Edit Post</DialogTitle>
                           <DialogDescription>
-                            Make changes to your post here. Click save when
-                            you're done.
+                            Make changes to your post here. Click save when you&apos;re done.
                           </DialogDescription>
                         </DialogHeader>
                         <form onSubmit={handleFormSubmit}>

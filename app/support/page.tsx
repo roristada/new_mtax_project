@@ -237,7 +237,7 @@ const Support = () => {
             ) : (
               <div className="flex flex-col items-center justify-center h-full">
                 <p className="mb-4 text-center">
-                  You don't have a support room yet.
+                  You don&apos;t have a support room yet.
                 </p>
                 <Button onClick={createRoom}>Create Support Chat</Button>
               </div>

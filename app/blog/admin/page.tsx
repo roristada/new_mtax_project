@@ -36,7 +36,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import TextEditer from "@/components/TextEditer/TextEditer";
-import TextEdit from "@/components/TextEditer/TextEdit";
+import dynamic from 'next/dynamic';
+
+// Dynamically import components that might use 'document'
+const DynamicTextEdit = dynamic(() => import('@/components/TextEditer/TextEdit'), { ssr: false });
+
 
 interface Author {
   name: string;
@@ -59,13 +63,23 @@ const Blog_manage = () => {
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isAdmin, setisAdmin] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useAuthAdmin((authenticated) => {
-    if (!authenticated) {
-      setisAdmin(false);
-      window.location.href = "/login";
+    if (isMounted) {
+      if (!authenticated) {
+        setisAdmin(false);
+        if (typeof window !== 'undefined') {
+          window.location.href = "/login";
+        }
+      } else {
+        setisAdmin(true);
+      }
     }
-    setisAdmin(true);
   });
 
   const fetchPosts = useCallback(async () => {
@@ -101,45 +115,47 @@ const Blog_manage = () => {
   };
 
   const handleDeletepost = (id: number) => {
-    Swal.fire({
-      title: "Delete Post",
-      text: "Are you sure you want to delete this Post?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then(async (result: any) => {
-      if (result.isConfirmed) {
-        try {
-          const res = await fetch(`/api/blog/${id}`, {
-            method: "DELETE",
-          });
-
-          if (res.ok) {
-            setPosts(posts.filter((posts) => posts.id !== id));
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your Post has been deleted.",
-              icon: "success",
+    if (isMounted) {
+      Swal.fire({
+        title: "Delete Post",
+        text: "Are you sure you want to delete this Post?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result: any) => {
+        if (result.isConfirmed) {
+          try {
+            const res = await fetch(`/api/blog/${id}`, {
+              method: "DELETE",
             });
-          } else {
+
+            if (res.ok) {
+              setPosts(posts.filter((posts) => posts.id !== id));
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your Post has been deleted.",
+                icon: "success",
+              });
+            } else {
+              Swal.fire({
+                title: "Error!",
+                text: "Failed to delete the Post.",
+                icon: "error",
+              });
+            }
+          } catch (error) {
             Swal.fire({
               title: "Error!",
-              text: "Failed to delete the Post.",
+              text: "An error occurred while deleting the Post.",
               icon: "error",
             });
+            console.error("Failed to delete Post:", error);
           }
-        } catch (error) {
-          Swal.fire({
-            title: "Error!",
-            text: "An error occurred while deleting the Post.",
-            icon: "error",
-          });
-          console.error("Failed to delete Post:", error);
         }
-      }
-    });
+      });
+    }
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
@@ -198,17 +214,23 @@ const Blog_manage = () => {
     }
   };
 
+  if (!isMounted) {
+    return null; // or a loading spinner
+  }
+
   return (
     <div className="container mx-auto py-10">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Manage Blog Posts</h1>
-        <Link href={"/blog/admin/blog_post"} className="flex">
-          <Button>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            New Post
-          </Button>
-        </Link>
-      </div>
+      {isMounted && (
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">Manage Blog Posts</h1>
+          <Link href={"/blog/admin/blog_post"} className="flex">
+            <Button>
+              <PlusCircle className="mr-2 h-4 w-4" />
+              New Post
+            </Button>
+          </Link>
+        </div>
+      )}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -337,7 +359,7 @@ const Blog_manage = () => {
                               <Label htmlFor="content" className="text-left">
                                 Content
                               </Label>
-                              <TextEdit
+                              <DynamicTextEdit
                                 value={selectedPost?.content || ""}
                                 onChange={(newContent: string) => {
                                   if (selectedPost) {

@@ -154,6 +154,7 @@ export default function Component({ params }: { params: { slug: string } }) {
     };
 
     fetchData();
+    console.log(process.env.GOOGLE_CLOUD_PROJECT_ID , process.env.GOOGLE_CLOUD_CLIENT_EMAIL , process.env.GOOGLE_CLOUD_PRIVATE_KEY)
   }, [params.slug,]);
 
   const memoizedChartData = useMemo(() => chartData, [chartData]);

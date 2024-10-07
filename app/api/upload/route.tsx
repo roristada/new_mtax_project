@@ -54,16 +54,52 @@ const storage = new Storage({
   },
 });
 
-const bucketName = 'mtax-uploads';
+const bucketName = 'mtax-storage-file';
 
-// async function parseCSV(filePath: string): Promise<CsvRecord[]> {
-//   const csvData = fs.readFileSync(filePath, "utf-8");
-//   return Papa.parse<CsvRecord>(csvData, {
-//     header: true,
-//     dynamicTyping: true,
-//     skipEmptyLines: true,
-//   }).data;
-// }
+async function parseCSV(filePath: string): Promise<CsvRecord[]> {
+  const csvData = fs.readFileSync(filePath, "utf-8");
+  return Papa.parse<CsvRecord>(csvData, {
+    header: true,
+    dynamicTyping: true,
+    skipEmptyLines: true,
+  }).data;
+}
+
+async function parseCSVFromGCS(bucketName: string, fileName: string): Promise<CsvRecord[]> {
+  const bucket = storage.bucket(bucketName);
+  const file = bucket.file(fileName);
+
+  const fileStream = file.createReadStream();
+
+  return new Promise((resolve, reject) => {
+    let dataBuffer = '';
+
+    // Listen to the stream and collect chunks of data
+    fileStream.on('data', (chunk) => {
+      dataBuffer += chunk;
+    });
+
+    // Handle errors in reading the stream
+    fileStream.on('error', (err) => {
+      reject(new Error(`Error reading file from GCS: ${err.message}`));
+    });
+
+    // When the stream ends, parse the CSV
+    fileStream.on('end', () => {
+      Papa.parse<CsvRecord>(dataBuffer, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+          resolve(results.data as CsvRecord[]);
+        },
+        error: (error: any) => {
+          reject(new Error(`Error parsing CSV: ${error.message}`));
+        },
+      });
+    });
+  });
+}
 
 function chunk<T>(array: T[], size: number): T[][] {
   return Array.from({ length: Math.ceil(array.length / size) }, (v, i) =>
@@ -78,6 +114,7 @@ async function uploadToStorage(req: NextRequest) {
     const yearString = formData.get("year");
     const companyIdString = formData.get("companyId");
     const file = formData.get("file");
+    console.log("file", file)
 
     if (!file || !(file instanceof Blob)) {
       throw new Error("File is missing or invalid");
@@ -126,9 +163,13 @@ async function uploadToStorage(req: NextRequest) {
     const gcsFile = bucket.file(fileName);
     await gcsFile.save(fileBuffer);
     console.log(`File uploaded to ${fileName}`);
+    // const publicUrl = `https://storage.googleapis.com/${bucketName}/${gcsFile.name}`
+    // console.log(publicUrl)
+
+    // const fileStream = gcsFile.createReadStream();
 
     const [fileContents] = await gcsFile.download();
-    const fileStream = Readable.from(fileContents);
+    const fileString = fileContents.toString("utf-8");
 
     // const arrayBuffer = await file.arrayBuffer();
     // const fileName = file instanceof File ? file.name : "unknown";
@@ -143,17 +184,32 @@ async function uploadToStorage(req: NextRequest) {
     // const filePath = path.join(dirPath, fileName);
     // fs.writeFileSync(filePath, new Uint8Array(arrayBuffer));
 
+    
+
     // const parsedData: CsvRecord[] = await parseCSV(filePath);
 
+    
+    
     const parsedData: CsvRecord[] = await new Promise((resolve, reject) => {
-      Papa.parse(fileStream, {
+      Papa.parse<CsvRecord>(fileString, {
         header: true,
         dynamicTyping: true,
         skipEmptyLines: true,
         complete: (results) => resolve(results.data as CsvRecord[]),
-        error: (error) => reject(error),
+        error: (error:any) => reject(error),
       });
     });
+
+    
+    // async function parseCSV(filePath: string): Promise<CsvRecord[]> {
+    //   const csvData = fs.readFileSync(filePath, "utf-8");
+    //   return Papa.parse<CsvRecord>(csvData, {
+    //     header: true,
+    //     dynamicTyping: true,
+    //     skipEmptyLines: true,
+    //   }).data;
+    // }
+    
 
     const batchSize = 100; // Adjust batch size as necessary
     const batches = chunk(parsedData, batchSize);
@@ -163,8 +219,10 @@ async function uploadToStorage(req: NextRequest) {
       try {
         await prisma.$transaction(async (tx) => {
           for (const record of batch) {
+            
             const employeeCode = record["รหัสพนักงาน"].toString();
-
+            console.log("employeeCode", employeeCode)
+            
             // Find existing employee based on composite key
             let employee = await tx.employee.findFirst({
               where: {
@@ -173,6 +231,7 @@ async function uploadToStorage(req: NextRequest) {
                 year: year,
               },
             });
+            
 
             if (employee) {
               // Update the existing employee record
@@ -297,15 +356,6 @@ async function uploadToStorage(req: NextRequest) {
   }
 }
 
-async function findFile(directory: string, fileName: string) {
-  const files = fs.readdirSync(directory);
-  const filePath = files.find((file) => file === fileName);
-  if (!filePath) {
-    throw new Error("File not found");
-  }
-  return path.join(directory, filePath);
-}
-
 export async function POST(req: NextRequest) {
   try {
     const data = await uploadToStorage(req);
@@ -318,28 +368,101 @@ export async function POST(req: NextRequest) {
   }
 }
 
+async function findFileInGCS(bucketName: string, fileName: string): Promise<string> {
+  const storage = new Storage({
+    projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+    credentials: {
+      client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
+      private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    },
+  });
+
+  const bucket = storage.bucket(bucketName);
+  const file = bucket.file(fileName);
+
+  try {
+    const [exists] = await file.exists();
+    if (!exists) {
+      throw new Error("File not found in Google Cloud Storage");
+    }
+    const [fileContents] = await file.download();
+    return fileContents.toString('utf-8');
+  } catch (error) {
+    console.error("Error finding file in GCS:", error);
+    throw error;
+  }
+}
+
+
+
+async function listFilesInGCS(bucketName: string, companyId: string): Promise<Record<string, string[]>> {
+  const storage = new Storage({
+    projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+    credentials: {
+      client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
+      private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    },
+  });
+
+  const bucket = storage.bucket(bucketName);
+  const [files] = await bucket.getFiles({ prefix: `${companyId}/` });
+
+  const filesByYear: Record<string, string[]> = {};
+  files.forEach(file => {
+    const match = file.name.match(new RegExp(`${companyId}/(\\d{4})/(.+)`));
+    if (match) {
+      const [, year, fileName] = match;
+      if (!filesByYear[year]) {
+        filesByYear[year] = [];
+      }
+      filesByYear[year].push(fileName);
+    }
+  });
+
+  return filesByYear;
+}
+
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
-    const fileName = url.searchParams.get("fileName");
-    const dateFolder = url.searchParams.get("dateFolder");
+    const action = url.searchParams.get("action");
+    const companyId = url.searchParams.get("companyId");
 
-    if (!fileName || !dateFolder) {
-      throw new Error("Missing query parameters");
+    if (action === "list") {
+      if (!companyId) {
+        throw new Error("Missing companyId parameter");
+      }
+
+      const files = await listFilesInGCS(bucketName, companyId);
+
+      return NextResponse.json(
+        { message: "Files found", files },
+        { status: 200 }
+      );
+    } else if (action === "download") {
+      const fileName = url.searchParams.get("fileName");
+      const year = url.searchParams.get("year");
+      if (!fileName || !companyId || !year) {
+        throw new Error("Missing query parameters");
+      }
+
+      const gcsFileName = `${companyId}/${year}/${fileName}`;
+      const fileContents = await findFileInGCS(bucketName, gcsFileName);
+
+      return NextResponse.json(
+        { message: "File found", fileContents },
+        { status: 200 }
+      );
+    } else {
+      throw new Error("Invalid action");
     }
-
-    const directory = path.join("public", "file_upload", dateFolder);
-    const filePath = await findFile(directory, fileName);
-
-    const fileContents = fs.readFileSync(filePath, "utf-8");
-    return NextResponse.json(
-      { message: "File found", fileContents },
-      { status: 200 }
-    );
   } catch (error) {
     return NextResponse.json(
-      { message: "Error", error: error },
+      { message: "Error", error: (error as Error).message },
       { status: 500 }
     );
   }
 }
+
+
+

@@ -163,5 +163,5 @@ model Message {
   isRead     Boolean  @default(false)
   sender   User @relation("SentMessages", fields: [senderId], references: [id])
   receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id])
-  room     Room @relation(fields: [roomId], references: [id]) // Link to Room
+  room     Room @relation(fields: [roomId], references: [id]) 
 }

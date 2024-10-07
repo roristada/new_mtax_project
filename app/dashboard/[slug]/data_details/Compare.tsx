@@ -56,6 +56,7 @@ import FinancialMonthLineChart from "./(Charts)/Month/LineChart";
 import RangeComChart from "@/components/Charts/Range_Commission/BarChart";
 import RangeDilChart from "@/components/Charts/Range_Diligence/BarChart";
 import Radian from "@/components/Charts/Radian/Employee_Count/Radian";
+import ExportButton from "@/components/ExportButton/ExportButton";
 
 interface SelectedDataTypes {
   Income: boolean;
@@ -499,7 +500,7 @@ export default function Compare({ slug }: { slug: string }) {
             ) : (
               <>
                 <div className="flex justify-end my-5 gap-4">
-                  <Button variant="outline">Export</Button>
+                <ExportButton companyId={slug} />
                 </div>
                 <div className="grid lg:grid-cols-1 items-start gap-4 md:gap-4 w-full">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

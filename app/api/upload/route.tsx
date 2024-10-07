@@ -167,7 +167,7 @@ async function uploadToStorage(req: NextRequest) {
     // }
     
 
-    const batchSize = 100; // Adjust batch size as necessary
+    const batchSize = 50; // Adjust batch size as necessary
     const batches = chunk(parsedData, batchSize);
     let recordsInserted = 0;
 

@@ -111,7 +111,7 @@ const Dashboard = () => {
 
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/dashboard_admin");
+        const res = await fetch(`/api/dashboard_admin`);
         const fetchedData: DashboardData = await res.json();
         console.log("Fetched data:", fetchedData);
 

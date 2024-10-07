@@ -116,7 +116,7 @@ const Support = () => {
     
     // Mark messages as read
     try {
-      const response = await fetch('/api/support/messages/isRead', {
+      const response = await fetch(`/api/support/messages/isRead`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ const Support = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update message read status');
+        throw new Error("Failed to update message read status");
       }
 
       // Update local state to reflect read messages
@@ -138,7 +138,7 @@ const Support = () => {
         )
       );
     } catch (error) {
-      console.error('Error updating message read status:', error);
+      console.error("Error updating message read status:", error);
     }
   };
 

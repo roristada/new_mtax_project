@@ -311,7 +311,11 @@ export default function Appointment() {
               </div>
 
               <Button type="submit" className="w-full" disabled={loading}>
+<<<<<<< HEAD
                 {loading ? "Submit..." : "Submit"}
+=======
+                {loading ? "Submiting..." : "Submit"}
+>>>>>>> aae79b8edd9b2174cbee6967eebc1dc91c9cc9ee
               </Button>
             </div>
             {error && <p className="text-red-500 mt-6">{error}</p>}

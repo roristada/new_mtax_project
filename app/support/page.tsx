@@ -147,7 +147,7 @@ const Support = () => {
       <CardHeader>
         <CardTitle>Support</CardTitle>
         <CardDescription>
-          Make changes to your account here. Click save when you're done.
+          Make changes to your account here. Click save when you&apos;re done.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -237,7 +237,7 @@ const Support = () => {
             ) : (
               <div className="flex flex-col items-center justify-center h-full">
                 <p className="mb-4 text-center">
-                  You dont have a support room yet.
+                  You don&apos;t have a support room yet.
                 </p>
                 <Button onClick={createRoom}>Create Support Chat</Button>
               </div>

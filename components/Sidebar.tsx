@@ -47,7 +47,7 @@ const adminLinks = [
   },
   { id: 3, title: "Register", url: "/register", icon: UserRoundPen },
   { id: 4, title: "Blog", url: "/blog/admin", icon: LibraryBig },
-  { id: 5, title: "Support", url: "/support", icon: MessageSquareWarning },
+  { id: 5, title: "Support", url: "/support/admin", icon: MessageSquareWarning },
   // New Overview link for admin
   { id: 6, title: "Overview", url: "/dashboard/:id", icon: LayoutDashboard },
   { id: 7, title: "Employee", url: "/dashboard/:id/employee", icon: Users2 },
@@ -66,7 +66,7 @@ const customerLinks = [
   {
     id: 4,
     title: "Support",
-    url: "/support",
+    url: "/support/:id",
     icon: MessageSquareWarning,
   },
 ];

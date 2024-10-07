@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo, useCallback } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 
@@ -12,7 +12,7 @@ const TextEditer: React.FC<TextEditerProps> = ({ onChange }) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const quillRef = useRef<Quill>();
 
-  const myColors = [
+  const myColors = useMemo(() => [
     "purple",
     "#785412",
     "#452632",
@@ -20,58 +20,9 @@ const TextEditer: React.FC<TextEditerProps> = ({ onChange }) => {
     "#963254",
     "#254563",
     "white",
-  ];
+  ], []);
 
-  const modules = {
-    toolbar: {
-      container: [
-        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [{ align: ["right", "center", "justify"] }],
-        [{ list: "ordered" }, { list: "bullet" }],
-        ["link", "image"],
-        [{ color: myColors }],
-        [{ background: myColors }],
-      ],
-      handlers: {
-        image: () => handleImageUpload(), // Custom image handler
-      },
-    },
-  };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "link",
-    "color",
-    "image",
-    "background",
-    "align",
-  ];
-
-  useEffect(() => {
-    if (editorRef.current && !quillRef.current) {
-      quillRef.current = new Quill(editorRef.current, {
-        modules,
-        formats,
-        theme: "snow",
-        placeholder: "Type something...",
-      });
-
-      quillRef.current.on("text-change", () => {
-        const content = quillRef.current?.root.innerHTML || "";
-        onChange(content);
-      });
-    }
-  }, [onChange]);
-
-  // Image upload handler
-  const handleImageUpload = () => {
+  const handleImageUpload = useCallback(() => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
@@ -99,7 +50,61 @@ const TextEditer: React.FC<TextEditerProps> = ({ onChange }) => {
         }
       }
     };
-  };
+  }, []);
+
+  const modules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ["bold", "italic", "underline", "strike", "blockquote"],
+        [{ align: ["right", "center", "justify"] }],
+        [{ list: "ordered" }, { list: "bullet" }],
+        ["link", "image"],
+        [{ color: myColors }],
+        [{ background: myColors }],
+      ],
+      handlers: {
+        image: handleImageUpload,
+      },
+    },
+  }), [myColors, handleImageUpload]);
+
+  const formats = useMemo(() => [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "link",
+    "color",
+    "image",
+    "background",
+    "align",
+  ], []);
+
+  useEffect(() => {
+    if (editorRef.current && !quillRef.current) {
+      quillRef.current = new Quill(editorRef.current, {
+        modules,
+        formats,
+        theme: "snow",
+        placeholder: "Type something...",
+      });
+
+      quillRef.current.on("text-change", () => {
+        const content = quillRef.current?.root.innerHTML || "";
+        onChange(content);
+      });
+    }
+
+    return () => {
+      if (quillRef.current) {
+        quillRef.current.off("text-change");
+      }
+    };
+  }, [modules, formats, onChange]);
 
   return (
     <div className="flex flex-col items-center">

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo, useCallback } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 
@@ -13,7 +13,7 @@ const TextEditer: React.FC<TextEditerProps> = ({ value, onChange }) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const quillRef = useRef<Quill>();
 
-  const myColors = [
+  const myColors = useMemo(() => [
     "purple",
     "#785412",
     "#452632",
@@ -21,9 +21,9 @@ const TextEditer: React.FC<TextEditerProps> = ({ value, onChange }) => {
     "#963254",
     "#254563",
     "white",
-  ];
+  ], []);
 
-  const modules = {
+  const modules = useMemo(() => ({
     toolbar: {
       container: [
         [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -35,12 +35,12 @@ const TextEditer: React.FC<TextEditerProps> = ({ value, onChange }) => {
         [{ background: myColors }],
       ],
       handlers: {
-        image: () => handleImageUpload(), // Custom image handler
+        image: () => handleImageUpload(),
       },
     },
-  };
+  }), [myColors]);
 
-  const formats = [
+  const formats = useMemo(() => [
     "header",
     "bold",
     "italic",
@@ -53,29 +53,9 @@ const TextEditer: React.FC<TextEditerProps> = ({ value, onChange }) => {
     "image",
     "background",
     "align",
-  ];
+  ], []);
 
-  useEffect(() => {
-    if (editorRef.current && !quillRef.current) {
-      quillRef.current = new Quill(editorRef.current, {
-        modules,
-        formats,
-        theme: "snow",
-        placeholder: "Type something...",
-      });
-
-      // Set initial content
-      quillRef.current.root.innerHTML = value;
-
-      quillRef.current.on("text-change", () => {
-        const content = quillRef.current?.root.innerHTML || "test";
-        onChange(content);
-      });
-    }
-  }, [onChange, value]);
-
-  // Image upload handler
-  const handleImageUpload = () => {
+  const handleImageUpload = useCallback(async () => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
@@ -103,7 +83,32 @@ const TextEditer: React.FC<TextEditerProps> = ({ value, onChange }) => {
         }
       }
     };
-  };
+  }, []);
+
+  useEffect(() => {
+    if (editorRef.current && !quillRef.current) {
+      quillRef.current = new Quill(editorRef.current, {
+        modules,
+        formats,
+        theme: "snow",
+        placeholder: "Type something...",
+      });
+
+      // Set initial content
+      quillRef.current.root.innerHTML = value;
+
+      quillRef.current.on("text-change", () => {
+        const content = quillRef.current?.root.innerHTML || "";
+        onChange(content);
+      });
+
+      return () => {
+        if (quillRef.current) {
+          quillRef.current.off("text-change");
+        }
+      };
+    }
+  }, [modules, formats, onChange, value]);
 
   return (
     <div className="flex flex-col items-center">

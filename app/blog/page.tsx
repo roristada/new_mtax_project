@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import Image from 'next/image';
 
 interface Post {
   id: number;
@@ -172,13 +173,15 @@ export default function Blog() {
                 {publishedPosts.length > 0 ? (
                   publishedPosts.map((post) => (
                     <Card key={post.id} className="flex flex-col h-full">
-                      <img
-                        src={post.picture || "https://via.placeholder.com/400x250"}
-                        alt="Blog Post Image"
-                        width={400}
-                        height={200}
-                        className="rounded-t-lg object-cover w-full h-[200px]"
-                      />
+                      <div className="mb-4 relative w-full h-64">
+                        <Image
+                          src={post.picture || "https://via.placeholder.com/400x250"}
+                          alt={post.title}
+                          layout="fill"
+                          objectFit="cover"
+                          className="rounded-lg"
+                        />
+                      </div>
                       <CardContent className="p-4 flex-grow">
                         <Link href={`/blog/${post.id}`}>
                           <h3 className="text-lg font-semibold">

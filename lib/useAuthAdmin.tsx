@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
 
@@ -8,26 +8,7 @@ const useAuthEffect = (callback?: (authenticated: boolean) => void) => {
   
   const { data: session, status } = useSession();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-    }
-    if (status === "authenticated" && session?.user) {
-      
-      const isAdmin = session.user.role === "admin";
-
-      if ( isAdmin) {
-        console.log('Access granted: User is admin');
-        if (callback) callback(true);
-      } else {
-        console.log('Access denied: User is not admin');
-        showErrorAndRedirect();
-        if (callback) callback(false);
-      }
-    }
-  }, [status, session, router, callback]);
-
-  const showErrorAndRedirect = () => {
+  const showErrorAndRedirect = useCallback(() => {
     Swal.fire({
       icon: "error",
       title: "Oops...",
@@ -38,7 +19,26 @@ const useAuthEffect = (callback?: (authenticated: boolean) => void) => {
         router.push("/");  
       }
     });
-  };
+  }, [router]);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+    if (status === "authenticated" && session?.user) {
+      
+      const isAdmin = session.user.role === "admin";
+
+      if (isAdmin) {
+        console.log('Access granted: User is admin');
+        if (callback) callback(true);
+      } else {
+        console.log('Access denied: User is not admin');
+        showErrorAndRedirect();
+        if (callback) callback(false);
+      }
+    }
+  }, [status, session, router, callback, showErrorAndRedirect]);
 };
 
 export default useAuthEffect;

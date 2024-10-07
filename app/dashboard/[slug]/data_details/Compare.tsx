@@ -485,7 +485,7 @@ export default function Compare({ slug }: { slug: string }) {
     };
 
     fetchApi();
-  }, [selectedYearCom]);
+  }, [selectedYearCom, slug]);
 
   return (
     <>

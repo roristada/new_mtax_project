@@ -80,20 +80,24 @@ export default function Sidebar() {
   const getUrl = (url: string) => url.replace(":id", id);
 
   useEffect(() => {
-    if (status === "authenticated") {
-      if (session?.user?.role === "admin") {
-        if (session && session.user) {
-          const expires_session = new Date(session.expires).getTime();
-          const nowDate = Date.now();
-          if (expires_session < nowDate) {
-            signOut({ callbackUrl: "/" });
+    const handleAuthentication = async () => {
+      if (status === "authenticated") {
+        if (session?.user?.role === "admin") {
+          if (session && session.user) {
+            const expires_session = new Date(session.expires).getTime();
+            const nowDate = Date.now();
+            if (expires_session < nowDate) {
+              await signOut({ callbackUrl: "/" });
+            }
           }
         }
+      } else if (status === "unauthenticated") {
+        router.push("/login");
       }
-    } else if (status === "unauthenticated") {
-      router.push("/login");
-    }
-  }, []);
+    };
+
+    handleAuthentication();
+  }, [status, session]);
 
   const isAdminOnUserDashboard =
     session?.user?.role === "admin" &&

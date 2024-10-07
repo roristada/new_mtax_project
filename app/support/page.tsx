@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -40,6 +40,32 @@ const Support = () => {
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const router = useRouter();
 
+  const checkCustomerRoom = useCallback(async () => {
+    try {
+      const res = await fetch(
+        `/api/support/room?customerId=${session?.user?.id}`
+      );
+      const data = await res.json();
+      if (data.room) {
+        setHasRoom(true);
+        setSelectedRoom(data.room);
+      }
+    } catch (error) {
+      console.error("Failed to fetch room data", error);
+    }
+  }, [session?.user?.id]);
+
+  const fetchRooms = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/support/admin`);
+      const data = await res.json();
+      console.log(data);
+      setRooms(data);
+    } catch (error) {
+      console.error("Failed to fetch rooms", error);
+    }
+  }, []);
+
   useEffect(() => {
     if (session) {
       if (status === "authenticated" && session?.user?.role === "admin") {
@@ -58,22 +84,7 @@ const Support = () => {
         console.log(session);
       }
     }
-  }, [session, status]);
-
-  const checkCustomerRoom = async () => {
-    try {
-      const res = await fetch(
-        `/api/support/room?customerId=${session?.user?.id}`
-      );
-      const data = await res.json();
-      if (data.room) {
-        setHasRoom(true);
-        setSelectedRoom(data.room);
-      }
-    } catch (error) {
-      console.error("Failed to fetch room data", error);
-    }
-  };
+  }, [session, status, checkCustomerRoom, router, fetchRooms]);
 
   const createRoom = async () => {
     try {
@@ -91,17 +102,6 @@ const Support = () => {
       }
     } catch (error) {
       console.error("Failed to create room", error);
-    }
-  };
-
-  const fetchRooms = async () => {
-    try {
-      const res = await fetch(`/api/support/admin`);
-      const data = await res.json();
-      console.log(data);
-      setRooms(data);
-    } catch (error) {
-      console.error("Failed to fetch rooms", error);
     }
   };
 

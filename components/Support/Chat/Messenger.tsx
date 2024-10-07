@@ -34,16 +34,32 @@ type Room = {
 export default function Component() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   
   const messageEndRef = useRef<HTMLDivElement>(null);
   const { data: session, status } = useSession();
   const customerId = session?.user?.id ? Number(session.user.id) : undefined;
  
   useEffect(() => {
+    if (customerId) {
+      setIsLoading(true);
       fetch(`/api/support/messages?userId=${customerId}`)
-        .then((response) => response.json())
-        .then((data) => setMessages(data));
-  }, []);
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setMessages(data);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching messages:', error);
+          setIsLoading(false);
+        });
+    }
+  }, [customerId]);
 
   useEffect(() => {
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
@@ -105,46 +121,50 @@ export default function Component() {
       </CardHeader> 
       <CardContent className="p-0">
         <ScrollArea className="h-[400px] p-4">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex mb-4 ${
-                message.senderId === customerId ? "justify-end" : "justify-start"
-              }`}
-            >
+          {isLoading ? (
+            <div>Loading messages...</div>
+          ) : (
+            messages.map((message) => (
               <div
-                className={`flex items-start space-x-2 max-w-[70%] ${
-                  message.senderId === customerId
-                    ? "flex-row-reverse space-x-reverse"
-                    : "flex-row"
+                key={message.id}
+                className={`flex mb-4 ${
+                  message.senderId === customerId ? "justify-end" : "justify-start"
                 }`}
               >
-                <Avatar className="w-8 h-8">
-                  <AvatarImage
-                    src={`https://api.dicebear.com/6.x/initials/svg?seed=${message.senderId}`}
-                  />
-                </Avatar>
                 <div
-                  className={`flex flex-col ${
-                    message.senderId === customerId ? "items-end" : "items-start"
+                  className={`flex items-start space-x-2 max-w-[70%] ${
+                    message.senderId === customerId
+                      ? "flex-row-reverse space-x-reverse"
+                      : "flex-row"
                   }`}
                 >
+                  <Avatar className="w-8 h-8">
+                    <AvatarImage
+                      src={`https://api.dicebear.com/6.x/initials/svg?seed=${message.senderId}`}
+                    />
+                  </Avatar>
                   <div
-                    className={`rounded-lg p-2 ${
-                      message.senderId === customerId
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200 text-gray-800"
+                    className={`flex flex-col ${
+                      message.senderId === customerId ? "items-end" : "items-start"
                     }`}
                   >
-                    <p className="text-sm">{message.content}</p>
+                    <div
+                      className={`rounded-lg p-2 ${
+                        message.senderId === customerId
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200 text-gray-800"
+                      }`}
+                    >
+                      <p className="text-sm">{message.content}</p>
+                    </div>
+                    <span className="text-xs text-gray-500 mt-1">
+                      {new Date(message.timestamp).toLocaleTimeString()}
+                    </span>
                   </div>
-                  <span className="text-xs text-gray-500 mt-1">
-                    {new Date(message.timestamp).toLocaleTimeString()}
-                  </span>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
           <div ref={messageEndRef}></div>
         </ScrollArea>
       </CardContent>

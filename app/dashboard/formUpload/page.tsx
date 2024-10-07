@@ -68,7 +68,7 @@ export default function Component() {
     const fetchCompanies = async () => {
       
       try {
-        const res = await fetch("/api/user");
+        const res = await fetch(`/api/user`);
         const users: { id: string; company: string; role : string }[] = await res.json();
         console.log(users , "users");
 
@@ -141,7 +141,7 @@ export default function Component() {
     console.log("Form Data:", formData);
 
     try {
-      const res = await fetch("/api/upload", {
+      const res = await fetch(`/api/upload`, {
         method: "POST",
         body: data,
       });

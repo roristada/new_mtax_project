@@ -295,7 +295,7 @@ export default function Appointment() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("/api/appointment/admin", {
+      const res = await fetch(`/api/appointment/admin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

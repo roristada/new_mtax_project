@@ -82,7 +82,7 @@ export default function Component() {
 
   const sendMessage = async () => {
     if (newMessage.trim() ) {
-      await fetch("/api/support/messages", {
+      await fetch(`/api/support/messages`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

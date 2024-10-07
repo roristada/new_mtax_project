@@ -88,7 +88,7 @@ const Support = () => {
 
   const createRoom = async () => {
     try {
-      const res = await fetch("/api/support/room", {
+      const res = await fetch(`/api/support/room`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

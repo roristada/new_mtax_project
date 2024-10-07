@@ -83,7 +83,7 @@ export default function MessengerAdmin({ selectedRoom }: MessengerAdminProps) {
 
   const sendMessage = async () => {
     if (newMessage.trim() && selectedRoom && adminId) {
-      await fetch("/api/support/messages/admin", {
+      await fetch(`/api/support/messages/admin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -121,7 +121,7 @@ export default function Appointment() {
     setError("");
     setLoading(true);
 
-    const res = await fetch("/api/appointment", {
+    const res = await fetch(`/api/appointment`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

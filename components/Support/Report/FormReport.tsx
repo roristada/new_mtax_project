@@ -67,7 +67,7 @@ export default function ProblemReportForm() {
     });
 
     try {
-      const res = await fetch("/api/support/report", {
+      const res = await fetch(`/api/support/report`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

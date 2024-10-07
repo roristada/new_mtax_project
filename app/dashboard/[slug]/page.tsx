@@ -111,7 +111,7 @@ export default function Component({ params }: { params: { slug: string } }) {
     setIsLoading(true);
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/dashboard/" + params.slug);
+        const res = await fetch(`/api/dashboard/` + params.slug);
         const jsonResponse = await res.json();
         const data = jsonResponse.data;
         console.log(data);

@@ -84,7 +84,7 @@ const Blog_manage = () => {
 
   const fetchPosts = useCallback(async () => {
     try {
-      const res = await fetch("/api/blog");
+      const res = await fetch(`/api/blog`);
       const data = await res.json();
       console.log(data);
       setPosts(data.posts);

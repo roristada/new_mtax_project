@@ -109,7 +109,7 @@ export default function Component() {
     }
 
     try {
-      const response = await fetch("/api/blog", {
+      const response = await fetch(`/api/blog`, {
         method: "POST",
         body: formDataToSend, // Send FormData including the file
       });

@@ -36,7 +36,7 @@ const TextEditer: React.FC<TextEditerProps> = ({ value, onChange }) => {
         formData.append("image", file);
 
         try {
-          const response = await fetch("/api/upload/img", {
+          const response = await fetch(`/api/upload/img`, {
             method: "POST",
             body: formData,
           });

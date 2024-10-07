@@ -35,6 +35,7 @@ import { useParams, usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useMemo, useCallback } from "react";
 
 const adminLinks = [
   { id: 1, title: "Home", url: "/dashboard/admin", icon: Home },
@@ -77,7 +78,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const id = params.slug as string;
 
-  const getUrl = (url: string) => url.replace(":id", id);
+  const getUrl = useCallback((url: string) => url.replace(":id", id), [id]);
 
   useEffect(() => {
     const handleAuthentication = async () => {
@@ -97,21 +98,23 @@ export default function Sidebar() {
     };
 
     handleAuthentication();
-  }, [status, session]);
+  }, [status, session, router]); // Add router to the dependency array
 
   const isAdminOnUserDashboard =
     session?.user?.role === "admin" &&
     pathname.startsWith("/dashboard/") &&
     pathname !== "/dashboard/admin" &&
     pathname !== "/dashboard/formUpload";
-  const links =
-    session?.user?.role === "admin"
-      ? isAdminOnUserDashboard
+  const links = useMemo(() => {
+    if (session?.user?.role === "admin") {
+      return isAdminOnUserDashboard
         ? [...adminLinks]
         : adminLinks.filter(
             (link) => link.id !== 6 && link.id !== 7 && link.id !== 8
-          ) // Remove Overview link if not on user dashboard
-      : customerLinks;
+          ); // Remove Overview link if not on user dashboard
+    }
+    return customerLinks;
+  }, [session?.user?.role, isAdminOnUserDashboard]);
 
   return (
     <TooltipProvider>

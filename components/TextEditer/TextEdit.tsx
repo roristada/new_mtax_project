@@ -23,38 +23,6 @@ const TextEditer: React.FC<TextEditerProps> = ({ value, onChange }) => {
     "white",
   ], []);
 
-  const modules = useMemo(() => ({
-    toolbar: {
-      container: [
-        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [{ align: ["right", "center", "justify"] }],
-        [{ list: "ordered" }, { list: "bullet" }],
-        ["link", "image"],
-        [{ color: myColors }],
-        [{ background: myColors }],
-      ],
-      handlers: {
-        image: () => handleImageUpload(),
-      },
-    },
-  }), [myColors]);
-
-  const formats = useMemo(() => [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "link",
-    "color",
-    "image",
-    "background",
-    "align",
-  ], []);
-
   const handleImageUpload = useCallback(async () => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
@@ -84,6 +52,38 @@ const TextEditer: React.FC<TextEditerProps> = ({ value, onChange }) => {
       }
     };
   }, []);
+
+  const modules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ["bold", "italic", "underline", "strike", "blockquote"],
+        [{ align: ["right", "center", "justify"] }],
+        [{ list: "ordered" }, { list: "bullet" }],
+        ["link", "image"],
+        [{ color: myColors }],
+        [{ background: myColors }],
+      ],
+      handlers: {
+        image: handleImageUpload,
+      },
+    },
+  }), [myColors, handleImageUpload]);
+
+  const formats = useMemo(() => [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "link",
+    "color",
+    "image",
+    "background",
+    "align",
+  ], []);
 
   useEffect(() => {
     if (editorRef.current && !quillRef.current) {

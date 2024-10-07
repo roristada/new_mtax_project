@@ -188,7 +188,7 @@ export default function Compare({ slug }: { slug: string }) {
       setLoading(true);
       try {
         // Fetch main data
-        const mainRes = await fetch("/api/dashboard/" + slug + "/compare");
+        const mainRes = await fetch(`/api/dashboard/${slug}/compare`);
         const mainJsonResponse = await mainRes.json();
         const data = mainJsonResponse.data;
         const years = mainJsonResponse.uniqueYears;
@@ -261,7 +261,7 @@ export default function Compare({ slug }: { slug: string }) {
     };
 
     fetchAllData();
-  }, [slug]);
+  }, [slug]); // Add slug to the dependency array
 
   // Helper function to group data by year
   const groupDataByYear = (data: any[], key: string) => {

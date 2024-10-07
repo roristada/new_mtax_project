@@ -23,9 +23,9 @@ import Sidebar from "@/components/Sidebar";
 
 export default function Register() {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
-  useAuthAdmin((authenticated) => {
-    setIsAuthChecked(authenticated);
-  });
+  // useAuthAdmin((authenticated) => {
+  //   setIsAuthChecked(authenticated);
+  // });
 
   
   const router = useRouter();

@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";  // Import the Image component from next/image
+import { usePathname } from 'next/navigation';
 
 interface User {
   id: number;
@@ -60,6 +61,7 @@ const links = [
 const Navbar = () => {
   const { data: session, status } = useSession();
   const [dashboardPath, setDashboardPath] = useState("");
+  const pathname = usePathname();
 
   useEffect(() => {
     if (session && session.user) {
@@ -81,9 +83,16 @@ const Navbar = () => {
 
   console.log("session Nav", session);
 
+  const getHref = (url: string) => {
+    if (url.startsWith('#') && pathname !== '/') {
+      return `/${url}`;
+    }
+    return url;
+  };
+
   const smoothScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     const targetId = e.currentTarget.getAttribute("href");
-    if (targetId && targetId.startsWith("#")) {
+    if (pathname === '/' && targetId && targetId.startsWith("#")) {
       e.preventDefault();
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
@@ -105,8 +114,7 @@ const Navbar = () => {
               <li key={link.id} className="my-auto">
                 <Link
                   className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-dark md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                  key={link.id}
-                  href={link.url}
+                  href={getHref(link.url)}
                   onClick={smoothScroll}
                 >
                   {link.title}

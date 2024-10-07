@@ -13,7 +13,7 @@ export default function DashboardLayout({
         <Sidebar children />
       </div>
 
-      <div className="w-[90%] md:w-[92%] lg:w-[84%] xl:w-[90%] bg-[#F7F8FA]  flex flex-col my-5">
+      <div className="w-[90%] md:w-[92%] lg:w-[84%] xl:w-[90%] bg-[#F7F8FA]  flex flex-col">
         {children}
       </div>
     </div>

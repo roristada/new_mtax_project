@@ -24,6 +24,7 @@ import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
 
 const TextEditer = dynamic(() => import("@/components/TextEditer/TextEditer"), {
   ssr: false,
@@ -38,7 +39,6 @@ interface FormData {
   picture: File | null;
   status: string; // Add this line
 }
-
 
 export default function Component() {
   const router = useRouter();
@@ -107,7 +107,6 @@ export default function Component() {
     if (formData.picture) {
       formDataToSend.append("picture", formData.picture); // Append the image file
     }
-    
 
     try {
       const response = await fetch("/api/blog", {
@@ -146,10 +145,10 @@ export default function Component() {
 
   const handleToggle = (checked: boolean) => {
     setIsPublished(checked);
-    
+
     setFormData((prevData) => ({
       ...prevData,
-      status: checked ? "Published" : "Private" // Ensuring formData.status is updated
+      status: checked ? "Published" : "Private", // Ensuring formData.status is updated
     }));
   };
 
@@ -215,11 +214,14 @@ export default function Component() {
                 <SelectItem value="financial_plan">
                   Financial Planning and Business Strategy
                 </SelectItem>
+
                 <SelectItem value="financial_news">
                   Financial News and Legal Updates
                 </SelectItem>
                 <SelectItem value="tips">Expert Advice and Tips</SelectItem>
                 <SelectItem value="other">Other</SelectItem>
+                <Separator />
+                <SelectItem value="services">Services of Mtax</SelectItem>
               </SelectContent>
             </Select>
           </div>

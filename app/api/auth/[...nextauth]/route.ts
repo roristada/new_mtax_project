@@ -53,7 +53,7 @@ const handler = NextAuth({
         token.company = user.company;
         token.role = user.role;
       }
-      console.log('JWT Token:', token);
+      //console.log('JWT Token:', token);
       return token;
     },
     async session({ session, token }) {
@@ -63,7 +63,7 @@ const handler = NextAuth({
         session.user.company = token.company;
         session.user.role = token.role;
       }
-      console.log('Session:', session);
+      //console.log('Session:', session);
       return session;
     },
   },

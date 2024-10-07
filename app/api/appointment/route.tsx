@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, company, email, telephone, startTime, endTime, date } =
+    const { name, company, email, telephone, startTime, note, endTime, date } =
       await request.json();
 
     const appointment = await prisma.appointment.create({
@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
         telephone,
         startTime,
         endTime,
+        note,
         date: new Date(date),
       },
     });

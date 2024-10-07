@@ -35,6 +35,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface DashboardData {
   totalCustomer: number;
@@ -63,6 +71,19 @@ interface DashboardData {
   }[];
 }
 
+type Appointment = {
+  id: number;
+  name: string;
+  company: string;
+  email: string;
+  telephone: string;
+  startTime: string;
+  endTime: string;
+  date: string;
+  note: string;
+  status: string;
+};
+
 const formatDateInThailand = (dateString: any) => {
   const date = new Date(dateString);
   return new Intl.DateTimeFormat("en-TH", {
@@ -76,6 +97,11 @@ const formatDateInThailand = (dateString: any) => {
 const Dashboard = () => {
   const [data, setData] = useState<DashboardData | null>(null);
   const [isAuthChecked, setIsAuthChecked] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   useAuthAdmin((authenticated) => {
     setIsAuthChecked(authenticated);
   });
@@ -88,14 +114,83 @@ const Dashboard = () => {
         const res = await fetch("/api/dashboard_admin");
         const fetchedData: DashboardData = await res.json();
         console.log("Fetched data:", fetchedData);
-        setData(fetchedData);
+
+        // Compare with existing data
+        if (JSON.stringify(fetchedData) !== JSON.stringify(data)) {
+          setData(fetchedData);
+        }
       } catch (e) {
         console.error("Fetch error", e);
       }
     };
 
+    async function fetchAppointments() {
+      try {
+        const res = await fetch(`/api/appointment`);
+        const data = await res.json();
+
+        // Sort appointments by date
+        const sortedAppointments = data.appointments.sort(
+          (a: Appointment, b: Appointment) => {
+            return new Date(a.date).getTime() - new Date(b.date).getTime();
+          }
+        );
+
+        // Compare with existing appointments
+        if (JSON.stringify(sortedAppointments) !== JSON.stringify(appointments)) {
+          setAppointments(sortedAppointments);
+        }
+        console.log(data);
+      } catch (error) {
+        console.error("Failed to fetch appointments:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching data
+      }
+    }
+
+    const fetchRooms = async () => {
+      try {
+        const res = await fetch(`/api/support/admin/rooms`);
+        const data = await res.json();
+
+        // Compare with existing unread messages count
+        if (data.unreadMessagesCount !== unreadMessagesCount) {
+          setUnreadMessagesCount(data.unreadMessagesCount);
+        }
+      } catch (error) {
+        console.error("Failed to fetch rooms", error);
+      }
+    };
+
     fetchData();
-  }, [isAuthChecked]);
+    fetchAppointments();
+    fetchRooms();
+  }, [isAuthChecked, data, appointments, unreadMessagesCount]);
+
+  const onDateChange = (date: any) => {
+    setSelectedDate(date);
+    setIsDialogOpen(true);
+  };
+
+  const getTileContent = ({ date, view }: { date: Date; view: string }) => {
+    if (view === "month") {
+      const dateString = date.toISOString().split("T")[0];
+      const appointmentDates = appointments.map(
+        (appt) => appt.date.split("T")[0]
+      );
+
+      if (appointmentDates.includes(dateString)) {
+        return <div className="appointment-marker">📅</div>;
+      }
+    }
+    return null;
+  };
+
+  const appointmentsForSelectedDate = appointments.filter(
+    (appt) =>
+      new Date(appt.date).toLocaleDateString() ===
+      selectedDate?.toLocaleDateString()
+  );
 
   return (
     <>
@@ -158,7 +253,7 @@ const Dashboard = () => {
                 <Bell className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">5</div>
+                <div className="text-2xl font-bold">{unreadMessagesCount}</div>
                 <p className="text-xs text-muted-foreground">
                   Recent notifications and updates.
                 </p>
@@ -166,7 +261,7 @@ const Dashboard = () => {
             </Card>
           </div>
           <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-            <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
+            <Card className="xl:col-span-2 xl:row-span-2" x-chunk="dashboard-01-chunk-4">
               <CardHeader className="flex flex-row items-center">
                 <div className="grid gap-2">
                   <CardTitle>Company</CardTitle>
@@ -228,9 +323,9 @@ const Dashboard = () => {
                               </Link>
 
                               <DropdownMenuSeparator />
-                              <Link href={`/dashboard/${user.id}/compare`}>
+                              <Link href={`/dashboard/${user.id}/data_details`}>
                                 <DropdownMenuItem>
-                                  Compare Data
+                                  Data Details
                                 </DropdownMenuItem>
                               </Link>
                             </DropdownMenuContent>
@@ -242,35 +337,94 @@ const Dashboard = () => {
                 </Table>
               </CardContent>
             </Card>
-            <Card x-chunk="dashboard-01-chunk-5">
-              <CardHeader>
-                <CardTitle>Recent Blogs</CardTitle>
-              </CardHeader>
-              {data?.blog && data.blog.length > 0 ? (
-                data.blog.map((blog) => (
-                  <CardContent key={blog.id} className="grid gap-8">
-                    <div className="flex items-center gap-4">
-                      <div className="grid gap-1">
-                        <p className="text-sm font-medium leading-none">
-                          {blog.title}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {blog.createdAt}
-                        </p>
+            <div className=" grid row-span-2 gap-4">
+              <Card x-chunk="dashboard-01-chunk-5">
+                <CardHeader>
+                  <CardTitle>Recent Blogs</CardTitle>
+                </CardHeader>
+                {data?.blog && data.blog.length > 0 ? (
+                  data.blog.map((blog) => (
+                    <CardContent key={blog.id} className="grid gap-8">
+                      <div className="flex items-center gap-4">
+                        <div className="grid gap-1">
+                          <p className="text-sm font-medium leading-none">
+                            {blog.title}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {blog.createdAt}
+                          </p>
+                        </div>
+                        <div className="ml-auto font-medium">
+                          {blog.category}
+                        </div>
                       </div>
-                      <div className="ml-auto font-medium">{blog.category}</div>
-                    </div>
+                    </CardContent>
+                  ))
+                ) : (
+                  <CardContent className="grid gap-8">
+                    <p className="text-sm text-muted-foreground">
+                      No blogs available
+                    </p>
                   </CardContent>
-                ))
-              ) : (
-                <CardContent className="grid gap-8">
-                  <p className="text-sm text-muted-foreground">
-                    No blogs available
-                  </p>
+                )}
+              </Card>
+
+              <Card className="shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl font-bold">Calendar</CardTitle>
+                  <CardDescription>
+                    View and manage your appointments in the calendar.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="w-full grid grid-col-1 lg:grid-cols-1 mx-auto">
+                  <div className="w-full flex ">
+                    <Calendar
+                      onChange={onDateChange}
+                      value={selectedDate}
+                      tileContent={getTileContent}
+                      className="rounded-lg shadow-md w-full lg:w-full"
+                    />
+                  </div>
                 </CardContent>
-              )}
-            </Card>
+              </Card>
+            </div>
+            
           </div>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  Appointments for {selectedDate?.toLocaleDateString()}
+                </DialogTitle>
+              </DialogHeader>
+              <CardContent>
+                {appointmentsForSelectedDate.length > 0 ? (
+                  <div>
+                    {appointmentsForSelectedDate.map((appt) => (
+                      <div
+                        key={appt.id}
+                        className="my-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0"
+                      >
+                        <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium leading-none">
+                            {appt.startTime} - {appt.endTime}:
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {appt.name} ({appt.company})
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-2 text-gray-500">
+                    No appointments for this date.
+                  </p>
+                )}
+              </CardContent>
+            </DialogContent>
+          </Dialog>
         </main>
       )}
     </>

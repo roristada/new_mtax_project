@@ -38,9 +38,10 @@ export async function DELETE(
   }
 }
 
-
-
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   const id = params.id;
 
   if (!id) {
@@ -69,6 +70,45 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     console.error("Failed to update Post:", error);
     return NextResponse.json(
       { error: "Failed to update Post" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const id = params.id;
+  try {
+    if (!id) {
+      return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    }
+
+    // Fetch post with the author information
+    const post = await prisma.post.findUnique({
+      where: { id: Number(id) },
+      include: {
+        author: {
+          select: {
+            name: true, // Select only the author's name
+          },
+        },
+      },
+    });
+
+    if (!post) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(
+      { message: "Post successfully fetched", post: post },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Failed to fetch post:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch post" },
       { status: 500 }
     );
   }

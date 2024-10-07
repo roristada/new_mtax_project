@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -26,6 +26,17 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import useAuthAdmin from "@/lib/useAuthAdmin";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import TextEditer from "@/components/TextEditer/TextEditer";
+import TextEdit from "@/components/TextEditer/TextEdit";
 
 interface Author {
   name: string;
@@ -47,22 +58,32 @@ const Blog_manage = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isAdmin, setisAdmin] = useState(false);
+
+  useAuthAdmin((authenticated) => {
+    if (!authenticated) {
+      setisAdmin(false);
+      window.location.href = "/login";
+    }
+    setisAdmin(true);
+  });
+
+  const fetchPosts = useCallback(async () => {
+    try {
+      const res = await fetch("/api/blog");
+      const data = await res.json();
+      console.log(data);
+      setPosts(data.posts);
+    } catch (error) {
+      console.error("Failed to fetch posts:", error);
+    }
+  }, []);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch("/api/blog");
-        const data = await res.json();
-
-        setPosts(data);
-        console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
+    if (isAdmin) {
+      fetchPosts();
     }
-
-    fetchData();
-  }, []);
+  }, [fetchPosts, isAdmin]);
 
   const handleEditPost = (post: BlogPost) => {
     setSelectedPost({
@@ -123,9 +144,9 @@ const Blog_manage = () => {
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (!selectedPost) return;
-  
+
     try {
       const res = await fetch(`/api/blog/${selectedPost.id}`, {
         method: "PATCH",
@@ -136,20 +157,22 @@ const Blog_manage = () => {
           title: selectedPost.title,
           content: selectedPost.content,
           category: selectedPost.category,
-          status: selectedPost.status,
+          status: selectedPost.status, // Ensure the status is included
         }),
       });
-  
+
       if (res.ok) {
         const updatedPost = await res.json();
-  
+
         // Update the state with the modified post
-        setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === updatedPost.id ? updatedPost : post
-          )
-        );
-  
+        setPosts((prevPosts) => {
+          const newPosts = prevPosts.map((post) =>
+            post.id === updatedPost.id ? { ...post, ...updatedPost } : post
+          );
+          console.log("New posts state:", newPosts); // Log the new posts state
+          return newPosts;
+        });
+
         Swal.fire({
           title: "Success!",
           text: "Your Post has been updated.",
@@ -157,6 +180,7 @@ const Blog_manage = () => {
         });
         setSelectedPost(null); // Close the dialog
         setIsDialogOpen(false); // Ensure the dialog closes
+        fetchPosts();
       } else {
         Swal.fire({
           title: "Error!",
@@ -173,8 +197,6 @@ const Blog_manage = () => {
       console.error("Failed to update Post:", error);
     }
   };
-  
-  
 
   return (
     <div className="container mx-auto py-10">
@@ -228,12 +250,13 @@ const Blog_manage = () => {
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <div className="flex space-x-2">
-                  <Dialog
+                  <div className="flex space-x-2 ">
+                    <Dialog
                       open={isDialogOpen && selectedPost?.id === post.id}
                       onOpenChange={(open) => {
                         if (!open) setIsDialogOpen(false);
                       }}
+                      
                     >
                       <DialogTrigger asChild>
                         <Button
@@ -244,7 +267,7 @@ const Blog_manage = () => {
                           Edit
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px]">
+                      <DialogContent className="w-full max-h-[80vh] overflow-y-auto">
                         <DialogHeader>
                           <DialogTitle>Edit Post</DialogTitle>
                           <DialogDescription>
@@ -254,8 +277,8 @@ const Blog_manage = () => {
                         </DialogHeader>
                         <form onSubmit={handleFormSubmit}>
                           <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="title" className="text-right">
+                            <div className="grid grid-cols-1 items-center gap-4">
+                              <Label htmlFor="title" className="">
                                 Title
                               </Label>
                               <Input
@@ -272,41 +295,77 @@ const Blog_manage = () => {
                                 className="col-span-3"
                               />
                             </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="category" className="text-right">
+                            <div className="grid grid-cols-1 items-center gap-4">
+                              <Label htmlFor="category" className="text-left">
                                 Category
                               </Label>
-                              <Input
-                                id="category"
+
+                              <Select
                                 value={selectedPost?.category || ""}
-                                onChange={(e) => {
+                                onValueChange={(value) => {
                                   if (selectedPost) {
                                     setSelectedPost({
                                       ...selectedPost,
-                                      category: e.target.value,
+                                      category: value,
                                     });
                                   }
                                 }}
-                                className="col-span-3"
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="basic_accounting">
+                                    Basic Accounting Management
+                                  </SelectItem>
+                                  <SelectItem value="tax_plan">
+                                    Tax Planning and Management
+                                  </SelectItem>
+                                  <SelectItem value="financial_plan">
+                                    Financial Planning and Business Strategy
+                                  </SelectItem>
+                                  <SelectItem value="financial_news">
+                                    Financial News and Legal Updates
+                                  </SelectItem>
+                                  <SelectItem value="tips">
+                                    Expert Advice and Tips
+                                  </SelectItem>
+                                  <SelectItem value="other">Other</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="grid grid-cols-1 items-center gap-4">
+                              <Label htmlFor="content" className="text-left">
+                                Content
+                              </Label>
+                              <TextEdit
+                                value={selectedPost?.content || ""}
+                                onChange={(newContent: string) => {
+                                  if (selectedPost) {
+                                    setSelectedPost({
+                                      ...selectedPost,
+                                      content: newContent,
+                                    });
+                                  }
+                                }}
                               />
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="content" className="text-right">
-                                Content
-                              </Label>
-                              <Textarea
-                                id="content"
-                                value={selectedPost?.content || ""}
-                                onChange={(e) => {
+                              <Switch
+                                id="status"
+                                checked={selectedPost?.status === "Published"}
+                                onCheckedChange={(e) => {
                                   if (selectedPost) {
                                     setSelectedPost({
                                       ...selectedPost,
-                                      content: e.target.value,
+                                      status: e ? "Published" : "Private",
                                     });
                                   }
                                 }}
-                                className="col-span-3"
                               />
+                              <Label className="ml-2" htmlFor="status">
+                                {selectedPost?.status}{" "}
+                              </Label>
                             </div>
                           </div>
                           <DialogFooter>

@@ -113,6 +113,15 @@ export const IncomeBreakdownDonutChart: React.FC<
     );
   };
 
+  const formatSalary = (salary: number) => {
+    return new Intl.NumberFormat("th-TH", {
+      style: "currency",
+      currency: "THB",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(salary)
+  }
+
   const CustomizedLegend = (props: any) => {
     const { payload } = props;
     return (
@@ -167,7 +176,7 @@ export const IncomeBreakdownDonutChart: React.FC<
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm mt-8">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Total Income: ${totalIncome.toFixed(2)}{" "}
+          Total Income: {formatSalary(totalIncome)}{" "}
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">

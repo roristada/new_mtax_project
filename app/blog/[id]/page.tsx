@@ -1,65 +1,201 @@
-import Navbar from "@/components/Navbar";
+"use client";
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Calendar, Clock, User } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import Loading from "@/components/Loading/Loading";
 
-export default function BlogDetail({ params }: { params: { id: string } }) {
-  // In a real application, you would fetch the post data based on the id
-  // For this example, we'll use mock data
-  const post = {
-    id: parseInt(params.id),
-    title: "The Future of Web Development",
-    author: {
-      name: "Jane Doe",
-      image: "/placeholder.svg?height=40&width=40",
-    },
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    category: "Technology",
-    status: "Published",
-    createdAt: new Date("2023-08-01"),
-    updatedAt: new Date("2023-08-02"),
+interface Post {
+  id: number;
+  title: string;
+  authorId: number;
+  picture: string;
+  content: string;
+  category: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  author: {
+    name: string;
+  };
+}
+
+const categoryMapping: Record<string, string> = {
+  basic_accounting: "Basic Accounting Management",
+  tax_plan: "Tax Planning and Management",
+  financial_plan: "Financial Planning and Business Strategy",
+  financial_news: "Financial News and Legal Updates",
+  tips: "Expert Advice and Tips",
+  other: "Other",
+};
+
+export default function BlogDetailWithSidebar({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const [post, setPost] = useState<Post | null>(null);
+  const [recentPost, setRecentPost] = useState<Post[] | null>(null); 
+  const [categories, setCategories] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlog = async () => {
+      try {
+        const res = await fetch(`/api/blog`);
+        const data = await res.json();
+        
+        const sortedPosts = data.posts.sort((a: Post, b: Post) => {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        }).slice(0, 5);
+        
+        setRecentPost(sortedPosts);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`/api/blog/${params.id}`);
+        const data = await res.json();
+        setPost(data.post);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(`/api/blog`);
+        const data = await res.json();
+        setCategories(data.categories);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+    fetchBlog();
+    fetchCategories();
+  }, [params.id]);
+
+  const getInitials = (name: string) => {
+    const nameParts = name.split(" ");
+    return nameParts.map((part) => part[0]).join("").toUpperCase();
   };
 
   return (
     <>
-      <Navbar />{" "}
-      <article className="max-w-3xl mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-        <div className="flex items-center space-x-4 mb-6">
-          <Avatar>
-            <AvatarImage src={post.author.image} alt={post.author.name} />
-            <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="text-sm font-medium">{post.author.name}</p>
-            <div className="flex items-center text-sm text-muted-foreground">
-              <Calendar className="mr-1 h-3 w-3" />
-              {post.createdAt.toLocaleDateString()}
-              <Clock className="ml-3 mr-1 h-3 w-3" />
-              {Math.ceil(
-                (post.updatedAt.getTime() - post.createdAt.getTime()) /
-                  (1000 * 60)
-              )}{" "}
-              min read
-            </div>
+      <Navbar />
+      <div className="w-full my-12 mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        {loading ? (
+          <Loading />
+        ) : (
+          <div className="max-w-[70%] mx-auto lg:grid lg:grid-cols-3 lg:gap-12">
+            <article className="col-span-2">
+              {post ? (
+                <>
+                  <header className="mb-8">
+                    <h1 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
+                      {post.title}
+                    </h1>
+                    <div className="flex items-center space-x-4">
+                      <Avatar>
+                        <AvatarImage
+                          src="/placeholder.svg?height=40&width=40"
+                          alt="Author"
+                        />
+                        <AvatarFallback>{getInitials(post.author.name)}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-sm font-medium">{post.author.name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Published on {new Date(post.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  </header>
+                  <Image
+                    src={post.picture || "https://via.placeholder.com/800x400"}
+                    alt={post.title}
+                    width={800}
+                    height={400}
+                    className="object-cover my-12 mx-auto rounded-lg w-full"
+                  />
+                  <Separator className="my-8" />
+                  <div className="prose prose-lg dark:prose-invert max-w-none">
+                    <p dangerouslySetInnerHTML={{ __html: post.content }} />
+                    <Separator className="my-8" />
+                  </div>
+                </>
+              ) : (
+                <p>Post not found.</p>
+              )}
+            </article>
+
+            <aside className="mt-12 lg:mt-0">
+              <Card className="mb-8">
+                <CardHeader>
+                  <CardTitle>Recent Posts</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-4">
+                    {recentPost && recentPost.length > 0 ? (
+                      recentPost.map((recentPost) => (
+                        <li key={recentPost.id}>
+                          <Link href={`/blog/${recentPost.id}`} className="text-sm hover:underline">
+                            {recentPost.title}
+                          </Link>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(recentPost.createdAt).toLocaleDateString()}
+                          </p>
+                        </li>
+                      ))
+                    ) : (
+                      <p>No recent posts available</p>
+                    )}
+                  </ul>
+                </CardContent>
+                <CardFooter>
+                  <Link href="/blog" className="text-sm hover:underline ml-auto">
+                    View all posts
+                  </Link>
+                </CardFooter>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Categories</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {categories.length > 0 ? (
+                      categories.map((category) => (
+                        <Badge key={category} variant="secondary">
+                          {categoryMapping[category] || category} {/* Use mapping here */}
+                        </Badge>
+                      ))
+                    ) : (
+                      <p>No categories available</p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </aside>
           </div>
-        </div>
-        <div className="prose max-w-none mb-6">
-          <p>{post.content}</p>
-        </div>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Badge>{post.category}</Badge>
-            <Badge variant="outline">{post.status}</Badge>
-          </div>
-          <Button variant="outline" size="sm">
-            <User className="mr-2 h-4 w-4" />
-            Follow Author
-          </Button>
-        </div>
-      </article>
+        )}
+      </div>
+      <Footer />
     </>
   );
 }

@@ -23,6 +23,7 @@ import dynamic from "next/dynamic";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Switch } from "@/components/ui/switch";
 
 const TextEditer = dynamic(() => import("@/components/TextEditer/TextEditer"), {
   ssr: false,
@@ -34,6 +35,8 @@ interface FormData {
   content: string;
   email: string;
   category: string;
+  picture: File | null;
+  status: string; // Add this line
 }
 
 
@@ -47,15 +50,18 @@ export default function Component() {
     content: "",
     email: "",
     category: "",
+    picture: null, // Initially null
+    status: "",
   });
+
+  const [isPublished, setIsPublished] = useState(false);
 
   useEffect(() => {
     if (status === "authenticated") {
       if (session?.user?.role !== "admin") {
         router.push("/login");
       } else {
-        // Set the author from session
-        setFormData((prevData:any) => ({
+        setFormData((prevData: any) => ({
           ...prevData,
           email: session?.user?.email,
           author: session?.user?.company,
@@ -64,8 +70,8 @@ export default function Component() {
     } else if (status === "unauthenticated") {
       router.push("/login");
     }
-
   }, [status, session, router]);
+
   const handleInputChange = (event: any) => {
     const { id, value } = event.target;
     setFormData((prevData) => ({
@@ -81,114 +87,159 @@ export default function Component() {
     }));
   };
 
+  const handlePictureChange = (event: any) => {
+    const file = event.target.files[0];
+    setFormData((prevData) => ({
+      ...prevData,
+      picture: file,
+    }));
+  };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-
-    console.log("Form Data Submitted Client:", formData);
+    const formDataToSend = new FormData();
+    formDataToSend.append("title", formData.title);
+    formDataToSend.append("author", formData.author);
+    formDataToSend.append("content", formData.content);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("category", formData.category);
+    formDataToSend.append("status", formData.status);
+    if (formData.picture) {
+      formDataToSend.append("picture", formData.picture); // Append the image file
+    }
+    
 
     try {
       const response = await fetch("/api/blog", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        body: formDataToSend, // Send FormData including the file
       });
 
       setLoading(true);
-
       const data = await response.json();
-      console.log("From Server:", data);
 
       if (response.ok) {
         Swal.fire({
-          title: "Good job!",
-          text: "You clicked the button!",
+          title: "Blog post created successfully!",
           icon: "success",
         }).then(() => {
           setLoading(false);
-          router.push("/blog")
+          router.push("/blog");
         });
+      } else {
+        Swal.fire({
+          title: "Something went wrong!",
+          text: data.error,
+          icon: "error",
+        });
+        setLoading(false);
       }
     } catch (error) {
       Swal.fire({
         title: "Something went wrong!",
-        text: "You clicked the button for Edit!",
+        text: "Failed to create the blog post.",
         icon: "error",
       });
       setLoading(false);
-      console.log(error);
     }
   };
 
+  const handleToggle = (checked: boolean) => {
+    setIsPublished(checked);
+    
+    setFormData((prevData) => ({
+      ...prevData,
+      status: checked ? "Published" : "Private" // Ensuring formData.status is updated
+    }));
+  };
 
   return (
-    <>
-      <Card className="w-full max-w-2xl mx-auto my-auto mt-20">
-        <CardHeader>
-          <CardTitle>Create New Blog Post</CardTitle>
-          <CardDescription>
-            Fill out the form to publish a new blog post.
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit} className="grid gap-4">
-          <CardContent>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  placeholder="Enter the blog post title"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="author">Author</Label>
-                <Input
-                  id="author"
-                  placeholder="Enter the author's name"
-                  value={session?.user?.company}
-                  onChange={handleInputChange}
-                  readOnly
-                />
-              </div>
-            </div>
-            <div className="space-y-2 mt-5">
-              <Label htmlFor="content">Content</Label>
-              <TextEditer
-                onChange={(content: string) =>
-                  setFormData((prevData) => ({ ...prevData, content }))
-                }
+    <Card className="w-full max-w-2xl mx-auto my-auto mt-20">
+      <CardHeader>
+        <CardTitle>Create New Blog Post</CardTitle>
+        <CardDescription>
+          Fill out the form to publish a new blog post.
+        </CardDescription>
+      </CardHeader>
+      <form
+        onSubmit={handleSubmit}
+        className="grid gap-4"
+        encType="multipart/form-data"
+      >
+        <CardContent>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                placeholder="Enter the blog post title"
+                value={formData.title}
+                onChange={handleInputChange}
+                required
               />
             </div>
-            
-            <div className="space-y-2 mt-5">
-              <Label htmlFor="category">Category</Label>
-              <Select
-                value={formData.category}
-                onValueChange={handleCategoryChange}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="technology">Technology</SelectItem>
-                  <SelectItem value="lifestyle">Lifestyle</SelectItem>
-                  <SelectItem value="travel">Travel</SelectItem>
-                  <SelectItem value="business">Business</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="space-y-2">
+              <Label htmlFor="author">Author</Label>
+              <Input id="author" value={session?.user?.company} readOnly />
             </div>
-          </CardContent>
-          <CardFooter className="flex justify-end">
-            <Button type="submit" disabled={loading}>
-              {loading ? "Posting a blog..." : "Publish Post"}
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
-    </>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="picture">Picture</Label>
+            <Input id="picture" type="file" onChange={handlePictureChange} />
+          </div>
+          <div className="space-y-2 mt-5">
+            <Label htmlFor="content">Content</Label>
+            <TextEditer
+              onChange={(content: string) =>
+                setFormData((prevData) => ({ ...prevData, content }))
+              }
+            />
+          </div>
+          <div className="space-y-2 mt-5">
+            <Label htmlFor="category">Category</Label>
+            <Select
+              value={formData.category}
+              onValueChange={handleCategoryChange}
+              required
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="basic_accounting">
+                  Basic Accounting Management
+                </SelectItem>
+                <SelectItem value="tax_plan">
+                  Tax Planning and Management
+                </SelectItem>
+                <SelectItem value="financial_plan">
+                  Financial Planning and Business Strategy
+                </SelectItem>
+                <SelectItem value="financial_news">
+                  Financial News and Legal Updates
+                </SelectItem>
+                <SelectItem value="tips">Expert Advice and Tips</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2 mt-5 flex align-middle ">
+            <Switch
+              id="status"
+              checked={isPublished}
+              onCheckedChange={handleToggle}
+            />
+            <Label className="ml-2" htmlFor="status">
+              {isPublished ? "Publish" : "Private"}
+            </Label>
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-end">
+          <Button type="submit" disabled={loading}>
+            {loading ? "Posting a blog..." : "Submit Post"}
+          </Button>
+        </CardFooter>
+      </form>
+    </Card>
   );
 }

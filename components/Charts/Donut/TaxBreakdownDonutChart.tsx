@@ -106,6 +106,15 @@ export const TaxBreakdownDonutChart: React.FC<TaxBreakdownDonutChartProps> = ({ 
     );
   };
 
+  const formatSalary = (salary: number) => {
+    return new Intl.NumberFormat("th-TH", {
+      style: "currency",
+      currency: "THB",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(salary)
+  }
+
   return (
     <Card className="flex flex-col h-full">
       <CardHeader className="items-center pb-0">
@@ -146,7 +155,7 @@ export const TaxBreakdownDonutChart: React.FC<TaxBreakdownDonutChartProps> = ({ 
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm mt-8">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Total Tax: ${totalTax.toFixed(2)} <TrendingUp className="h-4 w-4" />
+          Total Tax: {formatSalary(totalTax)} <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
           Showing Tax breakdown for the current period

@@ -1,5 +1,5 @@
 "use client";
-
+import React from 'react';
 import {
   Select,
   SelectContent,
@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
-import { format, isBefore, startOfToday } from "date-fns";
+import { addMonths, format, isAfter, isBefore, startOfToday } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -166,6 +166,7 @@ export default function Appointment() {
   };
 
   const today = startOfToday();
+  const oneMonthLater = addMonths(today, 1);
 
   return (
     <>
@@ -235,7 +236,8 @@ export default function Appointment() {
                       onSelect={setDate}
                       initialFocus
                       disabled={(d) =>
-                        isBefore(d, today) ||
+                        isBefore(d, today) || 
+                        isAfter(d, oneMonthLater) || 
                         fullyBookedDates.includes(d.toDateString())
                       }
                     />
@@ -309,7 +311,7 @@ export default function Appointment() {
               </div>
 
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Registering..." : "Register"}
+                {loading ? "Submit..." : "Submit"}
               </Button>
             </div>
             {error && <p className="text-red-500 mt-6">{error}</p>}

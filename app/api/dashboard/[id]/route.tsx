@@ -108,7 +108,7 @@ export async function GET(
       recentYearTax?.year || 0
     );
 
-    console.log("year" ,recentYear)
+    
 
     if (recentYear === 0) {
       return NextResponse.json(

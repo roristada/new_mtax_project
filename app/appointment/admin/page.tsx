@@ -14,10 +14,14 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Loading from "@/components/Loading/Loading";
+import Swal from "sweetalert2";
+import useAuthAdmin from "@/lib/useAuthAdmin";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,13 +29,25 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MoreHorizontal } from "lucide-react";
-import Loading from "@/components/Loading/Loading";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import Swal from "sweetalert2";
-import useAuthAdmin from "@/lib/useAuthAdmin";
+import AppointmentCalendar from "@/components/Calendar/AppointmentCalendar";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogHeader,
+} from "@/components/ui/dialog"; // Assuming using Radix dialog
+import {
+  CalendarIcon,
+  BuildingIcon,
+  AtSignIcon,
+  PhoneIcon,
+  ClockIcon,
+  FileTextIcon,
+} from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 type Appointment = {
   id: number;
@@ -46,83 +62,93 @@ type Appointment = {
   status: string;
 };
 
-const Appointments_manage = () => {
+const AppointmentsManage = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const [appointmentsPerPage] = useState(10); // Appointments per page
   const [isAuthChecked, setIsAuthChecked] = useState(false);
+
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<Appointment | null>(null); // State for selected appointment
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // State for dialog visibility
+
   useAuthAdmin((authenticated) => {
     setIsAuthChecked(authenticated);
   });
 
-  
-
   useEffect(() => {
-    // Fetch appointments from the API
-    async function fetchAppointments() {
-      try {
-        const res = await fetch(`/api/appointment`);
-        const data = await res.json();
+    if (isAuthChecked) {
+      const fetchAppointments = async () => {
+        try {
+          const res = await fetch(`/api/appointment`);
+          const data = await res.json();
 
-        // Sort appointments by date
-        const sortedAppointments = data.appointments.sort(
-          (a: Appointment, b: Appointment) => {
-            return new Date(a.date).getTime() - new Date(b.date).getTime();
-          }
-        );
-        setAppointments(sortedAppointments);
-      } catch (error) {
-        console.error("Failed to fetch appointments:", error);
-      } finally {
-        setLoading(false); // Set loading to false after fetching data
-      }
+          // Sort appointments by date
+          const sortedAppointments = data.appointments.sort(
+            (a: Appointment, b: Appointment) => {
+              return new Date(a.date).getTime() - new Date(b.date).getTime();
+            }
+          );
+          setAppointments(sortedAppointments);
+        } catch (error) {
+          console.error("Failed to fetch appointments:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchAppointments();
     }
+  }, [isAuthChecked]);
 
-    fetchAppointments();
-  }, []);
-
-  const onDateChange = (date: any) => {
-    setSelectedDate(date);
-  };
-
-  const getTileContent = ({ date, view }: { date: Date; view: string }) => {
-    if (view === "month") {
-      const dateString = date.toISOString().split("T")[0];
-      const appointmentDates = appointments.map(
-        (appt) => appt.date.split("T")[0]
-      );
-
-      if (appointmentDates.includes(dateString)) {
-        return <div className="appointment-marker">📅</div>;
-      }
-    }
-    return null;
-  };
-
-  const appointmentsForSelectedDate = appointments.filter(
+  // Filter appointments based on search query
+  const filteredAppointments = appointments.filter(
     (appt) =>
-      new Date(appt.date).toLocaleDateString() ===
-      selectedDate?.toLocaleDateString()
+      appt.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      new Date(appt.date).toLocaleDateString().includes(searchQuery)
   );
 
-  const onClickActionsEdit = () => {
-    Swal.fire({
-      title: "Edit appointment",
-      text: "Edit appointment details.",
-      icon: "info",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, edit it!",
-    }).then((result: any) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "Edited!",
-          text: "Your file has been edited.",
-          icon: "success",
-        });
+  // Get current appointments based on pagination
+  const indexOfLastAppointment = currentPage * appointmentsPerPage;
+  const indexOfFirstAppointment = indexOfLastAppointment - appointmentsPerPage;
+  const currentAppointments = filteredAppointments.slice(
+    indexOfFirstAppointment,
+    indexOfLastAppointment
+  );
+
+  // Calculate total pages
+  const totalPages = Math.ceil(
+    filteredAppointments.length / appointmentsPerPage
+  );
+
+  // Handle pagination
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const onClickActionsDetails = async (appointmentId: number) => {
+    try {
+      const res = await fetch(`/api/appointment/${appointmentId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setSelectedAppointment(data); // Assuming API returns an 'appointment' object
+        setIsDialogOpen(true); // Open the dialog
+      } else {
+        console.error("Failed to fetch appointment details");
       }
-    });
+    } catch (error) {
+      console.error("Failed to fetch appointment details:", error);
+    }
   };
 
   const onClickActionsDelete = async (appointmentId: number) => {
@@ -140,9 +166,11 @@ const Appointments_manage = () => {
           const res = await fetch(`/api/appointment/${appointmentId}`, {
             method: "DELETE",
           });
-  
+
           if (res.ok) {
-            setAppointments(appointments.filter(appt => appt.id !== appointmentId));
+            setAppointments(
+              appointments.filter((appt) => appt.id !== appointmentId)
+            );
             Swal.fire({
               title: "Deleted!",
               text: "Your appointment has been deleted.",
@@ -167,30 +195,46 @@ const Appointments_manage = () => {
     });
   };
 
-  const onClickActionsStatus = async (appointmentId: number) => {
+  const onClickActionsStatus = async (
+    appointmentId: number,
+    status: string
+  ) => {
+    const statusText =
+      status === "completed"
+        ? "completed"
+        : status === "canceled"
+        ? "canceled"
+        : "confirmed";
 
     Swal.fire({
-      title: "Status appointment",
-      text: "Are you sure you want to update the status of this appointment?",
+      title: `Status appointment`,
+      text: `Are you sure you want to ${statusText} this appointment?`,
       icon: "info",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, update status!",
+      confirmButtonText: `Yes, ${statusText} it!`,
     }).then(async (result: any) => {
       if (result.isConfirmed) {
         try {
           const res = await fetch(`/api/appointment/${appointmentId}`, {
             method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ status }), // Pass status to the backend
           });
-  
+
           if (res.ok) {
-            setAppointments(appointments.map(appt => 
-              appt.id === appointmentId ? { ...appt, status: 'completed' } : appt
-            ));
+            setAppointments(
+              appointments.map((appt) =>
+                appt.id === appointmentId ? { ...appt, status } : appt
+              )
+            );
+
             Swal.fire({
               title: "Status!",
-              text: "The status has been updated.",
+              text: `The appointment status has been updated to ${statusText}.`,
               icon: "success",
             });
           } else {
@@ -210,7 +254,6 @@ const Appointments_manage = () => {
         }
       }
     });
-
   };
 
   return (
@@ -225,180 +268,312 @@ const Appointments_manage = () => {
           </div>
           <TabsContent value="all">
             <Card className="shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold">
-                  Appointments
-                </CardTitle>
-                <CardDescription>
-                  Manage your appointments and view their details.
-                </CardDescription>
+              <CardHeader className="grid grid-cols-2">
+                <div>
+                  <CardTitle className="text-xl font-bold">
+                    Appointments
+                  </CardTitle>
+                  <CardDescription>
+                    Manage your appointments and view their details.
+                  </CardDescription>
+                </div>
+                <div className="ml-auto">
+                  <Link href={`/appointment/admin/add`}>
+                    <Button>Admin</Button>
+                  </Link>
+                </div>
               </CardHeader>
               <CardContent>
+                {/* Add search input */}
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    placeholder="Search by name or date"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded"
+                  />
+                </div>
                 {loading ? (
                   <Loading />
                 ) : (
-                  <Table className="w-full bg-white rounded-lg shadow-md">
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="py-2">Name</TableHead>
-                        <TableHead className="py-2">Company</TableHead>
-                        <TableHead className="py-2">Email</TableHead>
-                        <TableHead className="py-2">Telephone</TableHead>
-                        <TableHead className="py-2">Date</TableHead>
-                        <TableHead className="py-2">Start Time</TableHead>
-                        <TableHead className="py-2">End Time</TableHead>
-                        <TableHead className="py-2">Status</TableHead>
-                        <TableHead className="py-2">
-                          <span className="sr-only">Actions</span>
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {appointments.map((appointment) => (
-                        <TableRow
-                          key={appointment.id}
-                          className="hover:bg-gray-100"
-                        >
-                          <TableCell className="font-medium py-2">
-                            {appointment.name}
-                          </TableCell>
-                          <TableCell className="py-2">
-                            {appointment.company}
-                          </TableCell>
-                          <TableCell className="py-2">
-                            {appointment.email}
-                          </TableCell>
-                          <TableCell className="py-2">
-                            {appointment.telephone}
-                          </TableCell>
-                          <TableCell className="py-2">
-                            {new Date(appointment.date).toLocaleDateString()}
-                          </TableCell>
-                          <TableCell className="py-2">
-                            {appointment.startTime}
-                          </TableCell>
-                          <TableCell className="py-2">
-                            {appointment.endTime}
-                          </TableCell>
-                          <TableCell className="py-2">
-                            <Badge className={`py-1 px-2 ${
-                              appointment.status === "pending"
-                                ? "bg-yellow-500 text-white"
-                                : appointment.status === "completed"
-                                ? "bg-green-500 text-white"
-                                : appointment.status === "canceled"
-                                ? "bg-red-500 text-white"
-                                : ""
-                            }`}>
-                              {appointment.status === "pending"
-                                ? "Pending"
-                                : appointment.status === "completed"
-                                ? "Complete"
-                                : appointment.status === "canceled"
-                                ? "Cancel"
-                                : ""}
-                            </Badge>{" "}
-                          </TableCell>
-                          <TableCell className="py-2">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  aria-haspopup="true"
-                                  size="icon"
-                                  variant="ghost"
-                                >
-                                  <MoreHorizontal className="h-4 w-4" />
-                                  <span className="sr-only">Toggle menu</span>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem
-                                  onClick={() => onClickActionsStatus(appointment.id)}
-                                >
-                                  Complete
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={onClickActionsEdit}>
-                                  Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => onClickActionsDelete(appointment.id)}
-                                >
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
+                  <>
+                    <Table className="w-full bg-white rounded-lg shadow-md">
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="py-2">Name</TableHead>
+                          <TableHead className="py-2">Company</TableHead>
+                          <TableHead className="py-2">Email</TableHead>
+                          <TableHead className="py-2">Telephone</TableHead>
+                          <TableHead className="py-2">Date</TableHead>
+                          <TableHead className="py-2">Start Time</TableHead>
+                          <TableHead className="py-2">End Time</TableHead>
+                          <TableHead className="py-2">Status</TableHead>
+                          <TableHead className="py-2">
+                            <span className="sr-only">Actions</span>
+                          </TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {currentAppointments.length > 0 ? (
+                          currentAppointments.map((appointment) => (
+                            <TableRow key={appointment.id}>
+                              <TableCell className="py-2 font-medium">
+                                {appointment.name}
+                              </TableCell>
+                              <TableCell className="py-2">
+                                {appointment.company}
+                              </TableCell>
+                              <TableCell className="py-2">
+                                {appointment.email}
+                              </TableCell>
+                              <TableCell className="py-2">
+                                {appointment.telephone}
+                              </TableCell>
+                              <TableCell className="py-2">
+                                {new Date(
+                                  appointment.date
+                                ).toLocaleDateString()}
+                              </TableCell>
+                              <TableCell className="py-2">
+                                {appointment.startTime}
+                              </TableCell>
+                              <TableCell className="py-2">
+                                {appointment.endTime}
+                              </TableCell>
+                              <TableCell className="py-2">
+                                <Badge
+                                  className={`py-1 px-2 ${
+                                    appointment.status === "pending"
+                                      ? "bg-yellow-500 text-white"
+                                      : appointment.status === "completed"
+                                      ? "bg-green-500 text-white"
+                                      : appointment.status === "canceled"
+                                      ? "bg-red-500 text-white"
+                                      : appointment.status === "confirmed"
+                                      ? "bg-blue-500 text-white"
+                                      : ""
+                                  }}`}
+                                >
+                                  {" "}
+                                  {appointment.status === "pending"
+                                    ? "Pending"
+                                    : appointment.status === "completed"
+                                    ? "Completed"
+                                    : appointment.status === "canceled"
+                                    ? "Cancel"
+                                    : appointment.status === "confirmed"
+                                    ? "Confirmed"
+                                    : ""}
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="py-2">
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <span className="sr-only">Open menu</span>
+                                      <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>
+                                      Actions
+                                    </DropdownMenuLabel>
+
+                                    {/* Show Details and Delete for completed or canceled appointments */}
+                                    {appointment.status === "completed" ||
+                                    appointment.status === "canceled" ? (
+                                      <>
+                                        <DropdownMenuItem
+                                          onClick={() =>
+                                            onClickActionsDetails(
+                                              appointment.id
+                                            )
+                                          }
+                                        >
+                                          Details
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                          onClick={() =>
+                                            onClickActionsDelete(appointment.id)
+                                          }
+                                        >
+                                          Delete
+                                        </DropdownMenuItem>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <DropdownMenuItem
+                                          onClick={() =>
+                                            onClickActionsDetails(
+                                              appointment.id
+                                            )
+                                          }
+                                        >
+                                          Details
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                          onClick={() =>
+                                            onClickActionsStatus(
+                                              appointment.id,
+                                              "confirmed"
+                                            )
+                                          }
+                                        >
+                                          Confirm
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                          onClick={() =>
+                                            onClickActionsStatus(
+                                              appointment.id,
+                                              "completed"
+                                            )
+                                          }
+                                        >
+                                          Complete
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem
+                                          onClick={() =>
+                                            onClickActionsStatus(
+                                              appointment.id,
+                                              "canceled"
+                                            )
+                                          }
+                                        >
+                                          Cancel
+                                        </DropdownMenuItem>
+                                        <Separator />
+                                        <DropdownMenuItem
+                                          onClick={() =>
+                                            onClickActionsDelete(appointment.id)
+                                          }
+                                        >
+                                          Delete
+                                        </DropdownMenuItem>
+                                      </>
+                                    )}
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={8} className="text-center">
+                              No appointments found.
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+
+                    {/* Pagination Controls */}
+                    <div className="flex justify-between items-center mt-4">
+                      <Button
+                        onClick={handlePrevPage}
+                        disabled={currentPage === 1}
+                      >
+                        Previous
+                      </Button>
+                      <span>
+                        Page {currentPage} of {totalPages}
+                      </span>
+                      <Button
+                        onClick={handleNextPage}
+                        disabled={currentPage === totalPages}
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  </>
                 )}
               </CardContent>
-              <CardFooter>
-                <div className="text-xs text-muted-foreground">
-                  Showing <strong>{appointments.length}</strong> appointments
-                </div>
-              </CardFooter>
             </Card>
           </TabsContent>
-          <TabsContent value="calendar">
-            <Card className="shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold">Calendar</CardTitle>
-                <CardDescription>
-                  View and manage your appointments in the calendar.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="w-full grid grid-col-1 lg:grid-cols-2 mx-auto">
-                <div className="w-full flex justify-end">
-                  <Calendar
-                    onChange={onDateChange}
-                    value={selectedDate}
-                    tileContent={getTileContent}
-                    className="rounded-lg shadow-md w-full lg:w-full"
-                  />
-                </div>
-                <Card className="mt-4 lg:mt-0 lg:ml-4 p-4 rounded-lg shadow-md bg-white mx-auto ">
-                  <CardHeader>
-                    <h3 className="mt-4 text-lg font-semibold">
-                      Appointments for {selectedDate?.toLocaleDateString()}
-                    </h3>
-                  </CardHeader>
-                  <CardContent>
-                    {appointmentsForSelectedDate.length > 0 ? (
-                      <div>
-                        {appointmentsForSelectedDate.map((appt) => (
-                          <div
-                            key={appt.id}
-                            className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0"
-                          >
-                            <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500" />
-                            <div className="space-y-1">
-                              <p className="text-sm font-medium leading-none">
-                                {appt.startTime} - {appt.endTime}:
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                {appt.name} ({appt.company})
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="mt-2 text-gray-500">
-                        No appointments for this date.
-                      </p>
-                    )}
-                  </CardContent>
-                </Card>
-              </CardContent>
-            </Card>
+          <TabsContent className="w-[80%] mx-auto" value="calendar">
+            <AppointmentCalendar
+              appointments={appointments}
+            ></AppointmentCalendar>
           </TabsContent>
         </Tabs>
       </main>
+      {selectedAppointment && (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-black">
+                Appointment Details
+              </DialogTitle>
+              <DialogDescription className="text-black">
+                <div className="mt-4 grid grid-cols-[auto,1fr] gap-4">
+                  <CalendarIcon className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="font-medium text-black">
+                      {new Date(selectedAppointment.date).toLocaleDateString()}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedAppointment.startTime} -{" "}
+                      {selectedAppointment.endTime}
+                    </p>
+                  </div>
+
+                  <BuildingIcon className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="font-medium text-black">
+                      {selectedAppointment.name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedAppointment.company}
+                    </p>
+                  </div>
+
+                  <AtSignIcon className="h-5 w-5 text-muted-foreground" />
+                  <p className="text-black">{selectedAppointment.email}</p>
+
+                  <PhoneIcon className="h-5 w-5 text-muted-foreground" />
+                  <p className="text-black">{selectedAppointment.telephone}</p>
+
+                  <FileTextIcon className="h-5 w-5 text-muted-foreground" />
+                  <p className="text-sm text-black">
+                    {selectedAppointment.note}
+                  </p>
+
+                  <ClockIcon className="my-auto h-5 w-5 text-muted-foreground" />
+                  <Badge
+                    className={`py-2 px-2  ${
+                      selectedAppointment.status === "pending"
+                        ? "bg-yellow-500 text-white"
+                        : selectedAppointment.status === "completed"
+                        ? "bg-green-500 text-white"
+                        : selectedAppointment.status === "canceled"
+                        ? "bg-red-500 text-white"
+                        : selectedAppointment.status === "confirmed"
+                        ? "bg-blue-500 text-white"
+                        : ""
+                    }}`}
+                  >
+                    {" "}
+                    {selectedAppointment.status === "pending"
+                      ? "Pending"
+                      : selectedAppointment.status === "completed"
+                      ? "Completed"
+                      : selectedAppointment.status === "canceled"
+                      ? "Cancel"
+                      : selectedAppointment.status === "confirmed"
+                      ? "Confirmed"
+                      : ""}
+                  </Badge>
+                </div>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 };
 
-export default Appointments_manage;
+export default AppointmentsManage;

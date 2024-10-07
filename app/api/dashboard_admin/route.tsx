@@ -19,7 +19,13 @@ export async function GET(req: NextRequest) {
         });
 
         const totalBlog = await prisma.post.count();
-        const totalAppointment = await prisma.appointment.count();
+        const totalAppointment = await prisma.appointment.count({
+            where: {
+                status: {
+                    in: ["pending", "confirmed"]
+                }
+            }
+        });
          
 
         const blog = await prisma.post.findMany({

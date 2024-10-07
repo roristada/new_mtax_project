@@ -92,6 +92,15 @@ export const ExpenseBreakdownDonutChart: React.FC<ExpenseBreakdownDonutChartProp
     );
   };
 
+  const formatSalary = (salary: number) => {
+    return new Intl.NumberFormat("th-TH", {
+      style: "currency",
+      currency: "THB",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(salary)
+  }
+
   const CustomizedLegend = (props:any) => {
     const { payload } = props;
     return (
@@ -146,7 +155,7 @@ export const ExpenseBreakdownDonutChart: React.FC<ExpenseBreakdownDonutChartProp
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm mt-8">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Total Expense: ${totalExpense.toFixed(2)} <TrendingUp className="h-4 w-4" />
+          Total Expense: {formatSalary(totalExpense)} <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
           Showing Expense breakdown for the current period

@@ -154,7 +154,7 @@ export default function Component({ params }: { params: { slug: string } }) {
     };
 
     fetchData();
-  }, [params.slug, isAuthChecked]);
+  }, [params.slug,]);
 
   const memoizedChartData = useMemo(() => chartData, [chartData]);
   const memoizedIncomeBreakdown = useMemo(
@@ -192,19 +192,7 @@ export default function Component({ params }: { params: { slug: string } }) {
     return ((current - previous) / previous) * 100;
   };
 
-  type FinancialData = {
-    totalIncome: number;
-    totalExpenses: number;
-    totalTax: number;
-    netIncome: number;
-    year: number;
-    previousYearData?: {
-      totalIncome: number;
-      totalExpenses: number;
-      totalTax: number;
-      netIncome: number;
-    };
-  };
+  
 
   const FinancialCard = ({
     title,

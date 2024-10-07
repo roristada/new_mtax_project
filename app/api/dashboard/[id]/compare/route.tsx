@@ -1,42 +1,14 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-interface MonthlyFinancialSummary {
-  month: number;
+interface AggregatedData {
   year: number;
   totalIncome: number;
   totalExpense: number;
   totalTax: number;
   netIncome: number;
-  incomeBreakdown: IncomeBreakdown;
-  expenseBreakdown: ExpenseBreakdown;
-  taxBreakdown: TaxBreakdown;
-}
-
-interface AggregatedData {
-  [key: string]: {
-    month: number;
-    year: number;
-    totalIncome: number;
-    totalExpense: number;
-    totalTax: number;
-    netIncome: number;
-  };
-}
-
-interface EmployeeFinancialData {
-  monthlySummaries: MonthlyFinancialSummary[];
-  totalSummary: {
-    totalIncome: number;
-    totalExpense: number;
-    totalTax: number;
-    netIncome: number;
-  };
-}
-
-interface IncomeBreakdown {
   salary: number;
   shiftAllowance: number;
   foodAllowance: number;
@@ -47,16 +19,10 @@ interface IncomeBreakdown {
   brokerFee: number;
   otherIncome: number;
   bonus: number;
-}
-
-interface ExpenseBreakdown {
   loan: number;
   salaryAdvance: number;
   commissionDeduction: number;
   otherDeductions: number;
-}
-
-interface TaxBreakdown {
   employeeTax: number;
   companyTax: number;
   socialSecurityEmployee: number;
@@ -69,135 +35,101 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const employees = await prisma.employee.findMany({
-      where: {
-        companyId: Number(params.id),
+    const companyId = Number(params.id);
+
+    const [
+      uniqueYears,
+      employeeCountByYear,
+      employeeCountGenderByYear,
+      aggregatedData,
+    ] = await prisma.$transaction([
+      prisma.income.findMany({
+        where: { employee: { companyId } },
+        select: { year: true },
+        distinct: ["year"],
+      }),
+      prisma.employee.groupBy({
+        by: ["year"],
+        where: { companyId },
+        _count: { _all: true },
+        orderBy: { year: "asc" },
+      }),
+      prisma.employee.groupBy({
+        by: ["year", "gender"],
+        where: { companyId },
+        _count: { _all: true },
+        orderBy: { year: "asc" },
+      }),
+      prisma.$queryRaw<AggregatedData[]>`
+  SELECT 
+    i.year,
+    SUM(i.salary + i.shiftAllowance + i.foodAllowance + i.overtime + i.diligence + i.beverage + i.commission + i.brokerFee + i.otherIncome + i.bonus) as totalIncome,
+    SUM(e.loan + e.salaryAdvance + e.commissionDeduction + e.otherDeductions) as totalExpense,
+    SUM(t.employeeTax + t.socialSecurityEmployee + t.socialSecurityCompany + t.providentFund) as totalTax,
+    SUM(i.salary + i.shiftAllowance + i.foodAllowance + i.overtime + i.diligence + i.beverage + i.commission + i.brokerFee + i.otherIncome + i.bonus) - 
+    SUM(e.loan + e.salaryAdvance + e.commissionDeduction + e.otherDeductions) - 
+    SUM(t.employeeTax + t.socialSecurityEmployee + t.socialSecurityCompany + t.providentFund) as netIncome,
+    SUM(i.salary) as salary,
+    SUM(i.shiftAllowance) as shiftAllowance,
+    SUM(i.foodAllowance) as foodAllowance,
+    SUM(i.overtime) as overtime,
+    SUM(i.diligence) as diligence,
+    SUM(i.beverage) as beverage,
+    SUM(i.commission) as commission,
+    SUM(i.brokerFee) as brokerFee,
+    SUM(i.otherIncome) as otherIncome,
+    SUM(i.bonus) as bonus,
+    SUM(e.loan) as loan,
+    SUM(e.salaryAdvance) as salaryAdvance,
+    SUM(e.commissionDeduction) as commissionDeduction,
+    SUM(e.otherDeductions) as otherDeductions,
+    SUM(t.employeeTax) as employeeTax,
+    SUM(t.companyTax) as companyTax,
+    SUM(t.socialSecurityEmployee) as socialSecurityEmployee,
+    SUM(t.socialSecurityCompany) as socialSecurityCompany,
+    SUM(t.providentFund) as providentFund
+  FROM Income i
+  JOIN Employee emp ON i.employeeCode = emp.employeeCode AND i.companyId = emp.companyId AND i.year = emp.year
+  LEFT JOIN Expense e ON i.employeeCode = e.employeeCode AND i.companyId = e.companyId AND i.year = e.year AND i.month = e.month
+  LEFT JOIN Tax t ON i.employeeCode = t.employeeCode AND i.companyId = t.companyId AND i.year = t.year AND i.month = t.month
+  WHERE emp.companyId = ${companyId}
+  GROUP BY i.year
+  ORDER BY i.year
+`,
+    ]);
+
+    const aggregatedYearlyData = aggregatedData.map((data) => ({
+      year: data.year,
+      Income: Number(data.totalIncome),
+      Expense: Number(data.totalExpense),
+      Tax: Number(data.totalTax),
+      netIncome: Number(data.netIncome),
+      incomeBreakdown: {
+        salary: Number(data.salary),
+        shiftAllowance: Number(data.shiftAllowance),
+        foodAllowance: Number(data.foodAllowance),
+        overtime: Number(data.overtime),
+        diligence: Number(data.diligence),
+        beverage: Number(data.beverage),
+        commission: Number(data.commission),
+        brokerFee: Number(data.brokerFee),
+        otherIncome: Number(data.otherIncome),
+        bonus: Number(data.bonus),
       },
-    });
-
-    const uniqueYears = await prisma.income.findMany({
-      where: {
-        employee: {
-          companyId: Number(params.id),
-        },
+      expenseBreakdown: {
+        loan: Number(data.loan),
+        salaryAdvance: Number(data.salaryAdvance),
+        commissionDeduction: Number(data.commissionDeduction),
+        otherDeductions: Number(data.otherDeductions),
       },
-      select: {
-        year: true,
+      taxBreakdown: {
+        employeeTax: Number(data.employeeTax),
+        companyTax: Number(data.companyTax),
+        socialSecurityEmployee: Number(data.socialSecurityEmployee),
+        socialSecurityCompany: Number(data.socialSecurityCompany),
+        providentFund: Number(data.providentFund),
       },
-      distinct: ["year"],
-    });
-
-    const data_employee_details: EmployeeFinancialData[] = await Promise.all(
-      employees.map(async (employee) => {
-        const income = await prisma.income.findMany({
-          where: {
-            employeeCode: employee.employeeCode,
-            employee: {
-              companyId: Number(params.id),
-            },
-          },
-        });
-
-        const expense = await prisma.expense.findMany({
-          where: {
-            employeeCode: employee.employeeCode,
-            employee: {
-              companyId: Number(params.id),
-            },
-          },
-        });
-
-        const tax = await prisma.tax.findMany({
-          where: {
-            employeeCode: employee.employeeCode,
-            employee: {
-              companyId: Number(params.id),
-            },
-          },
-        });
-
-        const monthlySummaries = calculateMonthlyFinancialSummaries(
-          income,
-          expense,
-          tax
-        );
-        const totalSummary = calculateTotalFinancialSummary(monthlySummaries);
-
-        return {
-          monthlySummaries,
-          totalSummary,
-        };
-      })
-    );
-
-    const aggregatedYearlyData = uniqueYears.map((year) => {
-      const yearlyIncomeBreakdown: IncomeBreakdown = {
-        salary: 0,
-        shiftAllowance: 0,
-        foodAllowance: 0,
-        overtime: 0,
-        diligence: 0,
-        beverage: 0,
-        commission: 0,
-        brokerFee: 0,
-        otherIncome: 0,
-        bonus: 0,
-      };
-      const yearlyExpenseBreakdown: ExpenseBreakdown = {
-        loan: 0,
-        salaryAdvance: 0,
-        commissionDeduction: 0,
-        otherDeductions: 0,
-      };
-      const yearlyTaxBreakdown: TaxBreakdown = {
-        employeeTax: 0,
-        companyTax: 0,
-        socialSecurityEmployee: 0,
-        socialSecurityCompany: 0,
-        providentFund: 0,
-      };
-
-      let totalIncome = 0;
-      let totalExpense = 0;
-      let totalTax = 0;
-      let netIncome = 0;
-
-      data_employee_details.forEach(({ monthlySummaries }) => {
-        monthlySummaries
-          .filter((summary) => summary.year === year.year)
-          .forEach((summary) => {
-            totalIncome += summary.totalIncome;
-            totalExpense += summary.totalExpense;
-            totalTax += summary.totalTax;
-            netIncome += summary.netIncome;
-
-            // Aggregate breakdowns
-            Object.keys(yearlyIncomeBreakdown).forEach((key) => {
-              yearlyIncomeBreakdown[key as keyof IncomeBreakdown] +=
-                summary.incomeBreakdown[key as keyof IncomeBreakdown];
-            });
-            Object.keys(yearlyExpenseBreakdown).forEach((key) => {
-              yearlyExpenseBreakdown[key as keyof ExpenseBreakdown] +=
-                summary.expenseBreakdown[key as keyof ExpenseBreakdown];
-            });
-            Object.keys(yearlyTaxBreakdown).forEach((key) => {
-              yearlyTaxBreakdown[key as keyof TaxBreakdown] +=
-                summary.taxBreakdown[key as keyof TaxBreakdown];
-            });
-          });
-      });
-
-      return {
-        year: year.year,
-        Income:totalIncome,
-        Expense:totalExpense,
-        Tax:totalTax,
-        netIncome,
-        incomeBreakdown: yearlyIncomeBreakdown,
-        expenseBreakdown: yearlyExpenseBreakdown,
-        taxBreakdown: yearlyTaxBreakdown,
-      };
-    });
+    }));
 
     return NextResponse.json(
       {
@@ -205,6 +137,8 @@ export async function GET(
         data: aggregatedYearlyData,
         uniqueYears: uniqueYears.map((y) => y.year),
         count: aggregatedYearlyData.length,
+        employeeCountByYear,
+        employeeCountGenderByYear,
       },
       { status: 200 }
     );
@@ -215,134 +149,4 @@ export async function GET(
       { status: 500 }
     );
   }
-}
-
-function calculateMonthlyFinancialSummaries(
-  income: any[],
-  expense: any[],
-  tax: any[]
-): MonthlyFinancialSummary[] {
-  const monthlyData: { [key: string]: MonthlyFinancialSummary } = {};
-
-  income.forEach((inc) => {
-    const key = `${inc.year}-${inc.month}`;
-    if (!monthlyData[key]) {
-      monthlyData[key] = {
-        month: inc.month,
-        year: inc.year,
-        totalIncome: 0,
-        totalExpense: 0,
-        totalTax: 0,
-        netIncome: 0,
-        incomeBreakdown: {
-          salary: 0,
-          shiftAllowance: 0,
-          foodAllowance: 0,
-          overtime: 0,
-          diligence: 0,
-          beverage: 0,
-          commission: 0,
-          brokerFee: 0,
-          otherIncome: 0,
-          bonus: 0,
-        },
-        expenseBreakdown: {
-          loan: 0,
-          salaryAdvance: 0,
-          commissionDeduction: 0,
-          otherDeductions: 0,
-        },
-        taxBreakdown: {
-          employeeTax: 0,
-          companyTax: 0,
-          socialSecurityEmployee: 0,
-          socialSecurityCompany: 0,
-          providentFund: 0,
-        },
-      };
-    }
-
-    // Summing up the income breakdown
-    monthlyData[key].incomeBreakdown.salary += inc.salary || 0;
-    monthlyData[key].incomeBreakdown.shiftAllowance += inc.shiftAllowance || 0;
-    monthlyData[key].incomeBreakdown.foodAllowance += inc.foodAllowance || 0;
-    monthlyData[key].incomeBreakdown.overtime += inc.overtime || 0;
-    monthlyData[key].incomeBreakdown.diligence += inc.diligence || 0;
-    monthlyData[key].incomeBreakdown.beverage += inc.beverage || 0;
-    monthlyData[key].incomeBreakdown.commission += inc.commission || 0;
-    monthlyData[key].incomeBreakdown.brokerFee += inc.brokerFee || 0;
-    monthlyData[key].incomeBreakdown.otherIncome += inc.otherIncome || 0;
-    monthlyData[key].incomeBreakdown.bonus += inc.bonus || 0;
-
-    monthlyData[key].totalIncome +=
-      inc.salary +
-      inc.shiftAllowance +
-      inc.foodAllowance +
-      inc.overtime +
-      inc.diligence +
-      inc.beverage +
-      inc.commission +
-      inc.brokerFee +
-      inc.otherIncome +
-      inc.bonus;
-  });
-
-  expense.forEach((exp) => {
-    const key = `${exp.year}-${exp.month}`;
-    if (monthlyData[key]) {
-      monthlyData[key].expenseBreakdown.loan += exp.loan || 0;
-      monthlyData[key].expenseBreakdown.salaryAdvance += exp.salaryAdvance || 0;
-      monthlyData[key].expenseBreakdown.commissionDeduction +=
-        exp.commissionDeduction || 0;
-      monthlyData[key].expenseBreakdown.otherDeductions +=
-        exp.otherDeductions || 0;
-
-      monthlyData[key].totalExpense +=
-        exp.loan +
-        exp.salaryAdvance +
-        exp.commissionDeduction +
-        exp.otherDeductions;
-    }
-  });
-
-  tax.forEach((t) => {
-    const key = `${t.year}-${t.month}`;
-    if (monthlyData[key]) {
-      monthlyData[key].taxBreakdown.employeeTax += t.employeeTax || 0;
-      monthlyData[key].taxBreakdown.companyTax += t.companyTax || 0;
-      monthlyData[key].taxBreakdown.socialSecurityEmployee +=
-        t.socialSecurityEmployee || 0;
-      monthlyData[key].taxBreakdown.socialSecurityCompany +=
-        t.socialSecurityCompany || 0;
-      monthlyData[key].taxBreakdown.providentFund += t.providentFund || 0;
-
-      monthlyData[key].totalTax +=
-        t.employeeTax +
-        t.socialSecurityEmployee +
-        t.socialSecurityCompany +
-        t.providentFund;
-    }
-  });
-
-  // Calculate net income for each month
-  Object.values(monthlyData).forEach((data) => {
-    data.netIncome = data.totalIncome - data.totalExpense - data.totalTax;
-  });
-
-  return Object.values(monthlyData);
-}
-
-function calculateTotalFinancialSummary(
-  monthlySummaries: MonthlyFinancialSummary[]
-) {
-  return monthlySummaries.reduce(
-    (total, month) => {
-      total.totalIncome += month.totalIncome;
-      total.totalExpense += month.totalExpense;
-      total.totalTax += month.totalTax;
-      total.netIncome += month.netIncome;
-      return total;
-    },
-    { totalIncome: 0, totalExpense: 0, totalTax: 0, netIncome: 0 }
-  );
 }

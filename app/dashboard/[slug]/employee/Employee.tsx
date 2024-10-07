@@ -61,6 +61,8 @@ type Employee = {
   gender: string;
   currentSalary: number;
   year: number;
+  startDate: string;
+  endDate: string;
 };
 
 const formatSalary = (salary: number) => {
@@ -189,7 +191,9 @@ export default function Employee({ slug }: { slug: string }) {
       cell: ({ row }) => {
         const salary = parseFloat(row.getValue("currentSalary"));
         return (
-          <div className="text-right font-medium">{formatSalary(salary)}</div>
+          <div className="text-right font-medium">
+            {salary === 0 ? "Unknown Salary" : formatSalary(salary)}
+          </div>
         );
       },
     },

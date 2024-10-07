@@ -3,6 +3,34 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 const prisma = new PrismaClient();
+
+export async function GET(req: Request ,{ params }: { params: { id: string } }) {
+  const id = params.id;
+
+  if (!id) {
+    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  }
+  try {
+    const appointment = await prisma.appointment.findUnique({
+    where: { id: Number(id) },
+  });
+
+  if (!appointment) {
+    return NextResponse.json(
+      { error: "Appointment not found" },
+      { status: 404 }
+    );
+  }
+
+  return NextResponse.json(appointment);
+  }catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Failed to fetch appointment" }, { status: 500 });
+  }
+  
+}
+
+
 export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
@@ -18,7 +46,10 @@ export async function DELETE(
   });
 
   if (!appointment) {
-    return NextResponse.json({ error: "Appointment not found" }, { status: 404 });
+    return NextResponse.json(
+      { error: "Appointment not found" },
+      { status: 404 }
+    );
   }
 
   const email = appointment.email;
@@ -52,7 +83,10 @@ export async function DELETE(
       await transporter.sendMail(mailOptions);
 
       return NextResponse.json(
-        { message: "Appointment successfully deleted and cancellation email sent" },
+        {
+          message:
+            "Appointment successfully deleted and cancellation email sent",
+        },
         { status: 200 }
       );
     } catch (error) {
@@ -91,11 +125,46 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
+  const { status } = await req.json(); // Expecting status from the request body
+
+  if (!["completed", "canceled", "confirmed"].includes(status)) {
+    return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+  }
+
   try {
-    await prisma.appointment.update({
+    const appointment = await prisma.appointment.update({
       where: { id: Number(id) },
-      data: { status: "completed" },
+      data: { status },
     });
+
+    // Set up nodemailer transporter for sending email
+    if (status === "canceled" || status === "confirmed") {
+      // Set up nodemailer transporter
+      const transporter = nodemailer.createTransport({
+        service: "gmail", // Or another email service
+        auth: {
+          user: process.env.EMAIL_USER, // Your email address
+          pass: process.env.EMAIL_PASS, // Your email password or an app-specific password
+        },
+      });
+    
+      const emailContent = status === "canceled" 
+        ? `Dear ${appointment.name},\n\nYour appointment scheduled for ${appointment.date.toLocaleDateString()} ${appointment.startTime} to ${appointment.endTime} has been canceled. Please contact us if you need further assistance.\n\nBest regards,\nMtax Online Accounting: Payroll Outsourcing`
+        : `Dear ${appointment.name},\n\nYour appointment scheduled for ${appointment.date.toLocaleDateString()} ${appointment.startTime} to ${appointment.endTime} has been confirmed. We look forward to seeing you.\n\nBest regards,\nMtax Online Accounting: Payroll Outsourcing`;
+    
+      const mailOptions = {
+        from: process.env.EMAIL_USER, // Your email address
+        to: appointment.email, // The email of the person whose appointment was canceled or confirmed
+        subject: status === "canceled" ? "Appointment Canceled" : "Appointment Confirmed",
+        text: emailContent,
+      };
+    
+      if (mailOptions) {
+        // Send email
+        await transporter.sendMail(mailOptions);
+      }
+    }
+
     return NextResponse.json(
       { message: "Appointment successfully updated" },
       { status: 200 }

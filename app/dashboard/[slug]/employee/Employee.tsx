@@ -48,7 +48,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "../../../../components/ui/select";
 import EmployeeDetailsDialog from "./Employee_detail";
 import EmployeeBarChartsDialog from "./EmpBarChart";
 

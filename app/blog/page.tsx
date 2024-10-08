@@ -35,6 +35,7 @@ const categoryDisplayNames: { [key: string]: string } = {
   financial_news: "Financial News and Legal Updates",
   tips: "Expert Advice and Tips",
   other: "Other",
+  services: "Services",
 };
 
 export default function Blog() {

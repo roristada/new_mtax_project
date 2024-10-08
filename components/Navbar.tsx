@@ -163,7 +163,7 @@ const Navbar = () => {
                     <DropdownMenuItem><Link href={dashboardPath}>Dashboard</Link></DropdownMenuItem>
                     <DropdownMenuItem>Support</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => signOut({ callbackUrl: 'https://newmtaxproject-production.up.railway.app/'})} >Logout</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => signOut({ callbackUrl: `${getBaseUrl()}/`})} >Logout</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>

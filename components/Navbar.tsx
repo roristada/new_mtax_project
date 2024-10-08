@@ -63,6 +63,14 @@ const Navbar = () => {
   const [dashboardPath, setDashboardPath] = useState("");
   const pathname = usePathname();
 
+  const getBaseUrl = () => {
+    if (typeof window !== 'undefined') {
+      return window.location.origin;
+    }
+    // Fallback for server-side rendering
+    return process.env.NEXT_PUBLIC_BASE_URL || 'localhost:3000';
+  };
+
   useEffect(() => {
     if (session && session.user) {
       const role = session.user.role;
@@ -76,7 +84,7 @@ const Navbar = () => {
       
 
       if (expires_session < nowDate) {
-        signOut({ callbackUrl: "/" });
+        signOut({ callbackUrl: `${getBaseUrl()}/`});
       }
     }
   }, [session]);
@@ -154,7 +162,7 @@ const Navbar = () => {
                     <DropdownMenuItem><Link href={dashboardPath}>Dashboard</Link></DropdownMenuItem>
                     <DropdownMenuItem>Support</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })} >Logout</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => signOut({ callbackUrl: `${getBaseUrl()}/`})} >Logout</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>

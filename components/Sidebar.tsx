@@ -78,6 +78,14 @@ export default function Sidebar() {
   const pathname = usePathname();
   const id = params.slug as string;
 
+  const getBaseUrl = () => {
+    if (typeof window !== 'undefined') {
+      return window.location.origin;
+    }
+    // Fallback for server-side rendering
+    return process.env.NEXT_PUBLIC_BASE_URL || 'localhost:3000';
+  };
+
   const getUrl = useCallback((url: string) => url.replace(":id", id), [id]);
 
   useEffect(() => {
@@ -88,7 +96,7 @@ export default function Sidebar() {
             const expires_session = new Date(session.expires).getTime();
             const nowDate = Date.now();
             if (expires_session < nowDate) {
-              await signOut({ callbackUrl: "/" });
+              await signOut({ callbackUrl: `${getBaseUrl()}/`});
             }
           }
         }
@@ -188,7 +196,7 @@ export default function Sidebar() {
 
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={() => signOut({ callbackUrl: "/" })}
+                    onClick={() => signOut({ callbackUrl: `${getBaseUrl()}/` })}
                   >
                     Logout
                   </DropdownMenuItem>

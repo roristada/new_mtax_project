@@ -19,8 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["*"], // This will map `@/` to the root directory
-      "@/components/*": ["components/*"]
+      "@/*": ["./*"],
+      "@/components/*": ["./components/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

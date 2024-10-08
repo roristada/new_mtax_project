@@ -13,9 +13,9 @@ import {
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Label } from "../../../../components/ui/label";
+import { Input } from "../../../../components/ui/input";
+import { Button } from "../../../../components/ui/button";
 import {
   addMonths,
   format,
@@ -28,7 +28,7 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 
 import { cn } from "../../../../lib/utils";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar } from "../../../../components/ui/calendar";
 import {
   Popover,
   PopoverContent,

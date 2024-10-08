@@ -8,7 +8,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "../../../../components/ui/select";
 
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
@@ -33,14 +33,14 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "../../../../components/ui/popover";
+import { Tabs, TabsList, TabsTrigger } from "../../../../components/ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { useSession } from "next-auth/react";
-import useAuthAdmin from "@/lib/useAuthAdmin";
-import { DatePickerWithRange } from "@/components/Datepicker/Daterange";
-import BigCalendar from "@/components/Calendar/AppointmentCalendar";
-import AppointmentCalendar from "@/components/Calendar/AppointmentCalendar";
+import useAuthAdmin from "../../../../lib/useAuthAdmin";
+import { DatePickerWithRange } from "../../../../components/Datepicker/Daterange";
+
+import AppointmentCalendar from "../../../../components/Calendar/AppointmentCalendar";
 
 type Appointment = {
   id: number;

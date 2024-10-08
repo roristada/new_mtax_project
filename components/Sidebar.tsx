@@ -83,7 +83,7 @@ export default function Sidebar() {
       return window.location.origin;
     }
     // Fallback for server-side rendering
-    return process.env.NEXT_PUBLIC_BASE_URL || 'localhost:3000';
+    return process.env.NEXT_PUBLIC_BASE_URL || 'https://newmtaxproject-production.up.railway.app/';
   };
 
   const getUrl = useCallback((url: string) => url.replace(":id", id), [id]);
@@ -97,6 +97,7 @@ export default function Sidebar() {
             const nowDate = Date.now();
             if (expires_session < nowDate) {
               await signOut({ callbackUrl: `${getBaseUrl()}/`});
+              // await signOut({ callbackUrl: `/`});
             }
           }
         }

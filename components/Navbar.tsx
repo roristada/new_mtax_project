@@ -68,7 +68,7 @@ const Navbar = () => {
       return window.location.origin;
     }
     // Fallback for server-side rendering
-    return process.env.NEXT_PUBLIC_BASE_URL || 'localhost:3000';
+    return process.env.NEXT_PUBLIC_BASE_URL || 'https://newmtaxproject-production.up.railway.app/';
   };
 
   useEffect(() => {
@@ -85,6 +85,7 @@ const Navbar = () => {
 
       if (expires_session < nowDate) {
         signOut({ callbackUrl: `${getBaseUrl()}/`});
+        // signOut({ callbackUrl: `/`});
       }
     }
   }, [session]);

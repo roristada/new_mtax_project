@@ -86,7 +86,7 @@ export default function Appointment() {
     fetchAppointments();
   }, []);
 
-  console.log(process.env.NEXT_PUBLIC_PUSHER_KEY , process.env.NEXT_PUBLIC_PUSHER_CLUSTER ,process.env.NEXT_PUBLIC_EMAIL_USER)
+
 
   useEffect(() => {
     // Update disabled times based on selected date

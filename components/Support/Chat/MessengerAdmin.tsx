@@ -63,8 +63,8 @@ export default function MessengerAdmin({ selectedRoom }: MessengerAdminProps) {
   }, [selectedRoom]);
 
   useEffect(() => {
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
-      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
+    const pusher = new Pusher("e41cd48424569d285301", {
+      cluster: "ap1",
     });
     const channel = pusher.subscribe("chat-channel");
     channel.bind("new-message", (data: Message) => {

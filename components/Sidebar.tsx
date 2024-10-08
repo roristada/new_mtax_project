@@ -197,7 +197,7 @@ export default function Sidebar() {
 
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={() => signOut({ callbackUrl: `${getBaseUrl()}/` })}
+                    onClick={() => signOut({ callbackUrl: 'https://newmtaxproject-production.up.railway.app/' })}
                   >
                     Logout
                   </DropdownMenuItem>

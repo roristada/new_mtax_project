@@ -7,20 +7,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+} from "../../../components/ui/table";
+import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Loading from "@/components/Loading/Loading";
+} from "../../../components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import Loading from "../../../components/Loading/Loading";
 import Swal from "sweetalert2";
-import useAuthAdmin from "@/lib/useAuthAdmin";
+import useAuthAdmin from "../../../lib/useAuthAdmin";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -28,9 +28,9 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "../../../components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import AppointmentCalendar from "@/components/Calendar/AppointmentCalendar";
+import AppointmentCalendar from "../../../components/Calendar/AppointmentCalendar";
 import {
   Dialog,
   DialogTrigger,
@@ -38,7 +38,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogHeader,
-} from "@/components/ui/dialog"; // Assuming using Radix dialog
+} from "../../../components/ui/dialog"; // Assuming using Radix dialog
 import {
   CalendarIcon,
   BuildingIcon,
@@ -47,7 +47,7 @@ import {
   ClockIcon,
   FileTextIcon,
 } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "../../../components/ui/separator";
 
 type Appointment = {
   id: number;

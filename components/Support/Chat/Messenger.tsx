@@ -76,7 +76,7 @@ export default function Component() {
     };
   }, []);
 
-  console.log(process.env.NEXT_PUBLIC_PUSHER_KEY , process.env.NEXT_PUBLIC_PUSHER_CLUSTER)
+  
 
   const scrollToBottom = useCallback(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });

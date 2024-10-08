@@ -1,11 +1,11 @@
-import CustomTooltip from "@/components/Charts/CustomTooltipMonth";
+import CustomTooltip from "../../../../../../components/Charts/CustomTooltipMonth";
 import {
   ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-} from "@/components/ui/chart";
+} from "../../../../../../components/ui/chart";
 import React from "react";
 import {
   BarChart as RechartsBarChart,

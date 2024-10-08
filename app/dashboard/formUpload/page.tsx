@@ -7,19 +7,19 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+} from "../../../components/ui/card";
+import { Label } from "../../../components/ui/label";
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from "../../../components/ui/select";
+import { Input } from "../../../components/ui/input";
+import { Button } from "../../../components/ui/button";
 import Swal from "sweetalert2";
-import useAuthAdmin from "@/lib/useAuthAdmin";
+import useAuthAdmin from "../../../lib/useAuthAdmin";
 
 const getCurrentYear = () => new Date().getFullYear();
 const generateYearOptions = (startYear: number) => {

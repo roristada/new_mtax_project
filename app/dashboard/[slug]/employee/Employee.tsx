@@ -21,7 +21,7 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../../components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -30,8 +30,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+} from "../../../../components/ui/dropdown-menu";
+import { Input } from "../../../../components/ui/input";
 import {
   Table,
   TableBody,
@@ -39,8 +39,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from "../../../../components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card";
 import { useEffect, useState, useMemo } from "react";
 import {
   Select,
@@ -50,7 +50,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import EmployeeDetailsDialog from "./Employee_detail";
-import EmployeeBarChartsDialog from "@/app/dashboard/[slug]/employee/EmpBarChart";
+import EmployeeBarChartsDialog from "./EmpBarChart";
 
 type Employee = {
   id: number;

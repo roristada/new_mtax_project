@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import Loading from "@/components/Loading/Loading";
+import { Avatar, AvatarFallback, AvatarImage } from "../../../components/ui/avatar";
+import { Separator } from "../../../components/ui/separator";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Badge } from "../../../components/ui/badge";
+import Navbar from "../../../components/Navbar";
+import Footer from "../../../components/Footer";
+import Loading from "../../../components/Loading/Loading";
 
 interface Post {
   id: number;

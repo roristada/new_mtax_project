@@ -21,10 +21,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+} from "../../../components/ui/card";
+import { ChartContainer, ChartTooltipContent } from "../../../components/ui/chart";
 import EmployeeDialog from "./EmployeeDialog";
-import Loading from "@/components/Loading/Loading";
+import Loading from "../../../components/Loading/Loading";
 
 interface Employee {
   name: string;

@@ -2,17 +2,17 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Pusher from "pusher-js";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage } from "../../../components/ui/avatar";
+import { Button } from "../../../components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "../../../components/ui/card";
+import { Input } from "../../../components/ui/input";
+import { ScrollArea } from "../../../components/ui/scroll-area";
 import { useSession } from "next-auth/react";
 import { Send } from "lucide-react";
 

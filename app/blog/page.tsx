@@ -1,15 +1,15 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import Navbar from "@/components/Navbar";
+import { Card, CardContent, CardFooter } from "../../components/ui/card";
+import Navbar from "../../components/Navbar";
 import { useEffect, useState } from "react";
 
-import Loading from "@/components/Loading/Loading";
-import { Button } from "@/components/ui/button";
+import Loading from "../../components/Loading/Loading";
+import { Button } from "../../components/ui/button";
 import { Filter } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "../../components/ui/checkbox";
+import { Badge } from "../../components/ui/badge";
 import Image from 'next/image';
 
 interface Post {

@@ -1,12 +1,12 @@
 "use client";
 import * as React from "react";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
-import { File, ListFilter, Loader2, TrendingUp } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { Button } from "@/components/ui/button";
+import { File, ListFilter, Loader2, TrendingUp } from "lucide-react";
+import { Input } from "../../../../components/ui/input";
+import { Label } from "../../../../components/ui/label";
+
+import { ChartConfig, ChartContainer } from "../../../../components/ui/chart";
+import { Button } from "../../../../components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,14 +14,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "../../../../components/ui/card";
 
 import { useEffect, useMemo, useState } from "react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "../../../../components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -30,7 +30,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "../../../../components/ui/select";
 
 import {
   Dialog,
@@ -40,10 +40,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "../../../../components/ui/dialog";
 
-import { Checkbox } from "@/components/ui/checkbox";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "../../../../components/ui/checkbox";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../components/ui/tabs";
 
 import FinancialBarChart from "./(Charts)/BarChart";
 import FinancialLineChart from "./(Charts)/LineChart";
@@ -53,10 +53,10 @@ import FinancialMonthBarChart from "./(Charts)/Month/BarChart";
 import FinancialMonthAreaChart from "./(Charts)/Month/AreaChart";
 import FinancialMonthLineChart from "./(Charts)/Month/LineChart";
 
-import RangeComChart from "@/components/Charts/Range_Commission/BarChart";
-import RangeDilChart from "@/components/Charts/Range_Diligence/BarChart";
-import Radian from "@/components/Charts/Radian/Employee_Count/Radian";
-import ExportButton from "@/components/ExportButton/ExportButton";
+import RangeComChart from "../../../../components/Charts/Range_Commission/BarChart";
+import RangeDilChart from "../../../../components/Charts/Range_Diligence/BarChart";
+import Radian from "../../../../components/Charts/Radian/Employee_Count/Radian";
+import ExportButton from "../../../../components/ExportButton/ExportButton";
 
 interface SelectedDataTypes {
   Income: boolean;

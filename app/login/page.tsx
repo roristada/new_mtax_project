@@ -1,10 +1,10 @@
 "use client";
 
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Label } from "../../components/ui/label";
+import { Input } from "../../components/ui/input";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import Navbar from "@/components/Navbar";
+import { Button } from "../../components/ui/button";
+import Navbar from "../../components/Navbar";
 import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import Swal from "sweetalert2";

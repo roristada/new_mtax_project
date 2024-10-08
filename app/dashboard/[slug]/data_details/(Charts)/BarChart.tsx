@@ -1,5 +1,5 @@
-import CustomTooltip from '@/components/Charts/CustomTooltip';
-import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip } from '@/components/ui/chart'
+import CustomTooltip from '../../../../../components/Charts/CustomTooltip';
+import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip } from '../../../../../components/ui/chart'
 import React, { useState } from 'react'
 import { BarChart as RechartsBarChart, Bar, CartesianGrid, XAxis, YAxis } from 'recharts';
 

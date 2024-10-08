@@ -8,7 +8,7 @@ import {
   CardTitle,
   CardContent,
   CardDescription,
-} from "@/components/ui/card";
+} from "../../../components/ui/card";
 import {
   Table,
   TableHeader,
@@ -16,8 +16,8 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+} from "../../../components/ui/table";
+import { Badge } from "../../../components/ui/badge";
 import {
   BookOpenText,
   Building2,
@@ -26,7 +26,7 @@ import {
   ScanSearch,
   Bell,
 } from "lucide-react";
-import useAuthAdmin from "@/lib/useAuthAdmin";
+import useAuthAdmin from "../../../lib/useAuthAdmin";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,7 +34,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "../../../components/ui/dropdown-menu";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import {
@@ -42,7 +42,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "../../../components/ui/dialog";
 
 interface DashboardData {
   totalCustomer: number;

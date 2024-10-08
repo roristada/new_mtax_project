@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import RangeComChart from "@/components/Charts/Range_Commission/BarChart";
+import RangeComChart from "../../components/Charts/Range_Commission/BarChart";
 
 const page = () => {
   

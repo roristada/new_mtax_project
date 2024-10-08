@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "../../../components/ui/button";
+import { Badge } from "../../../components/ui/badge";
 import {
   Table,
   TableBody,
@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "../../../components/ui/table";
 import { PlusCircle, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import Swal from "sweetalert2";
@@ -22,24 +22,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import useAuthAdmin from "@/lib/useAuthAdmin";
-import { Switch } from "@/components/ui/switch";
+} from "../../../components/ui/dialog";
+import { Label } from "../../../components/ui/label";
+import { Input } from "../../../components/ui/input";
+import { Textarea } from "../../../components/ui/textarea";
+import useAuthAdmin from "../../../lib/useAuthAdmin";
+import { Switch } from "../../../components/ui/switch";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import TextEditer from "@/components/TextEditer/TextEditer";
+} from "../../../components/ui/select";
+import TextEditer from "../../../components/TextEditer/TextEditer";
 import dynamic from 'next/dynamic';
 
 // Dynamically import components that might use 'document'
-const DynamicTextEdit = dynamic(() => import('@/components/TextEditer/TextEdit'), { ssr: false });
+const DynamicTextEdit = dynamic(() => import('../../../components/TextEditer/TextEdit'), { ssr: false });
 
 
 interface Author {

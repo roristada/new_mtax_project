@@ -8,18 +8,18 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "../../components/ui/select";
 
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Label } from "../../components/ui/label";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import useAuthAdmin from "@/lib/useAuthAdmin";
-import Sidebar from "@/components/Sidebar";
+import Navbar from "../../components/Navbar";
+import useAuthAdmin from "../../lib/useAuthAdmin";
+import Sidebar from "../../components/Sidebar";
 
 export default function Register() {
   const [isAuthChecked, setIsAuthChecked] = useState(false);

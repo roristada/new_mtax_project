@@ -1,5 +1,4 @@
-import Sidebar from "@/components/Sidebar";
-
+import Sidebar from "../../../components/Sidebar";
 export default async function RootLayout({
   children,
 }: Readonly<{

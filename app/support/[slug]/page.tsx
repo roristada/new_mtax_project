@@ -1,23 +1,23 @@
 "use client";
 import React, { useEffect, useState, useCallback } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import FormReport from "@/components/Support/Report/FormReport";
-import Messenger from "@/components/Support/Chat/Messenger";
+} from "../../../components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import FormReport from "../../../components/Support/Report/FormReport";
+import Messenger from "../../../components/Support/Chat/Messenger";
 import { useSession } from "next-auth/react";
-import { Input } from "@/components/ui/input";
+import { Input } from "../../../components/ui/input";
 import { Search } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import MessengerAdmin from "@/components/Support/Chat/MessengerAdmin";
+import { Avatar, AvatarFallback, AvatarImage } from "../../../components/ui/avatar";
+import MessengerAdmin from "../../../components/Support/Chat/MessengerAdmin";
 import { useRouter } from "next/navigation";
-import Report_table from "@/components/Support/Report/Report_table";
+import Report_table from "../../../components/Support/Report/Report_table";
 
 interface Customer {
   id: number;

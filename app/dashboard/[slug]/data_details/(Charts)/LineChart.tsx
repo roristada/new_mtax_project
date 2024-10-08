@@ -1,4 +1,4 @@
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { ChartConfig, ChartContainer } from "../../../../../components/ui/chart";
 import exp from "constants";
 import {
   LineChart,

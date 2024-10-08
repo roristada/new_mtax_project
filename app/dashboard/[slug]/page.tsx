@@ -8,15 +8,15 @@ import {
   TrendingUpIcon,
 } from "lucide-react";
 
-import IncomeBreakdownDonutChart from "@/components/Charts/Donut/IncomeBreakdownDonutChart";
-import BarChart_Component from "@/components/Charts/Bar/BarChart";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartConfig } from "@/components/ui/chart";
+import IncomeBreakdownDonutChart from "../../../components/Charts/Donut/IncomeBreakdownDonutChart";
+import BarChart_Component from "../../../components/Charts/Bar/BarChart";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { ChartConfig } from "../../../components/ui/chart";
 
 import { useEffect, useMemo, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ExpenseBreakdownDonutChart from "@/components/Charts/Donut/ExpenseBreakdownDonutChart ";
-import TaxBreakdownDonutChart from "@/components/Charts/Donut/TaxBreakdownDonutChart";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import ExpenseBreakdownDonutChart from "../../../components/Charts/Donut/ExpenseBreakdownDonutChart ";
+import TaxBreakdownDonutChart from "../../../components/Charts/Donut/TaxBreakdownDonutChart";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";

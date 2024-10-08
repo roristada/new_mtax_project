@@ -7,26 +7,26 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from "../../../../components/ui/card";
+import { Label } from "../../../../components/ui/label";
+import { Input } from "../../../../components/ui/input";
+import { Button } from "../../../../components/ui/button";
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select";
-import Navbar from "@/components/Navbar";
+} from "../../../../components/ui/select";
+import Navbar from "../../../../components/Navbar";
 import dynamic from "next/dynamic";
 import Swal from "sweetalert2";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
+import { Switch } from "../../../../components/ui/switch";
+import { Separator } from "../../../../components/ui/separator";
 
-const TextEditer = dynamic(() => import("@/components/TextEditer/TextEditer"), {
+const TextEditer = dynamic(() => import("../../../../components/TextEditer/TextEditer"), {
   ssr: false,
 });
 

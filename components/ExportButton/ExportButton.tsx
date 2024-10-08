@@ -1,15 +1,15 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
+} from "../../components/ui/dialog"
+import { ScrollArea } from "../../components/ui/scroll-area"
 import { Loader2, Download } from "lucide-react"
 
 interface ExportButtonProps {

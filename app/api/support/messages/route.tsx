@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { pusher } from "@/lib/pusher";
+import { pusher } from "../../../../lib/pusher";
 
 const prisma = new PrismaClient();
 

@@ -9,7 +9,7 @@ export async function GET(
 ) {
   const { searchParams } = new URL(request.url);
   const year = searchParams.get("year");
-  
+  const companyId = searchParams.get("companyId");
 
   interface Employee {
     name: string;
@@ -34,10 +34,10 @@ export async function GET(
   try {
     // Fetch employee data and commission from the database
     const employees = await prisma.employee.findMany({
-      where: { year: Number(year) },
+      where: { year: Number(year), companyId: Number(companyId) },
       include: {
         incomes: {
-          where: { year: Number(year) },
+          where: { year: Number(year), companyId: Number(companyId) },
           select: {
             commission: true,
             diligence: true,

@@ -261,7 +261,7 @@ export default function Compare({ slug }: { slug: string }) {
 
           // Fetch commission and diligence data for the latest year
           const commissionRes = await fetch(
-            `/api/dashboard/${slug}/commission_sum?year=${latestYear}`
+            `/api/dashboard/${slug}/commission_sum?companyId=${slug}&year=${latestYear}`
           );
           const commissionData = await commissionRes.json();
           setRangeCommission(commissionData.commissionRanges);

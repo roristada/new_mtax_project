@@ -240,7 +240,7 @@ export default function CommissionDiligencePage() {
     };
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/dashboard/${slug}/com-dil`);
+        const response = await fetch(`/api/dashboard/${slug}/com-dil?companyId=${slug}`);
         const data = await response.json();
         setUniqueYears(data.years);
         setSelectedYearCom(data.year);
@@ -259,7 +259,7 @@ export default function CommissionDiligencePage() {
       if (selectedYearCom) {
         try {
           const response = await fetch(
-            `/api/dashboard/${slug}/com-dil?year=${selectedYearCom}`
+            `/api/dashboard/${slug}/com-dil?companyId=${slug}&year=${selectedYearCom}`
           );
           const data = await response.json();
           console.log("Fetched data:", data); // เพิ่ม log นี้

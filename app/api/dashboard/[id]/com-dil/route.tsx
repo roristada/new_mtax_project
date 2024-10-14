@@ -23,6 +23,7 @@ export async function GET(
 ) {
   const { searchParams } = new URL(request.url);
   const year = searchParams.get("year");
+  const companyId = searchParams.get("companyId");
 
   try {
     let targetYear: number;
@@ -30,6 +31,7 @@ export async function GET(
     if (!year) {
       // If no year is provided, get the latest year
       const latestYear = await prisma.employee.findFirst({
+        where: { companyId: Number(companyId) },
         select: { year: true },
         orderBy: { year: 'desc' },
       });
@@ -40,10 +42,10 @@ export async function GET(
 
     // Fetch data for the target year
     const employees = await prisma.employee.findMany({
-      where: { year: targetYear },
+      where: { year: targetYear, companyId: Number(companyId) },
       include: {
         incomes: {
-          where: { year: targetYear },
+          where: { year: targetYear, companyId: Number(companyId) },
           select: {
             commission: true,
             diligence: true,

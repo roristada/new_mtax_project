@@ -15,7 +15,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "../../../../../../../components/ui/popover";
 import { TrendingUp, ArrowUpIcon, ArrowDownIcon, PercentIcon, CalendarIcon } from "lucide-react";
 import PieChartComponent from "../../(Charts)/Breakdown/PieChartIncome";
 import {

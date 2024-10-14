@@ -19,7 +19,7 @@ import MessengerAdmin from "../../../../components/Support/Chat/MessengerAdmin";
 import { useRouter } from "next/navigation";
 import Report_table from "../../../../components/Support/Report/Report_table";
 import { useTranslations } from "next-intl";
-import useAuthEffect from "@/lib/useAuthEffect";
+import useAuthEffect from "../../../../lib/useAuthEffect";
 
 interface Customer {
   id: number;

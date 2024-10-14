@@ -59,7 +59,7 @@ import Radian from "../../../../../components/Charts/Radian/Employee_Count/Radia
 import ExportButton from "../../../../../components/ExportButton/ExportButton";
 
 import { useTranslations } from 'next-intl';
-import useAuthEffect from "@/lib/useAuthEffect";
+import useAuthEffect from "../../../../../lib/useAuthEffect";
 
 interface SelectedDataTypes {
   Income: boolean;

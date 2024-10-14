@@ -17,9 +17,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../components/ui/tabs";
 import ExpenseBreakdownDonutChart from "../../../../components/Charts/Donut/ExpenseBreakdownDonutChart ";
 import TaxBreakdownDonutChart from "../../../../components/Charts/Donut/TaxBreakdownDonutChart";
-import useAuthEffect from "@/lib/useAuthEffect";
+import useAuthEffect from "../../../../lib/useAuthEffect";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+
 
 
 interface MonthlySummary {

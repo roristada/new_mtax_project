@@ -175,11 +175,9 @@ export default function Blog() {
                   publishedPosts.map((post) => (
                     <Card key={post.id} className="flex flex-col h-full">
                       <div className="mb-4 relative w-full h-64">
-                        <Image
+                        <img
                           src={post.picture || "https://via.placeholder.com/400x250"}
                           alt={post.title}
-                          layout="fill"
-                          objectFit="cover"
                           className="rounded-lg"
                         />
                       </div>

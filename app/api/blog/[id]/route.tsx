@@ -12,7 +12,7 @@ const storage = new Storage({
   },
 });
 
-const bucketName = 'mtax-storage-file';
+const bucketName = process.env.GOOGLE_CLOUD_STORAGE_BUCKET_NAME || '';
 
 export async function DELETE(
   req: Request,

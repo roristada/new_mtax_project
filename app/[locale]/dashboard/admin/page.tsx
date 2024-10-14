@@ -348,7 +348,7 @@ const Dashboard = () => {
                       <div className="flex items-center gap-4">
                         <div className="grid gap-1">
                           <p className="text-sm font-medium leading-none">
-                            {blog.title}
+                            <Link href={`/blog/${blog.id}`}>{blog.title}</Link>
                           </p>
                           <p className="text-sm text-muted-foreground">
                             {blog.createdAt}

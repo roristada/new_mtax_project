@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface FormData {
   name: string;
@@ -27,6 +27,7 @@ interface FormData {
 export default function ProblemReportForm() {
   const { data: session } = useSession();
   const [isAuthChecked, setIsAuthChecked] = useState(false);
+  const locale = useLocale();
   const [formData, setFormData] = useState<FormData>({
     name: "",
     company: "",
@@ -75,7 +76,7 @@ export default function ProblemReportForm() {
           title: t('thankYouTitle'),
           text: t('thankYouText'),
         }).then(() => {
-          route.push(`/dashboard/${session?.user?.id}`);
+          route.push(`/${locale}/dashboard/${session?.user?.id}`);
         });
       } else {
         console.log(res.text);

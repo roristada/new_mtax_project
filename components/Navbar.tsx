@@ -62,6 +62,7 @@ const links = [
 const Navbar = () => {
   const { data: session, status } = useSession();
   const [dashboardPath, setDashboardPath] = useState("");
+  const [supportPath, setSupportPath] = useState("");
   const pathname = usePathname();
   const t = useTranslations("Navbar");
   const locale = useLocale();
@@ -83,8 +84,10 @@ const Navbar = () => {
       const role = session.user.role;
       if (role === "admin") {
         setDashboardPath("/dashboard/admin");
+        setSupportPath("/support/admin");
       } else if (role === "customer") {
         setDashboardPath(`/dashboard/${session.user.id}`);
+        setSupportPath(`/support/${session.user.id}`);
       }
       const expires_session = new Date(session.expires).getTime();
       const nowDate = Date.now();
@@ -187,7 +190,9 @@ const Navbar = () => {
                     <DropdownMenuItem>
                       <Link href={dashboardPath}>{t("dashboard")}</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>{t("support")}</DropdownMenuItem>
+                    <DropdownMenuItem>{t("support")}
+                      <Link href={"/support"}>{t("support")}</Link>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() =>

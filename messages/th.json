@@ -117,6 +117,7 @@
     "noAppointmentsFound": "ไม่พบการนัดหมาย",
     "details": "รายละเอียด",
     "delete": "ลบ",
+    "actions": "การดำเนินการ",
     "tableHeaders": {
       "name": "ชื่อ",
       "company": "บริษัท",
@@ -134,11 +135,7 @@
       "canceled": "ยกเลิก",
       "confirmed": "ยืนยันแล้ว"
     },
-    "actions": {
-      "view": "ดู",
-      "edit": "แก้ไข",
-      "delete": "ลบ"
-    },
+    
     "pagination": {
       "previous": "ก่อนหน้า",
       "next": "ถัดไป",
@@ -703,6 +700,7 @@
     "title": "การจัดการรายงานปัญหา",
     "description": "จัดการรายงานปัญหาและดูรายละเอียด",
     "searchPlaceholder": "ค้นหาตามชื่อหรือหมวดหมู่...",
+    "noSupportCases": "ไม่พบรายงานปัญหา",
     "tableHeaders": {
       "name": "ชื่อ",
       "category": "หมวดหมู่",

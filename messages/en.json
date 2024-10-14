@@ -697,6 +697,7 @@
     "title": "Manage Report Problems",
     "description": "Manage report problems and view details",
     "searchPlaceholder": "Search by name or category...",
+    "noSupportCases": "No support cases found.",
     "tableHeaders": {
       "name": "Name",
       "category": "Category",

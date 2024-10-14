@@ -1,6 +1,18 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { Storage } from '@google-cloud/storage';
+
 const prisma = new PrismaClient();
+
+const storage = new Storage({
+  projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+  credentials: {
+    client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
+    private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+  },
+});
+
+const bucketName = 'mtax-storage-file';
 
 export async function DELETE(
   req: Request,
@@ -91,7 +103,7 @@ export async function GET(
       include: {
         author: {
           select: {
-            name: true, // Select only the author's name
+            name: true,
           },
         },
       },
@@ -101,8 +113,31 @@ export async function GET(
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
+    // If the post has a picture, generate a signed URL
+    let pictureUrl = post.picture;
+    if (pictureUrl && pictureUrl.startsWith('https://storage.googleapis.com/')) {
+      const fileName = pictureUrl.split('/').pop();
+      if (fileName) {
+        const [url] = await storage
+          .bucket(bucketName)
+          .file(`blog_pic/${fileName}`)
+          .getSignedUrl({
+            version: 'v4',
+            action: 'read',
+            expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+          });
+        pictureUrl = url;
+      }
+    }
+
     return NextResponse.json(
-      { message: "Post successfully fetched", post: post },
+      { 
+        message: "Post successfully fetched", 
+        post: {
+          ...post,
+          picture: pictureUrl
+        }
+      },
       { status: 200 }
     );
   } catch (error) {

@@ -9,9 +9,9 @@ export async function GET(
 ) {
   const { searchParams } = new URL(request.url);
   const year = searchParams.get("year");
-  const id = params.id;
+  
 
-  interface EmployeePerformance {
+  interface Employee {
     name: string;
     totalCommission: number;
     totalDiligence: number;
@@ -21,14 +21,14 @@ export async function GET(
     min: number;
     max: number;
     count: number;
-    employees: EmployeePerformance[];
+    employees: Employee[];
   }
 
   interface DiligenceRange {
     min: number;
     max: number;
     count: number;
-    employees: EmployeePerformance[];
+    employees: Employee[];
   }
 
   try {

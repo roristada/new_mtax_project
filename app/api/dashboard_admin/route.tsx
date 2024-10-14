@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
             }),
         }));
 
-        console.log(process.env.GOOGLE_CLOUD_PROJECT_ID , process.env.GOOGLE_CLOUD_CLIENT_EMAIL , process.env.GOOGLE_CLOUD_PRIVATE_KEY)
+        
 
 
         return NextResponse.json({

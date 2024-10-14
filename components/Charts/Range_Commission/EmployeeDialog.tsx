@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../../../components/ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/table"
-import { Input } from "../../../components/ui/input" // Import Input component for search
+import { Input } from "../../../components/ui/input"
 import { Button } from "../../../components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon, ChevronDownIcon } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface Employee {
   name: string
@@ -21,13 +22,13 @@ type SortField = 'totalCommission' | 'totalDiligence'
 type SortOrder = 'asc' | 'desc'
 
 export default function EmployeeDialog({ isOpen, onClose, employees }: EmployeeDialogProps) {
+  const t = useTranslations('EmployeeDialog');
   const [currentPage, setCurrentPage] = useState(1)
-  const [searchQuery, setSearchQuery] = useState('') // State for the search input
+  const [searchQuery, setSearchQuery] = useState('')
   const itemsPerPage = 10
   const [sortField, setSortField] = useState<SortField | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
 
-  // Filter employees based on search query
   const filteredEmployees = employees.filter(employee =>
     employee.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
@@ -35,7 +36,7 @@ export default function EmployeeDialog({ isOpen, onClose, employees }: EmployeeD
   useEffect(() => {
     if (!isOpen) {
       setCurrentPage(1)
-      setSearchQuery('') // Optionally reset searchQuery when closing dialog
+      setSearchQuery('')
     }
   }, [isOpen])
 
@@ -77,14 +78,13 @@ export default function EmployeeDialog({ isOpen, onClose, employees }: EmployeeD
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Employees in Range</DialogTitle>
+          <DialogTitle>{t('title')}</DialogTitle>
         </DialogHeader>
         <DialogDescription>
           {employees.length > 0 ? (
             <div className="mt-4">
-              {/* Search input */}
               <Input
-                placeholder="Search by name..."
+                placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="mb-4"
@@ -93,15 +93,15 @@ export default function EmployeeDialog({ isOpen, onClose, employees }: EmployeeD
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
+                    <TableHead>{t('name')}</TableHead>
                     <TableHead onClick={() => handleSort('totalCommission')} className="cursor-pointer">
-                      Total Commission
+                      {t('totalCommission')}
                       {sortField === 'totalCommission' && (
                         sortOrder === 'asc' ? <ChevronUpIcon className="inline ml-1 h-4 w-4" /> : <ChevronDownIcon className="inline ml-1 h-4 w-4" />
                       )}
                     </TableHead>
                     <TableHead onClick={() => handleSort('totalDiligence')} className="cursor-pointer">
-                      Total Diligence
+                      {t('totalDiligence')}
                       {sortField === 'totalDiligence' && (
                         sortOrder === 'asc' ? <ChevronUpIcon className="inline ml-1 h-4 w-4" /> : <ChevronDownIcon className="inline ml-1 h-4 w-4" />
                       )}
@@ -119,7 +119,7 @@ export default function EmployeeDialog({ isOpen, onClose, employees }: EmployeeD
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={3}>No employees found.</TableCell>
+                      <TableCell colSpan={3}>{t('noEmployeesFound')}</TableCell>
                     </TableRow>
                   )}
                 </TableBody>
@@ -133,10 +133,10 @@ export default function EmployeeDialog({ isOpen, onClose, employees }: EmployeeD
                   size="sm"
                 >
                   <ChevronLeftIcon className="h-4 w-4" />
-                  Previous
+                  {t('previous')}
                 </Button>
                 <span>
-                  Page {currentPage} of {totalPages}
+                  {t('pageInfo', { current: currentPage, total: totalPages })}
                 </span>
                 <Button
                   onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
@@ -144,17 +144,17 @@ export default function EmployeeDialog({ isOpen, onClose, employees }: EmployeeD
                   variant="outline"
                   size="sm"
                 >
-                  Next
+                  {t('next')}
                   <ChevronRightIcon className="h-4 w-4" />
                 </Button>
               </div>
             </div>
           ) : (
-            <p>No employees in this range.</p>
+            <p>{t('noEmployeesInRange')}</p>
           )}
         </DialogDescription>
         <DialogFooter>
-          <Button onClick={onClose}>Close</Button>
+          <Button onClick={onClose}>{t('close')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

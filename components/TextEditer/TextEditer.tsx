@@ -39,18 +39,30 @@ const TextEditer: React.FC<TextEditerProps> = ({ onChange }) => {
             method: "POST",
             body: formData,
           });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
           const data = await response.json();
 
-          const range = quillRef.current?.getSelection();
-          if (range) {
-            quillRef.current?.insertEmbed(range.index, "image", data.url);
+          if (data.url) {
+            const range = quillRef.current?.getSelection();
+            if (range && quillRef.current) {
+              quillRef.current.insertEmbed(range.index, "image", data.url);
+              quillRef.current.setSelection(range.index + 1);
+              
+              // Trigger content update
+              const content = quillRef.current.root.innerHTML;
+              onChange(content);
+            }
+          } else {
+            console.error("No URL returned from server");
           }
         } catch (error) {
           console.error("Error uploading image:", error);
         }
       }
     };
-  }, []);
+  }, [onChange]);
 
   const modules = useMemo(() => ({
     toolbar: {

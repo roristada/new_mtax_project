@@ -1,10 +1,13 @@
+"use client"
+import { useLocale } from "next-intl";
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { SVGProps } from "react"
 
+
 export default function Footer() {
   const [isClient, setIsClient] = useState(false);
-
+  const locale = useLocale();
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -18,7 +21,7 @@ export default function Footer() {
       <div className="container max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         <div className="flex flex-col items-start gap-4">
           <Link href="#" className="flex items-center gap-2" prefetch={false}>
-            <ActivityIcon className="w-8 h-8" />
+            
             <span className="font-bold text-lg">Mtax Online Accounting</span>
           </Link>
           <p className="text-muted-foreground">
@@ -43,17 +46,17 @@ export default function Footer() {
         <div className="grid gap-2">
           <h3 className="font-semibold">Services</h3>
           
-          <Link href="#" className="hover:underline" prefetch={false}>
-            Tax Preparation
+          <Link href={`/${locale}/service/online_accounting`} className="hover:underline" prefetch={false}>
+            Online Accounting
           </Link>
-          <Link href="#" className="hover:underline" prefetch={false}>
-            Bookkeeping
+          <Link href={`/${locale}/service/book`} className="hover:underline" prefetch={false}>
+            Bookkeeping Services
           </Link>
-          <Link href="#" className="hover:underline" prefetch={false}>
-            Auditing
+          <Link href={`/${locale}/service/business-startup`} className="hover:underline" prefetch={false}>
+            Business Startup
           </Link>
-          <Link href="#" className="hover:underline" prefetch={false}>
-            Financial Planning
+          <Link href={`/${locale}/service/payroll`} className="hover:underline" prefetch={false}>
+            Payroll Outsourcing
           </Link>
         </div>
         <div className="grid gap-2">
@@ -81,24 +84,7 @@ export default function Footer() {
   )
 }
 
-function ActivityIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />
-    </svg>
-  )
-}
+
 
 function FacebookIcon(props: SVGProps<SVGSVGElement>) {
   return (

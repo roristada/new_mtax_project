@@ -1,0 +1,901 @@
+{
+  "HomePage": {
+    "title": "Hello world!",
+    "about": "Go to the about page"
+  },
+  "Navbar": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "knowledge": "Knowledge",
+    "contact": "Contact",
+    "appointment": "Appointment",
+    "login": "Login",
+    "myAccount": "My Account",
+    "dashboard": "Dashboard",
+    "support": "Support",
+    "logout": "Logout"
+  },
+  "Services": {
+    "title": "Service",
+    "onlineAccounting": {
+      "title": "Online Accounting",
+      "description": "Service characteristics:",
+      "details": [
+        "Cloud Accounting for bookkeeping through standard software",
+        "Sending trade documents via electronic media such as Email, Line, SMS, Fax, Scan, Photos",
+        "Ability to view transactions via mobile (All Devices)",
+        "Within 24 hours after sending documents, you can view and issue financial statements and drill down documents"
+      ],
+      "moreDetails": "More Details"
+    },
+    "payrollOutsourcing": {
+      "title": "Payroll Outsourcing",
+      "description": "Service characteristics:",
+      "details": [
+        "Outsourced payroll services, can divide salary payment into 4 installments",
+        "Internet-based services for PND1 filing, social security filing, employee entry and exit notifications",
+        "Preparation of files for bank submission",
+        "Filing of PND90, 91 forms with tax calculation sheets for employees"
+      ],
+      "moreDetails": "More Details"
+    },
+    "bookkeepingServices": {
+      "title": "Bookkeeping Services",
+      "description": "Service characteristics:",
+      "details": [
+        "Tax Accounting: Providing accounting services in the form of an accounting office covering tax work, social security, Department of Business Development, handling related government filings, submitting annual financial statements",
+        "Financial Accounting: Monthly accounting and closing, focusing on accuracy according to accounting standards, bank reconciliation, prioritizing the company's cash flow",
+        "Management Accounting: Providing management accounting services, a continuation of Financial Accounting by presenting information to executives in the form of Dashboard, Infographic, PowerPoint"
+      ],
+      "moreDetails": "More Details"
+    },
+    "businessStartup": {
+      "title": "Business Startup",
+      "description": "Service characteristics:",
+      "details": [
+        "Company and legal entity establishment",
+        "Preparation of forms for business use",
+        "Basic business plan advice for new entrepreneurs",
+        "Consultation on important trade laws for the business",
+        "Handling changes to existing legal entities, capital increase, change of director authority, company name change, change of business objectives, VAT registration"
+      ],
+      "moreDetails": "More Details"
+    }
+  },
+  "Contact": {
+    "title": "Contact",
+    "address": "Address",
+    "contactUs": "Contact Us",
+    "email": "Email",
+    "tel": "Tel.",
+    "fax": "Fax."
+  },
+  "Footer": {
+    "quickLinks": "Quick Links",
+    "services": "Services",
+    "followUs": "Follow Us",
+    "copyright": "© 2024 Acme Accounting. All rights reserved."
+  },
+  "About": {
+    "title": "About us",
+    "subtitle": "Our Company",
+    "description": {
+      "part1": "The office was established in 1996 under the name M.Tax & Solution Accounting Office as a group of individuals.",
+      "part2": "In 2005, it was transformed into a legal entity under the name Mtax Online Accounting Co., Ltd. with a registered capital of 1.0 million baht.",
+      "policies": "Company Policies and Missions",
+      "policy1": "1. Strictly maintain client confidentiality",
+      "policy2": "2. Maintain professional service standards",
+      "policy3": "3. Provide accurate service to clients based on important documentary evidence",
+      "policy4": "4. Follow the principle of working as if the office is part of the same team as your business",
+      "goal": "Goal",
+      "goalDescription": "To be a modern accounting office keeping up with technology, a 24-hour accounting office. Clients can access information on all devices."
+    }
+  },
+  "Sidebar": {
+    "home": "Home",
+    "appointment": "Appointment",
+    "register": "Register",
+    "blog": "Blog",
+    "support": "Support",
+    "overview": "Overview",
+    "employee": "Employee",
+    "dataDetails": "Data Details",
+    "dashboard": "Dashboard",
+    "myAccount": "My Account",
+    "logout": "Logout",
+    "financialOverview": "Financial Overview",
+    "financialBreakdown": "Financial Breakdown",
+    "commissionDiligence": "Commission & Diligence",
+    "dataVisualization": "Data Visualization"
+  },
+  "AppointmentsManage": {
+    "title": "Appointments Management",
+    "description": "Manage your appointments and view their details.",
+    "addAppointment": "Add Appointment",
+    "searchPlaceholder": "Search by name or date",
+    "tableHeaders": {
+      "name": "Name",
+      "company": "Company",
+      "email": "Email",
+      "telephone": "Telephone",
+      "date": "Date",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "pending": "Pending",
+      "completed": "Completed",
+      "canceled": "Canceled",
+      "confirmed": "Confirmed"
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {currentPage} of {totalPages}"
+    },
+    "dialog": {
+      "title": "Appointment Details",
+      "company": "Company",
+      "email": "Email",
+      "telephone": "Telephone",
+      "note": "Note"
+    }
+  },
+  "AppointmentForm": {
+    "title": "Appointment",
+    "subtitle": "Enter your details to make an Appointment.",
+    "tabs": {
+      "customer": "Customer",
+      "admin": "Admin"
+    },
+    "fields": {
+      "name": "Name",
+      "company": "Company",
+      "email": "Email",
+      "date": "Date",
+      "pickDate": "Pick a date",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "telephone": "Telephone",
+      "note": "Note",
+      "selectStartTime": "Select Start Time"
+    },
+    "buttons": {
+      "submit": "Submit",
+      "submitting": "Submitting..."
+    },
+    "errors": {
+      "invalidEmail": "Invalid email format"
+    },
+    "success": {
+      "title": "Good job!",
+      "message": "Appointment successfully created"
+    },
+    "error": {
+      "title": "Something went wrong!",
+      "message": "An error occurred while creating the appointment"
+    }
+  },
+  "Register": {
+    "title": "Register",
+    "subtitle": "Enter your details to create an account.",
+    "fields": {
+      "name": "Name",
+      "company": "Company",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "address": "Address",
+      "telephone": "Telephone",
+      "role": "Role"
+    },
+    "placeholders": {
+      "name": "Enter your Name",
+      "company": "Enter your Company",
+      "email": "m@example.com"
+    },
+    "roles": {
+      "admin": "Admin",
+      "customer": "Customer"
+    },
+    "buttons": {
+      "register": "Register",
+      "registering": "Registering..."
+    },
+    "errors": {
+      "invalidEmail": "Invalid email format",
+      "invalidPassword": "Password must be at least 8 characters long and contain at least one letter and one number",
+      "passwordMismatch": "Passwords do not match"
+    },
+    "success": {
+      "title": "Good job!",
+      "message": "Registration successful!"
+    }
+  },
+  "BlogManage": {
+    "title": "Blog Management",
+    "addPost": "Add New Post",
+    "tableHeaders": {
+      "title": "Title",
+      "date": "Date",
+      "category": "Category",
+      "author": "Author",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "dialog": {
+      "editTitle": "Edit Post",
+      "editDescription": "Make changes to your post here. Click save when you're done.",
+      "fields": {
+        "title": "Title",
+        "category": "Category",
+        "content": "Content",
+        "status": "Status",
+        "picture": "Picture"
+      },
+      "saveChanges": "Save changes"
+    },
+    "categories": {
+      "basic_accounting": "Basic Accounting Management",
+      "tax_plan": "Tax Planning and Management",
+      "financial_plan": "Financial Planning and Business Strategy",
+      "financial_news": "Financial News and Legal Updates",
+      "tips": "Expert Advice and Tips",
+      "other": "Other",
+      "services": "Services"
+    },
+    "status": {
+      "published": "Published",
+      "private": "Private"
+    },
+    "submit": "Submit Post",
+    "submitting": "Posting a blog..."
+  },
+  "PieChartIncome": {
+    "labels": {
+      "salary": "Salary",
+      "shiftAllowance": "Shift Allowance",
+      "foodAllowance": "Food Allowance",
+      "overtime": "Overtime",
+      "diligence": "Diligence",
+      "beverage": "Beverage",
+      "commission": "Commission",
+      "brokerFee": "Broker Fee",
+      "otherIncome": "Other Income",
+      "bonus": "Bonus",
+      "loan": "Loan",
+      "salaryAdvance": "Salary Advance",
+      "commissionDeduction": "Commission Deduction",
+      "otherDeductions": "Other Deductions",
+      "employeeTax": "Employee Tax",
+      "companyTax": "Company Tax",
+      "socialSecurityEmployee": "Social Security (Employee)",
+      "socialSecurityCompany": "Social Security (Company)",
+      "providentFund": "Provident Fund"
+    },
+    "value": "Value",
+    "other": "Other",
+    "otherItems": "Other items"
+  },
+  "Charts": {
+    "income_expense": "Income - Expense",
+    "area_chart_legend": "Area Chart - Legend",
+    "january_december": "January - December",
+    "open_menu": "Open menu",
+    "BarChart": "Bar Chart",
+    "AreaChart": "Area Chart",
+    "description": "Income - Expense",
+    "showing_total_visitors": "Showing Income - Expense for the current period",
+    "expense_breakdown": "Expense Breakdown",
+    "no_data_available": "No data available",
+    "employee_expense_distribution": "Employee Expense Distribution",
+    "total_expense": "Total Expense",
+    "showing_expense_breakdown": "Showing Expense breakdown for the current period",
+    "income_breakdown": "Income Breakdown",
+    "employee_income_distribution": "Employee Income Distribution",
+    "total_income": "Total Income",
+    "showing_income_breakdown": "Showing income breakdown for the current period",
+    "tax_breakdown": "Tax Breakdown",
+    "employee_tax_distribution": "Employee Tax Distribution",
+    "total_tax": "Total Tax",
+    "showing_tax_breakdown": "Showing Tax breakdown for the current period",
+    "amount": "Amount",
+    "percentage": "Percentage",
+    "labels": {
+      "income": "Income",
+      "expense": "Expense",
+      "expenses": "Expenses",
+      "tax": "Tax",
+      "netincome": "Net Income",
+      "totalincome": "Total Income",
+      "totalexpense": "Total Expenses",
+      "totaltax": "Total Tax",
+      "net": "Net",
+      "Income": "Income",
+      "Expense": "Expense"
+    },
+    "income_labels": {
+      "salary": "Salary",
+      "shiftAllowance": "Shift Allowance",
+      "foodAllowance": "Food Allowance",
+      "overtime": "Overtime",
+      "diligence": "Diligence",
+      "beverage": "Beverage",
+      "commission": "Commission",
+      "brokerFee": "Broker Fee",
+      "otherIncome": "Other Income",
+      "bonus": "Bonus"
+    },
+    "expense_labels": {
+      "loan": "Loan",
+      "salaryAdvance": "Salary Advance",
+      "commissionDeduction": "Commission Deduction",
+      "otherDeductions": "Other Deductions"
+    },
+    "tax_labels": {
+      "employeeTax": "Employee Tax",
+      "companyTax": "Company Tax",
+      "socialSecurityEmployee": "Social Security (Employee)",
+      "socialSecurityCompany": "Social Security (Company)",
+      "providentFund": "Provident Fund"
+    },
+    "month": "Month",
+    "monthNames": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "monthNameBar": {
+      "Jan": "Jan",
+      "Feb": "Feb",
+      "Mar": "Mar",
+      "Apr": "Apr",
+      "May": "May",
+      "Jun": "Jun",
+      "Jul": "Jul",
+      "Aug": "Aug",
+      "Sep": "Sep",
+      "Oct": "Oct",
+      "Nov": "Nov",
+      "Dec": "Dec"
+    },
+    "year": "Year",
+    "currency": "฿",
+    "currencyCode": "THB",
+    "million": "M",
+    "locale": "en-US"
+  },
+  "Compare": {
+    "labels": {
+      "income": "Income",
+      "expense": "Expenses",
+      "expenses": "Expenses",
+      "tax": "Tax",
+      "netincome": "Net Income",
+      "Income": "Income",
+      "Expense": "Expense",
+      "Tax": "Tax",
+      "netIncome": "Net Income"
+    },
+    "title": "Compare",
+    "commissionAndDiligence": "Commission & Diligence",
+    "viewSummary": "View a summary of all orders for {year}",
+    "filter": "Filter",
+    "filterData": "Filter Data",
+    "setDimensions": "Set the dimensions for the layer.",
+    "year": "Year",
+    "selectYear": "Select Year",
+    "applyFilters": "Apply Filters",
+    "dataTypes": "Data Types",
+    "chartType": "Chart Type",
+    "barChart": "Bar Chart",
+    "areaChart": "Area Chart",
+    "lineChart": "Line Chart",
+    "saveChanges": "Save changes",
+    "financialBreakdown": "Financial Breakdown",
+    "viewSummaryAllOrders": "View a summary of all orders",
+    "yearlySummary": "Yearly Summary for {year}: January - December",
+    "analyzingData": "Analyzing income, expenses, and taxes for {year}.",
+    "filterYear": "Filter Year",
+    "chooseYear": "Choose Year",
+    "chooseYears": "Choose years to show in charts.",
+    "financialOverview": "Financial Overview",
+    "BarChart": "Bar Chart",
+    "AreaChart": "Area Chart",
+    "LineChart": "Line Chart",
+    "month": "Month"
+  },
+  "Employee": {
+    "tableHeaders": {
+      "employeeCode": "Employee Code",
+      "title": "Title",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "gender": "Gender",
+      "currentSalary": "Current Salary",
+      "workingYear": "Working Year",
+      "actions": "Actions",
+      "year": "Year"
+    },
+    "actions": {
+      "details": "Details",
+      "chart": "Chart"
+    },
+    "unknownSalary": "Unknown Salary",
+    "noResults": "No results found",
+    "employeesFound": "Employees found: {count}",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "filterByYear": "Filter by Year",
+    "allYears": "All Years",
+    "title": "Employee Management",
+    "description": "Manage your employees and view their details.",
+    "columns": "Columns",
+    "filterPlaceholder": "Search by name..."
+  },
+  "Employee_detail": {
+    "labels": {
+      "totalincome": "Total Income",
+      "totalexpense": "Total Expenses",
+      "totaltax": "Total Tax",
+      "netincome": "Net Income"
+    },
+    "title": "{name}",
+    "viewDetails": "View Details",
+    "name-lastName": "Name:",
+    "tabs": {
+      "income": "Income",
+      "expense": "Expense",
+      "tax": "Tax"
+    },
+    "personalInfo": "Personal Information",
+    "employeeCode": "Employee Code",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "gender": "Gender",
+    "currentSalary": "Current Salary",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "stillEmployed": "Still Employed",
+    "income": "Income",
+    "salary": "Salary",
+    "shiftAllowance": "Shift Allowance",
+    "foodAllowance": "Food Allowance",
+    "overtime": "Overtime",
+    "diligence": "Diligence",
+    "beverage": "Beverage",
+    "commission": "Commission",
+    "brokerFee": "Broker Fee",
+    "otherIncome": "Other Income",
+    "bonus": "Bonus",
+    "tax": "Tax",
+    "employeeTax": "Employee Tax",
+    "companyTax": "Company Tax",
+    "socialSecurityEmployee": "Social Security (Employee)",
+    "socialSecurityCompany": "Social Security (Company)",
+    "providentFund": "Provident Fund",
+    "workingYear": "Working Year",
+    "loan": "Loan",
+    "salaryAdvance": "Salary Advance",
+    "commissionDeduction": "Commission Deduction",
+    "otherDeductions": "Other Deductions",
+    "expense": "Expense"
+  },
+  "Employee_Chart": {
+    "title": "Chart for {name}",
+    "viewDetails": "View Details",
+    "employeeCode": "Employee Code",
+    "name-lastName": "Name-Surname",
+    "gender": "Gender",
+    "currentSalary": "Current Salary",
+    "workingYear": "Working Year",
+    "tabs": {
+      "income": "Income",
+      "expense": "Expense",
+      "tax": "Tax",
+      "net": "Net"
+    },
+    "financialOverview": "Financial Overview",
+    "yearlySummary": "Yearly Summary for {year}: January - December",
+    "analyzingData": "Analyzing income, expenses, and taxes for {year}.",
+    "footerTitle": "Financial Breakdown & Summary",
+    "allYears": "All Years",
+    "months": [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ],
+    "tooltip": {
+      "income": "Income",
+      "expense": "Expense",
+      "tax": "Tax",
+      "netIncome": "Net Income"
+    },
+    "income": "Income",
+    "expense": "Expense",
+    "tax": "Tax",
+    "income_labels": {
+      "salary": "Salary",
+      "shiftAllowance": "Shift Allowance",
+      "foodAllowance": "Food Allowance",
+      "overtime": "Overtime",
+      "diligence": "Diligence",
+      "beverage": "Beverage",
+      "commission": "Commission",
+      "brokerFee": "Broker Fee",
+      "bonus": "Bonus",
+      "other": "Other"
+    },
+    "expense_labels": {
+      "loan": "Loan",
+      "salaryAdvance": "Salary Advance",
+      "commissionDeduction": "Commission Deduction",
+      "otherDeductions": "Other Deductions"
+    },
+    "tax_labels": {
+      "employeeTax": "Employee Tax",
+      "companyTax": "Company Tax",
+      "socialSecurityEmployee": "Social Security (Employee)",
+      "socialSecurityCompany": "Social Security (Company)",
+      "providentFund": "Provident Fund"
+    }
+  },
+  "Dashboard": {
+    "labels": {
+      "income": "Income",
+      "expense": "Expenses",
+      "totalincome": "Total Income",
+      "totalexpense": "Total Expenses",
+      "totaltax": "Total Tax",
+      "netincome": "Net Income"
+    },
+    "tabs": {
+      "income": "Income",
+      "expense": "Expense",
+      "tax": "Tax"
+    },
+    "from_previous_year": "from previous year",
+    "Charts": {
+      "locale": "en-US",
+      "currencyCode": "THB",
+      "year": "Data from Year"
+    }
+  },
+  "DashboardAdmin": {
+    "customer": "Customer",
+    "blog": "Blog",
+    "appointments": "Appointments",
+    "notifications": "Notifications",
+    "loading": "Loading...",
+    "totalCustomersRegistered": "Total number of customers currently registered.",
+    "totalBlogsPublished": "Total number of blog posts published.",
+    "totalAppointmentsScheduled": "Total number of appointments scheduled.",
+    "recentNotifications": "Recent notifications and updates.",
+    "company": "Company",
+    "recentTransactions": "Recent transactions from your store.",
+    "uploadFile": "Upload File",
+    "contact": "Contact",
+    "status": "Status",
+    "date": "Member Date",
+    "details": "Details",
+    "recentBlogs": "Recent Blogs",
+    "noBlogs": "No blogs available",
+    "calendar": "Calendar",
+    "calendarDescription": "View and manage your appointments in the calendar.",
+    "appointmentsFor": "Appointments for {date}",
+    "noAppointments": "No appointments for this date.",
+    "dataVisualization": "Data Visualization",
+    "overview": "Overview",
+    "employee": "Employee",
+    "name": "Name"
+  },
+  "Uploadcsv": {
+    "cardTitle": "Upload CSV File",
+    "cardDescription": "Select a company, enter a month and year, then upload a CSV file.",
+    "companyLabel": "Company",
+    "selectCompanyPlaceholder": "Select a company",
+    "monthLabel": "Month",
+    "selectMonthPlaceholder": "Select a month",
+    "yearLabel": "Year",
+    "selectYearPlaceholder": "Select a year",
+    "csvFileLabel": "CSV File",
+    "uploadButton": "Upload",
+    "uploading": "Uploading...",
+    "noFileSelectedTitle": "No File Selected",
+    "noFileSelectedText": "Please select a file to upload.",
+    "uploadSuccessTitle": "Upload Successful",
+    "uploadSuccessText": "The file has been uploaded successfully!",
+    "uploadErrorTitle": "Oops...",
+    "uploadErrorText": "Something went wrong!",
+    "uploadFailedTitle": "Upload Failed",
+    "uploadFailedText": "Failed to upload file due to a network or server error."
+  },
+  "Radian": {
+    "employeeCount": "Employee Count",
+    "employeeDistribution": "Employee Distribution by Gender",
+    "male": "Male",
+    "female": "Female",
+    "notSpecified": "Not Specified",
+    "employees": "Employees",
+    "totalEmployees": "Total Employees: {count} in {year}",
+    "total": "Total",
+    "gender": "Gender"
+  },
+  "RangeCommission": {
+    "employees": "Employees",
+    "range1": "฿0-฿10,000",
+    "range2": "฿10,001-฿20,000",
+    "range3": "฿20,001-฿30,000",
+    "range4": "฿30,001-฿40,000",
+    "range5": "฿40,001-฿50,000++",
+    "error": "Error",
+    "distribution": "Distribution for the year",
+    "commissionRangesThisYear": "Commission Ranges this year",
+    "showingDistribution": "Showing employee distribution by ranges",
+    "commissionRanges": "Commission Ranges"
+  },
+  "RangeDiligence": {
+    "employees": "Employees",
+    "range1": "฿0-฿10,000",
+    "range2": "฿10,001-฿20,000",
+    "range3": "฿20,001-฿30,000",
+    "range4": "฿30,001-฿40,000",
+    "range5": "฿40,001-฿50,000++",
+    "error": "Error",
+    "distribution": "Distribution for the year",
+    "diligenceRangesThisYear": "Diligence Ranges this year",
+    "showingDistribution": "Showing employee distribution by ranges",
+    "diligenceRanges": "Diligence Ranges"
+  },
+  "EmployeeDialog": {
+    "title": "Employees in Range",
+    "searchPlaceholder": "Search by name...",
+    "name": "Name",
+    "totalCommission": "Total Commission",
+    "totalDiligence": "Total Diligence",
+    "noEmployeesFound": "No employees found.",
+    "previous": "Previous",
+    "next": "Next",
+    "pageInfo": "Page {current} of {total}",
+    "noEmployeesInRange": "No employees in this range.",
+    "close": "Close"
+  },
+  "Support":{
+    "report": "Report",
+    "chat": "Chat",
+    "search": "Search...",
+    "title": "Support",
+    "description": "Support customers and contact the team."
+  },
+  "SupportAdmin": {
+    "title": "Manage Report Problems",
+    "description": "Manage report problems and view details",
+    "searchPlaceholder": "Search by name or category...",
+    "tableHeaders": {
+      "name": "Name",
+      "category": "Category",
+      "status": "Status",
+      "createdAt": "Created At",
+      "actions": "Actions"
+    },
+    "status": {
+      "pending": "Pending",
+      "inProgress": "In Progress",
+      "resolved": "Resolved"
+    },
+    "categories": {
+      "data_problem": "Data Problem",
+      "dashboard_problem": "Dashboard Problem",
+      "appointment_problem": "Appointment Problem",
+      "feedback": "Feedback"
+    },
+    "actions": "Actions",
+    "problemResolutionReport": "Problem Resolution Report",
+    "delete": "Delete",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {current} of {total}"
+    },
+    "dialog": {
+      "title": "Problem Report Details",
+      "category": "Category",
+      "status": "Status",
+      "description": "Description",
+      "createdAt": "Created At",
+      "resolutionReportFor": "Resolution Report For",
+      "enterResolutionReportFor": "Enter Resolution Report For",
+      "enterResolutionDetails": "Enter Resolution Details",
+      "cancel": "Cancel",
+      "submit": "Submit"
+    },
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "resolutionReportFor": "Resolution Report For",
+    "descriptionFor": "Description For",
+    "confirmDeleteTitle": "Confirm Delete",
+    "confirmDeleteText": "Are you sure you want to delete this report?",
+    "confirmDeleteButton": "Delete"
+    
+    
+    
+  },
+  "ProblemReportForm": {
+    "title": "Problem Report Form",
+    "name": "Name",
+    "company": "Company",
+    "email": "Email",
+    "category": "Category",
+    "description": "Description",
+    "placeholders": {
+      "name": "Enter your name",
+      "company": "Enter your company name",
+      "email": "m@example.com"
+    },
+    "categories": {
+      "data_problem": "Data Problem",
+      "dashboard_problem": "Dashboard Problem",
+      "appointment_problem": "Appointment Problem",
+      "feedback": "Feedback"
+    },
+    "selectCategory": "Select Category",
+    "yourQuestion": "Your Question",
+    "enterQuestion": "Please enter your question here...",
+    "problemDescription": "Problem Description",
+    "describeProblem": "Please describe the problem you encountered...",
+    "submitReport": "Submit Report",
+    "thankYouTitle": "Thank You!",
+    "thankYouText": "Your report has been sent successfully!",
+    "errorTitle": "Oops...",
+    "errorText": "Something went wrong! Please try again."
+  },
+  "Topbar": {
+    "welcome": "Welcome",
+    "companyPlaceholder": "Company: {name} ",
+    "namePlaceholder": "Name: {name}"
+  },
+  "FinancialOverview": {
+    "filterData": "Filter Data",
+    "viewSummaryAllOrders": "View Summary All Orders",
+    "financialOverview": "Financial Overview",
+    "financialSummary": "Financial Overview",
+    "yearSummary": "Yearly Summary for {year}: January - December",
+    "totalIncome": "Total Income",
+    "totalExpense": "Total Expense",
+    "totalTax": "Total Tax",
+    "netIncome": "Total Net Income",
+    "summaryForPeriod": "Summary for {year}",
+    "year": "Year",
+    "month": "Month",
+    "yearlySummary": "Yearly Summary",
+    "analyzingData": "Analyzing income, expenses, and taxes for {year}.",
+    "filter": "Filter",
+    "overviewOfFinances": "Overview of Finances",
+    "dataTypes": "Data Types",
+    "applyFilters": "Apply Filters",
+    "setDimensions": "Set Dimensions",
+    "chartType": "Chart Type",
+    "barChart": "Bar Chart",
+    "areaChart": "Area Chart",
+    "lineChart": "Line Chart",
+    "labels": {
+      "Income": "Income",
+      "Expense": "Expense",
+      "Tax": "Tax",
+      "netIncome": "Net Income"
+    },
+    "filterYear": "Filter Year",
+    "chooseYear": "Choose Year",
+    "chooseYears": "Choose years to show in charts.",
+    "saveChanges": "Save Changes",
+    "BarChart": "Bar Chart",
+    "AreaChart": "Area Chart",
+    "LineChart": "Line Chart",
+    "month_1": "January",
+    "month_2": "February",
+    "month_3": "March",
+    "month_4": "April",
+    "month_5": "May",
+    "month_6": "June",
+    "month_7": "July",
+    "month_8": "August",
+    "month_9": "September",
+    "month_10": "October",
+    "month_11": "November",
+    "month_12": "December",
+    "summaryForYear": "Summary for {year}"
+  },
+  "FinancialBreakdown": {
+    "financialBreakdown": "Financial Breakdown",
+    "viewSummaryAllOrders": "View Summary All Orders",
+    "filterData": "Filter Data",
+    "setDimensions": "Set Dimensions",
+    "selectYear": "Select Year",
+    "filter": "Filter",
+    "labels": {
+      "income": "Income",
+      "expense": "Expense",
+      "tax": "Tax",
+      "salary": "Salary",
+      "shiftAllowance": "Shift Allowance",
+      "foodAllowance": "Food Allowance",
+      "overtime": "Overtime",
+      "diligence": "Diligence",
+      "beverage": "Beverage",
+      "commission": "Commission",
+      "brokerFee": "Broker Fee",
+      "otherIncome": "Other Income",
+      "loan": "Loan",
+      "salaryAdvance": "Salary Advance",
+      "commissionDeduction": "Commission Deduction",
+      "otherDeductions": "Other Deductions",
+      "employeeTax": "Employee Tax",
+      "companyTax": "Company Tax",
+      "socialSecurityEmployee": "Social Security (Employee)",
+      "socialSecurityCompany": "Social Security (Company)",
+      "providentFund": "Provident Fund",
+      "bonus": "Bonus",
+      "other": "Other",
+      "incomeDetails": "Income Details for {year}",
+      "expenseDetails": "Expense Details for {year}",
+      "taxDetails": "Tax Details for {year}"
+    },
+    "item": "Item",
+    "amount": "Amount",
+    "percentage": "Percentage",
+    "total": "Total",
+    "yearlySummary": "Yearly Summary for {year}",
+    "analyzingData": "Analyzing income, expenses, and taxes for {year}.",
+    "year": "Year"
+  },
+  "CommissionDiligence": {
+    "commissionAndDiligence": "Commission & Diligence",
+    "year": "Year",
+    "range": "Range",
+    "count": "Count",
+    "employees": "Employees",
+    "totalCommission": "Total Commission",
+    "totalDiligence": "Total Diligence",
+    "viewSummary": "View Summary",
+    "filterData": "Filter Data",
+    "setDimensions": "Set Dimensions",
+    "selectYear": "Select Year",
+    "filter": "Filter",
+    "yearlySummary": "Yearly Summary for {year}",
+    "apply": "Apply",
+    "searchEmployee": "Search employee name",
+    "employeeName": "Employee Name",
+    "commissionValue": "Commission Value",
+    "commissionRange": "Commission Range",
+    "diligenceValue": "Diligence Value",
+    "diligenceRange": "Diligence Range",
+    "pageInfo": "Page {current} of {total}",
+    "previous": "Previous",
+    "next": "Next",
+    "employeeDetails": "Employee Details",
+    "resetFilter": "Reset Filter"
+  }
+  
+}

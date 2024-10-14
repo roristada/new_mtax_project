@@ -1,6 +1,6 @@
 import React from "react";
 import { TrendingUp } from "lucide-react";
-import { Pie, PieChart, ResponsiveContainer, Cell, Legend } from "recharts";
+import { Pie, PieChart, ResponsiveContainer, Cell, Legend, Tooltip } from "recharts";
 import {
   Card,
   CardContent,
@@ -9,12 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "../../../components/ui/chart";
+import { ChartConfig, ChartContainer } from "../../../components/ui/chart";
+import { useTranslations } from 'next-intl';
 
 interface IncomeBreakdown {
   salary: number;
@@ -48,12 +44,14 @@ const generateVibrantColors = (numColors: number) => {
 export const IncomeBreakdownDonutChart: React.FC<
   IncomeBreakdownDonutChartProps
 > = ({ incomeBreakdown }) => {
+  const t = useTranslations('Charts');
+
   if (!incomeBreakdown) {
     return (
       <Card className="flex flex-col">
         <CardHeader className="items-center pb-0">
-          <CardTitle>Income Breakdown</CardTitle>
-          <CardDescription>No data available</CardDescription>
+          <CardTitle>{t('income_breakdown')}</CardTitle>
+          <CardDescription>{t('no_data_available')}</CardDescription>
         </CardHeader>
       </Card>
     );
@@ -64,7 +62,7 @@ export const IncomeBreakdownDonutChart: React.FC<
 
   const chartData = Object.entries(incomeBreakdown)
     .map(([key, value], index) => ({
-      name: key.charAt(0).toUpperCase() + key.slice(1),
+      name: t(`income_labels.${key}`),
       value: value,
       fill: COLORS[index],
     }))
@@ -73,10 +71,7 @@ export const IncomeBreakdownDonutChart: React.FC<
   const chartConfig: ChartConfig = Object.fromEntries(
     categories.map((key, index) => [
       key,
-      {
-        label: key.charAt(0).toUpperCase() + key.slice(1),
-        color: COLORS[index],
-      },
+      { label: t(`income_labels.${key}`), color: COLORS[index] }
     ])
   );
 
@@ -114,9 +109,9 @@ export const IncomeBreakdownDonutChart: React.FC<
   };
 
   const formatSalary = (salary: number) => {
-    return new Intl.NumberFormat("th-TH", {
+    return new Intl.NumberFormat(t('locale'), {
       style: "currency",
-      currency: "THB",
+      currency: t('currencyCode'),
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(salary)
@@ -142,17 +137,36 @@ export const IncomeBreakdownDonutChart: React.FC<
     );
   };
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      const percentage = ((data.value / totalIncome) * 100).toFixed(1);
+      return (
+        <div className="custom-tooltip bg-white p-4 rounded-lg shadow-md border border-gray-200">
+          <p className="font-semibold text-lg mb-2">{data.name}</p>
+          <p className="text-sm text-gray-600 mb-1">
+            {t('amount')}: <span className="font-medium">{formatSalary(data.value)}</span>
+          </p>
+          <p className="text-sm text-gray-600">
+            {t('percentage')}: <span className="font-medium">{percentage}%</span>
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <Card className="flex flex-col h-full">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Income Breakdown</CardTitle>
-        <CardDescription>Employee Income Distribution</CardDescription>
+        <CardTitle>{t('income_breakdown')}</CardTitle>
+        <CardDescription>{t('employee_income_distribution')}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer config={chartConfig} className="w-full h-[450px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
-              <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+              <Tooltip content={<CustomTooltip />} />
               <Pie
                 data={chartData}
                 dataKey="value"
@@ -176,11 +190,10 @@ export const IncomeBreakdownDonutChart: React.FC<
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm mt-8">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Total Income: {formatSalary(totalIncome)}{" "}
-          <TrendingUp className="h-4 w-4" />
+          {t('total_income')}: {formatSalary(totalIncome)} <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing income breakdown for the current period
+          {t('showing_income_breakdown')}
         </div>
       </CardFooter>
     </Card>

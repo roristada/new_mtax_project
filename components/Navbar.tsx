@@ -1,11 +1,9 @@
 "use client";
-import Link from "next/link";
-import React from "react";
-import { useEffect, useState } from "react";
+// import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "../components/ui/button";
 import { signOut, useSession } from "next-auth/react";
-import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -15,8 +13,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
-import Image from "next/image";  // Import the Image component from next/image
-import { usePathname } from 'next/navigation';
+
+import { usePathname } from "next/navigation";
+import { Link } from "../i18n/routing";
+import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 interface User {
   id: number;
@@ -62,13 +63,19 @@ const Navbar = () => {
   const { data: session, status } = useSession();
   const [dashboardPath, setDashboardPath] = useState("");
   const pathname = usePathname();
+  const t = useTranslations("Navbar");
+  const locale = useLocale();
+  const router = useRouter();
 
   const getBaseUrl = () => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       return window.location.origin;
     }
     // Fallback for server-side rendering
-    return process.env.NEXT_PUBLIC_BASE_URL || 'https://newmtaxproject-production.up.railway.app/';
+    return (
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      "https://newmtaxproject-production.up.railway.app/"
+    );
   };
 
   useEffect(() => {
@@ -81,10 +88,9 @@ const Navbar = () => {
       }
       const expires_session = new Date(session.expires).getTime();
       const nowDate = Date.now();
-      
 
       if (expires_session < nowDate) {
-        signOut({ callbackUrl: `${getBaseUrl()}/`});
+        signOut({ callbackUrl: `${getBaseUrl()}/` });
         // signOut({ callbackUrl: `/`});
       }
     }
@@ -93,7 +99,7 @@ const Navbar = () => {
   console.log("session Nav", session);
 
   const getHref = (url: string) => {
-    if (url.startsWith('#') && pathname !== '/') {
+    if (url.startsWith("#") && pathname !== "/") {
       return `/${url}`;
     }
     return url;
@@ -101,7 +107,7 @@ const Navbar = () => {
 
   const smoothScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     const targetId = e.currentTarget.getAttribute("href");
-    if (pathname === '/' && targetId && targetId.startsWith("#")) {
+    if (pathname === "/" && targetId && targetId.startsWith("#")) {
       e.preventDefault();
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
@@ -110,6 +116,21 @@ const Navbar = () => {
     }
   };
 
+  const toggleLanguage = () => {
+    const newLocale = locale === "en" ? "th" : "en";
+    const newPathname = pathname.replace(`/${locale}`, `/${newLocale}`);
+    router.push(newPathname);
+  };
+
+  const links = [
+    { id: 1, title: t("home"), url: "/" },
+    { id: 2, title: t("about"), url: "#about" },
+    { id: 3, title: t("services"), url: "#service" },
+    { id: 4, title: t("knowledge"), url: "/blog" },
+    { id: 5, title: t("contact"), url: "#contact" },
+    { id: 6, title: t("appointment"), url: "/appointment" },
+  ];
+
   return (
     <nav className="bg-white border-gray-200 shadow-md">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-5">
@@ -117,7 +138,7 @@ const Navbar = () => {
           <span className="text-blue-500">M</span>
           <span className="text-red-500">tax</span>
         </Link>
-        <div className="hidden w-full md:block md:w-auto" id="navbar-default">
+        <div className="hidden w-full md:flex md:w-auto" id="navbar-default">
           <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white">
             {links.map((link) => (
               <li key={link.id} className="my-auto">
@@ -130,11 +151,12 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
+
             {status === "authenticated" && session.user ? (
               <div className="flex items-center">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                  <Button
+                    <Button
                       variant="outline"
                       size="icon"
                       className="overflow-hidden rounded-full"
@@ -157,23 +179,38 @@ const Navbar = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuLabel className="font-normal">{session.user.company}</DropdownMenuLabel>
+                    <DropdownMenuLabel>{t("myAccount")}</DropdownMenuLabel>
+                    <DropdownMenuLabel className="font-normal">
+                      {session.user.company}
+                    </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem><Link href={dashboardPath}>Dashboard</Link></DropdownMenuItem>
-                    <DropdownMenuItem>Support</DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link href={dashboardPath}>{t("dashboard")}</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>{t("support")}</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => signOut({ callbackUrl: `${getBaseUrl()}/`})} >Logout</DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        signOut({ callbackUrl: `${getBaseUrl()}/` })
+                      }
+                    >
+                      {t("logout")}
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
             ) : (
               <div>
                 <Link href={"/login"}>
-                  <Button className="w-20">Login</Button>
+                  <Button className="w-20">{t("login")}</Button>
                 </Link>
               </div>
             )}
+            <li className="my-auto">
+              <Button onClick={toggleLanguage} variant="outline" size="sm">
+                {locale === "en" ? "EN" : "TH"}
+              </Button>
+            </li>
           </ul>
         </div>
       </div>

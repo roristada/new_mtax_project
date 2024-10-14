@@ -1,0 +1,913 @@
+{
+  "HomePage": {
+    "title": "ยินดีต้อนรับสู่ MTAX",
+    "about": "คลิกเพื่อไปยังหน้า about"
+  },
+  "Navbar": {
+    "home": "หน้าหลัก",
+    "about": "เกี่ยวกับเรา",
+    "services": "บริการ",
+    "knowledge": "ความรู้",
+    "contact": "ติดต่อ",
+    "appointment": "นัดหมาย",
+    "login": "เข้าสู่ระบบ",
+    "myAccount": "บัญชีของฉัน",
+    "dashboard": "แดชบอร์ด",
+    "support": "ช่วยเหลือ",
+    "logout": "ออกจากระบบ"
+  },
+  "Services": {
+    "title": "บริการ",
+    "onlineAccounting": {
+      "title": "บัญชีออนไลน์",
+      "description": "ลักษณะการให้บริการ:",
+      "details": [
+        "Cloud Accounting ในการบันทึกบัญชีผ่าน Software มาตรฐาน",
+        "การส่งเอกสารทางการค้าผ่านสื่ออิเล็กทรอนิกส์ เช่น Email, Line, SMS, Fax, Scan, รูปถ่าย",
+        "สามารถดูรายการค้าผ่านมือถือ (All Device)",
+        "ภายใน 24 ชม. หลังส่งเอกสาร สามารถเรียกดูและออกงบการเงินได้ และสามารถ drill down เอกสาร"
+      ],
+      "moreDetails": "รายละเอียดเพิ่มเติม"
+    },
+    "payrollOutsourcing": {
+      "title": "บัญชีเงินเดือน",
+      "description": "ลักษณะการให้บริการ:",
+      "details": [
+        "รับทำบัญชีเงินเดือนภายนอก สามารถแบ่งงวดการจ่ายเงินเดือนได้ 4 งวด",
+        "ให้บริการผ่านอินเทอร์เน็ต การยื่นแบบ ภงด.1,การยื่นแบบประกันสังคม, การแจ้งเข้าแจ้งออกพนักงาน",
+        "การเตรียมไฟล์สำหรับส่งให้ธนาคาร",
+        "การยื่นแบบ ภงด.90,91 พร้อมใบคำนวณภาษีสำหรับพนักงาน"
+      ],
+      "moreDetails": "รายละเอียดเพิ่มเติม"
+    },
+    "bookkeepingServices": {
+      "title": "สำนักงานบัญชี",
+      "description": "ลักษณะการให้บริการ:",
+      "details": [
+        "Tax Accounting รับทำบัญชีในรูปแบบสำนักงานบัญชีครอบคลุมงานด้านภาษี ประกันสังคม กรมพัฒนาธุรกิจการค้า ดูแลการยื่นแบบที่เกี่ยวข้องทางราชการ ส่งงบการเงินประจำปี",
+        "Financial Accounting รับทำบัญชีปิดบัญชีรายเดือน เน้นความถูกต้องตามมาตรฐานบัญชี กระทบยอดเงินฝากธนาคาร ให้ความสำคัญกับกระแสเงินสดของกิจการเป็นสำคัญ",
+        "Management Accounting รับทำบัญชีบริหาร เป็นงานต่อเนื่องจาก Financial Accounting โดยนำเสนอข้อมูลให้ผู้บริหารในรูปแบบ Dashboard,Infographic,PowerPoint"
+      ],
+      "moreDetails": "รายละเอียดเพิ่มเติม"
+    },
+    "businessStartup": {
+      "title": "รับจัดตั้งธุรกิจ",
+      "description": "ลักษณะการให้บริการ:",
+      "details": [
+        "รับจัดตั้งบริษัทและนิติบุคคล",
+        "เตรียมแบบฟอร์มสำหรับใช้งานธุรกิจ",
+        "แนะนำแผนธุรกิจเบื้องต้นสำหรับผู้ประกอบการใหม่",
+        "ให้คำปรึกษาด้านกฎหมายการค้าที่สำคัญกับกิจการ",
+        "รับเปลี่ยนแปลงนิติบุคคลเดิม การเพิ่มทุน การเปลี่ยนอำนาจกรรมการ การเปลี่ยนชื่อบริษัท การเปลี่ยนวัตถุประสงค์ของกิจการ การจดทะเบียนภาษีมูลค่าเพิ่ม"
+      ],
+      "moreDetails": "รายละเอียดเพิ่มเติม"
+    }
+  },
+  "Contact": {
+    "title": "ติดต่อ",
+    "address": "ที่อยู่",
+    "contactUs": "ช่องทางการติดต่อของเรา",
+    "email": "อีเมล",
+    "tel": "โทร.",
+    "fax": "แฟกซ์"
+  },
+  "Footer": {
+    "quickLinks": "ลิงก์ด่วน",
+    "services": "บริการ",
+    "followUs": "ติดตามเรา",
+    "copyright": "© 2024 Acme Accounting สงวนลิขสิทธิ์"
+  },
+  "About": {
+    "title": "เกี่ยวกับเรา",
+    "subtitle": "บริษัทของเรา",
+    "description": {
+      "part1": "สำนักงานก่อตั้งเมื่อปี 2539 ในนาม สำนักงานบัญชี เอ็ม.แท็ค.แอนด์ โซลูชั่น ในรูปแบบคณะบุคคล",
+      "part2": "ในปี 2548 ได้เปลี่ยนแปลงเป็นนิติบุคคล ในนามบริษัท เอ็มแท็กซ์ บัญชีออนไลน์ จำกัด ทุนจดทะเบียน 1.0 ล้านบาท",
+      "policies": "นโยบายและพันธกิจของบริษัท",
+      "policy1": "1. รักษาความลับลูกค้าโดยเคร่งครัด",
+      "policy2": "2. รักษาบริการมาตรฐานแห่งวิชาชีพ",
+      "policy3": "3. ให้บริการลูกค้าด้วยความถูกต้องแม่นยำโดยยึดถือเอกสารหลักฐานเป็นสำคัญ",
+      "policy4": "4. ให้ถือหลักการทำงานเสมือนสำนักงานเป็นส่วนหนึ่งของทีมเดียวกับธุรกิจของท่าน",
+      "goal": "เป้าหมาย",
+      "goalDescription": "เป็นสำนักงานบัญชีรูปแบบสมัยใหม่ก้าวทันเทคโนยี สำนักงานบัญชี24 ชม. ลูกค้าสามารถเข้าถึงข้อมูลได้ทุกอุปกรณ์ all Device"
+    }
+  },
+  "Sidebar": {
+    "home": "หน้าหลัก",
+    "appointment": "นัดหมาย",
+    "register": "ลงทะเบียน",
+    "blog": "บล็อก",
+    "support": "ช่วยเหลือ",
+    "overview": "ภาพรวม",
+    "employee": "พนักงาน",
+    "dataDetails": "รายละเอียดข้อมูล",
+    "dashboard": "แดชบอร์ด",
+    "myAccount": "บัญชีของฉัน",
+    "logout": "ออกจากระบบ",
+    "dataVisualization": "Data Visualization",
+    "financialOverview": "ภาพรวมทางการเงิน",
+    "financialBreakdown": "สัดส่วนทางการเงิน",
+    "commissionDiligence": "คอมมิชชั่น&ความขยัน"
+  },
+  "AppointmentsManage": {
+    "title": "การจัดการการนัดหมาย",
+    "description": "จัดการการนัดหมายของคุณและดูรายละเอียด",
+    "addAppointment": "เพิ่มการนัดหมาย",
+    "searchPlaceholder": "ค้นหาตามชื่อหรือวันที่",
+    "tableHeaders": {
+      "name": "ชื่อ",
+      "company": "บริษัท",
+      "email": "อีเมล",
+      "telephone": "โทรศัพท์",
+      "date": "วันที่",
+      "startTime": "เวลาเริ่มต้น",
+      "endTime": "เวลาสิ้นสุด",
+      "status": "สถานะ",
+      "actions": "การดำเนินการ"
+    },
+    "status": {
+      "pending": "รอดำเนินการ",
+      "completed": "เสร็จสิ้น",
+      "canceled": "ยกเลิก",
+      "confirmed": "ยืนยันแล้ว"
+    },
+    "actions": {
+      "view": "ดู",
+      "edit": "แก้ไข",
+      "delete": "ลบ"
+    },
+    "pagination": {
+      "previous": "ก่อนหน้า",
+      "next": "ถัดไป",
+      "page": "หน้า {currentPage} จาก {totalPages}"
+    },
+    "dialog": {
+      "title": "รายละเอียดการนัดหมาย",
+      "company": "บริษัท",
+      "email": "อีเมล",
+      "telephone": "โทรศัพท์",
+      "note": "หมายเหตุ"
+    }
+  },
+  "AppointmentForm": {
+    "title": "การนัดหมาย",
+    "subtitle": "กรอกรายละเอียดของคุณเพื่อทำการนัดหมาย",
+    "tabs": {
+      "customer": "ลูกค้า",
+      "admin": "ผู้ดูแลระบบ"
+    },
+    "fields": {
+      "name": "ชื่อ",
+      "company": "บริษัท",
+      "email": "อีเมล",
+      "date": "วันที่",
+      "pickDate": "เลือกวันที่",
+      "startTime": "เวลาเริ่มต้น",
+      "endTime": "เวลาสิ้นสุด",
+      "telephone": "โทรศัพท์",
+      "note": "หมายเหตุ",
+      "selectStartTime": "เลือกเวลาเริ่มต้น"
+    },
+    "buttons": {
+      "submit": "ส่ง",
+      "submitting": "กำลังส่ง..."
+    },
+    "errors": {
+      "invalidEmail": "รูปแบบอีเมลไม่ถูกต้อง"
+    },
+    "success": {
+      "title": "ดีมาก!",
+      "message": "สร้างการนัดหมายสำเร็จ"
+    },
+    "error": {
+      "title": "เกิดข้อผิดพลาด!",
+      "message": "เกิดข้อผิดพลาดขณะสร้างการนัดหมาย"
+    }
+  },
+  "Register": {
+    "title": "ลงทะเบียน",
+    "subtitle": "กรอกรายละเอียดของคุณเพื่อสร้างบัญชี",
+    "fields": {
+      "name": "ชื่อ",
+      "company": "บริษัท",
+      "email": "อีเมล",
+      "password": "รหัสผ่าน",
+      "confirmPassword": "ยืนยันรหัสผ่าน",
+      "address": "ที่อยู่",
+      "telephone": "โทรศัพท์",
+      "role": "บทบาท"
+    },
+    "placeholders": {
+      "name": "กรอกชื่อของคุณ",
+      "company": "กรอกชื่อบริษัทของคุณ",
+      "email": "m@example.com"
+    },
+    "roles": {
+      "admin": "ผู้ดูแลระบบ",
+      "customer": "ลูกค้า"
+    },
+    "buttons": {
+      "register": "ลงทะเบียน",
+      "registering": "กำลังลงทะเบียน..."
+    },
+    "errors": {
+      "invalidEmail": "รูปแบบอีเมลไม่ถูกต้อง",
+      "invalidPassword": "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษรและประกอบด้วยตัวอักษรอย่างน้อย 1 ตัวและตัวเลขอย่างน้อย 1 ตัว",
+      "passwordMismatch": "รหัสผ่านไม่ตรงกัน"
+    },
+    "success": {
+      "title": "ดีมาก!",
+      "message": "ลงทะเบียนสำเร็จ!"
+    }
+  },
+  "BlogManage": {
+    "title": "จัดการบล็อก",
+    "addPost": "เพิ่มโพสต์ใหม่",
+    "tableHeaders": {
+      "title": "หัวข้อ",
+      "date": "วันที่",
+      "category": "หมวดหมู่",
+      "author": "ผู้เขียน",
+      "status": "สถานะ",
+      "actions": "การดำเนินการ"
+    },
+    "actions": {
+      "edit": "แก้ไข",
+      "delete": "ลบ"
+    },
+    "dialog": {
+      "editTitle": "แก้ไขโพสต์",
+      "editDescription": "ทำการเปลี่ยนแปลงโพสต์ของคุณที่นี่ คลิกบันทึกเมื่อเสร็จสิ้น",
+      "fields": {
+        "title": "หัวข้อ",
+        "category": "หมวดหมู่",
+        "content": "เนื้อหา",
+        "status": "สถานะ",
+        "picture": "รูปภาพ"
+      },
+      "saveChanges": "บันทึกการเปลี่ยนแปลง"
+    },
+    "categories": {
+      "basic_accounting": "การจัดการบัญชีพื้นฐาน",
+      "tax_plan": "การวางแผนและจัดการภาษี",
+      "financial_plan": "การวางแผนการเงินและกลยุทธ์ทางธุรกิจ",
+      "financial_news": "ข่าวสารทางการเงินและการอัปเดตกฎหมาย",
+      "tips": "คำแนะนำจากผู้เชี่ยวชาญและเคล็ดลับ",
+      "other": "อื่นๆ",
+      "services": "บริการ"
+    },
+    "status": {
+      "published": "เผยแพร่แล้ว",
+      "private": "ส่วนตัว"
+    },
+    "submit": "โพสต์",
+    "submitting": "กำลังส่งโพสต์..."
+  },
+  "PieChartIncome": {
+    "labels": {
+      "salary": "เงินเดือน",
+      "shiftAllowance": "เบี้ยเลี้ยงกะ",
+      "foodAllowance": "เบี้ยเลี้ยงอาหาร",
+      "overtime": "OT",
+      "diligence": "ความขยัน",
+      "beverage": "เครื่องดื่ม",
+      "commission": "ค่าคอมมิชชั่น",
+      "brokerFee": "ค่าธรรมเนียมนายหน้า",
+      "otherIncome": "รายได้อื่น ๆ",
+      "bonus": "โบนัส",
+      "loan": "เงินกู้",
+      "salaryAdvance": "เงินเดือนล่วงหน้า",
+      "commissionDeduction": "การหักค่าคอมมิชชั่น",
+      "otherDeductions": "การหักอื่น ๆ",
+      "employeeTax": "ภาษีเงินได้ (พนักงาน)",
+      "companyTax": "ภาษีเงินได้ (บริษัท)",
+      "socialSecurityEmployee": "ประกันสังคม (พนักงาน)",
+      "socialSecurityCompany": "ประกันสังคม (บริษัท)",
+      "providentFund": "กองทุนสำรองเลี้ยงชีพ"
+    },
+    "value": "มูลค่า",
+    "other": "อื่นๆ",
+    "otherItems": "รายการอื่นๆ"
+  },
+  "Charts": {
+    "year": "ปี",
+    "million": "ล้าน",
+    "income_expense": "รายได้ - ค่าใช้จ่าย",
+    "area_chart_legend": "แผนภูมิพื้นที่ - คำอธิบาย",
+    "january_december": "มกราคม - ธันวาคม",
+    "open_menu": "เปิดเมนู",
+    "BarChart": "แผนภูมิแท่ง",
+    "AreaChart": "แผนภูมิพื้นที่",
+    "description": "รายได้-ค่าใช้จ่าย",
+    "showing_total_visitors": "แสดงรายได้-ค่าใช้จ่ายสำหรับช่วงเวลาปัจจุบัน",
+    "expense_breakdown": "สัดส่วนค่าใช้จ่าย",
+    "no_data_available": "ไม่มีข้อมูล",
+    "employee_expense_distribution": "การกระจายค่าใช้จ่ายของพนักงาน",
+    "total_expense": "ค่าใช้จ่ายทั้งหมด",
+    "showing_expense_breakdown": "แสดงสัดส่วนค่าใช้จ่ายสำหรับช่วงเวลาปัจจุบัน",
+    "income_breakdown": "สัดส่วนรายได้",
+    "employee_income_distribution": "การกระจายรายได้ของพนักงาน",
+    "total_income": "รายได้ทั้งหมด",
+    "showing_income_breakdown": "แสดงสัดส่วนรายได้สำหรับช่วงเวลาปัจจุบัน",
+    "tax_breakdown": "สัดส่วนภาษี",
+    "employee_tax_distribution": "การกระจายภาษีของพนักงาน",
+    "total_tax": "ภาษีทั้งหมด",
+    "showing_tax_breakdown": "แสดงสัดส่วนภาษีสำหรับช่วงเวลาปัจจุบัน",
+    "labels": {
+      "income": "รายได้",
+      "expense": "ค่าใช้จ่าย",
+      "tax": "ภาษี",
+      "Income": "รายได้",
+      "Expense": "ค่าใช้จ่าย",
+      "expenses": "ค่าใช้จ่าย",
+      "net": "สุทธิ",
+      "netincome": "รายได้สุทธิ",
+      "totalexpense": "ค่าใช้จ่าย",
+      "totalincome": "รายได้",
+      "totaltax": "ภาษี"
+      
+    },
+    "currency": "฿",
+    "amount": "จำนวนเงิน",
+    "percentage": "เปอร์เซ็นต์",
+    "month": "เดือน",
+    "monthNames": [
+      "ม.ค.",
+      "ก.พ.",
+      "มี.ค.",
+      "เม.ย.",
+      "พ.ค.",
+      "มิ.ย.",
+      "ก.ค.",
+      "ส.ค.",
+      "ก.ย.",
+      "ต.ค.",
+      "พ.ย.",
+      "ธ.ค."
+    ],
+    "monthNameBar": {
+      "Jan": "ม.ค.",
+      "Feb": "ก.พ.",
+      "Mar": "มี.ค.",
+      "Apr": "เม.ย.",
+      "May": "พ.ค.",
+      "Jun": "มิ.ย.",
+      "Jul": "ก.ค.",
+      "Aug": "ส.ค.",
+      "Sep": "ก.ย.",
+      "Oct": "ต.ค.",
+      "Nov": "พ.ย.",
+      "Dec": "ธ.ค."
+    },
+    "locale": "th-TH",
+    "currencyCode": "THB",
+    "tax_labels": {
+      "employeeTax": "ภาษีพนักงาน",
+      "companyTax": "ภาษีบริษัท",
+      "socialSecurityEmployee": "ประกันสังคม (พนักงาน)",
+      "socialSecurityCompany": "ประกันสังคม (บริษัท)",
+      "providentFund": "กองทุนสำรองเลี้ยงชีพ"
+    },
+    "expense_labels": {
+      "loan": "เงินกู้",
+      "salaryAdvance": "เงินเดือนล่วงหน้า",
+      "commissionDeduction": "การหักค่าคอมมิชชั่น",
+      "otherDeductions": "การหักอื่นๆ"
+    },
+    "income_labels": {
+      "salary": "เงินเดือน",
+      "shiftAllowance": "เบี้ยเลี้ยงกะ",
+      "foodAllowance": "เบี้ยเลี้ยงอาหาร",
+      "overtime": "OT",
+      "diligence": "ความขยัน",
+      "beverage": "เครื่องดื่ม",
+      "commission": "ค่าคอมมิชชั่น",
+      "brokerFee": "ค่าธรรมเนียมนายหน้า",
+      "otherIncome": "รายได้อื่น ๆ",
+      "bonus": "โบนัส"
+    }
+  },
+  "Compare": {
+    "labels": {
+      "income": "รายได้",
+      "expenses": "ค่าใช้จ่าย",
+      "expense": "ค่าใช้จ่าย",
+      "tax": "ภาษี",
+      "net": "สุทธิ",
+      "Income": "รายได้",
+      "Expense": "ค่าใช้จ่าย",
+      "Tax": "ภาษี",
+      "netIncome": "รายได้สุทธิ"
+    },
+    "title": "เปรียบเทียบ",
+    "commissionAndDiligence": "ค่าคอมมิชชั่นและความขยัน",
+    "viewSummary": "ดูสรุปคำสั่งทั้งหมดสำหรับปี {year}",
+    "filter": "ตัวกรอง",
+    "filterData": "กรองข้อมูล",
+    "setDimensions": "กำหนดตัวกรองสำหรับแสดงผล",
+    "year": "ปี",
+    "selectYear": "เลือกปี",
+    "applyFilters": "ใช้ตัวกรอง",
+    "dataTypes": "ประเภทข้อมูล",
+    "chartType": "ประเภทแผนภูมิ",
+    "barChart": "แผนภูมิแท่ง",
+    "areaChart": "แผนภูมิพื้นที่",
+    "lineChart": "แผนภูมิเส้น",
+    "saveChanges": "บันทึกการเปลี่ยนแปลง",
+    "financialBreakdown": "การวิเคราะห์ทางการเงิน",
+    "viewSummaryAllOrders": "ดูสรุปของคำสั่งทั้งหมด",
+    "yearlySummary": "สรุปประจำปี {year}: มกราคม - ธันวาคม",
+    "analyzingData": "วิเคราะห์รายได้ ค่าใช้จ่าย และภาษีสำหรับปี {year}",
+    "filterYear": "ตัวกรองปี",
+    "chooseYear": "เลือกปี",
+    "chooseYears": "เลือกปีเพื่อแสดงในแผนภูมิ",
+    "financialOverview": "ภาพรวมทางการเงิน",
+    "BarChart": "แผนภูมิแท่ง",
+    "AreaChart": "แผนภูมิพื้นที่",
+    "LineChart": "แผนภูมิเส้น",
+    "month": "เดือน"
+  },
+  "Employee": {
+    "tableHeaders": {
+      "employeeCode": "รหัสพนักงาน",
+      "title": "ตำแหน่ง",
+      "firstName": "ชื่อ",
+      "lastName": "นามสกุล",
+      "gender": "เพศ",
+      "currentSalary": "เงินเดือนปัจจุบัน",
+      "workingYear": "ปีที่ทำงาน",
+      "actions": "เมนูตัวเลือก",
+      "year": "ปี"
+    },
+    "actions": {
+      "details": "รายละเอียด",
+      "chart": "แผนภูมิ"
+    },
+    "unknownSalary": "ไม่มีข้อมูล",
+    "noResults": "ไม่พบผลลัพธ์",
+    "employeesFound": "พบพนักงาน: {count}",
+    "pagination": {
+      "previous": "ก่อนหน้า",
+      "next": "ถัดไป"
+    },
+    "filterByYear": "กรองตามปี",
+    "allYears": "ทุกปี",
+    "title": "การจัดการพนักงาน",
+    "description": "จัดการพนักงานของคุณและดูรายละเอียดของพวกเขา",
+    "filterPlaceholder": "ค้นหาตามชื่อ...",
+    "columns": "ตัวกรอง"
+  },
+  "Employee_detail": {
+    "title": "{name}",
+    "name-lastName": "ชื่อ-นามสกุล:",
+    "viewDetails": "ดูรายละเอียด",
+    "tabs": {
+      "income": "รายได้",
+      "expense": "ค่าใช้จ่าย",
+      "tax": "ภาษี"
+    },
+    "personalInfo": "ข้อมูลส่วนตัว",
+    "employeeCode": "รหัสพนักงาน",
+    "firstName": "ชื่อ",
+    "lastName": "นามสกุล",
+    "gender": "เพศ",
+    "currentSalary": "เงินเดือนปัจจุบัน",
+    "startDate": "วันที่เริ่มงาน",
+    "endDate": "วันที่สิ้นสุดการทำงาน",
+    "stillEmployed": "ยังทำงานอยู่",
+    "income": "รายได้",
+    "salary": "เงินเดือน",
+    "shiftAllowance": "เบี้ยเลี้ยงกะ",
+    "foodAllowance": "เบี้ยเลี้ยงอาหาร",
+    "overtime": "ค่าล่วงเวลา",
+    "diligence": "เบี้ยขยัน",
+    "beverage": "ค่าเครื่องดื่ม",
+    "commission": "ค่าคอมมิชชั่น",
+    "brokerFee": "ค่านายหน้า",
+    "otherIncome": "รายได้อื่นๆ",
+    "bonus": "โบนัส",
+    "tax": "ภาษี",
+    "employeeTax": "ภาษีพนักงาน",
+    "companyTax": "ภาษีบริษัท",
+    "socialSecurityEmployee": "ประกันสังคม (พนักงาน)",
+    "socialSecurityCompany": "ประกันสังคม (บริษัท)",
+    "providentFund": "กองทุนสำรองเลี้ยงชีพ",
+    "workingYear": "ปีที่ทำงาน",
+    "loan": "เงินกู้",
+    "salaryAdvance": "เงินเดือนล่วงหน้า",
+    "commissionDeduction": "การหักค่าคอมมิชชั่น",
+    "otherDeductions": "การหักอื่นๆ",
+    "expense": "ค่าใช้จ่าย"
+  },
+  "Employee_Chart": {
+    "labels": {
+      "totalincome": "รายได้ทั้งหมด",
+      "totalexpense": "ค่าใช้จ่ายทั้งหมด",
+      "totaltax": "ภาษีทั้งหมด",
+      "netincome": "รายได้สุทธิ"
+    },
+    "title": "แผนภูมิของ {name}",
+    "viewDetails": "ดูรายละเอียด",
+    "employeeCode": "รหัสพนักงาน",
+    "name-lastName": "ชื่อ-นามสกุล",
+    "gender": "เพศ",
+    "currentSalary": "เงินเดือนปัจจุบัน",
+    "workingYear": "ปีที่ทำงาน",
+
+    "tabs": {
+      "income": "รายได้",
+      "expense": "ค่าใช้จ่าย",
+      "tax": "ภาษี",
+      "net": "สุทธิ"
+    },
+    "financialOverview": "ภาพรวมทางการเงิน",
+    "yearlySummary": "สรุปประจำปี {year}: มกราคม - ธันวาคม",
+    "analyzingData": "วิเคราะห์รายได้ ค่าใช้จ่าย และภาษีสำหรับปี {year}",
+    "financialBreakdown": "การวิเคราะห์ส่วนแบ่งทางการเงิน",
+    "viewSummaryAllOrders": "ดูสรุปของคำสั่งทั้งหมด",
+    "footerTitle": "การวิเคราะห์ทางการเงินและสรุป",
+    "allYears": "ทั้งปี",
+    "months": [
+      "ม.ค.",
+      "ก.พ.",
+      "มี.ค.",
+      "เม.ย.",
+      "พ.ค.",
+      "มิ.ย.",
+      "ก.ค.",
+      "ส.ค.",
+      "ก.ย.",
+      "ต.ค.",
+      "พ.ย.",
+      "ธ.ค."
+    ],
+    "tooltip": {
+      "income": "รายได้",
+      "expense": "ค่าใช้จ่าย",
+      "tax": "ภาษี",
+      "netIncome": "รายได้สุทธิ"
+    },
+    "income": "รายได้",
+    "expense": "ค่าใช้จ่าย",
+    "tax": "ภาษี",
+    "income_labels": {
+      "salary": "เงินเดือน",
+      "shiftAllowance": "เบี้ยเลี้ยงกะ",
+      "foodAllowance": "เบี้ยเลี้ยงอาหาร",
+      "overtime": "ค่าล่วงเวลา",
+      "diligence": "เบี้ยขยัน",
+      "beverage": "ค่าเครื่องดื่ม",
+      "commission": "ค่าคอมมิชชั่น",
+      "brokerFee": "ค่านายหน้า",
+      "bonus": "โบนัส",
+      "other": "อื่นๆ"
+    },
+    "expense_labels": {
+      "loan": "เงินกู้",
+      "salaryAdvance": "เงินเดือนล่วงหน้า",
+      "commissionDeduction": "การหักค่าคอมมิชชั่น",
+      "otherDeductions": "การหักอื่นๆ"
+    },
+    "tax_labels": {
+      "employeeTax": "ภาษีพนักงาน",
+      "companyTax": "ภาษีบริษัท",
+      "socialSecurityEmployee": "ประกันสังคม (พนักงาน)",
+      "socialSecurityCompany": "ประกันสังคม (บริษัท)",
+      "providentFund": "กองทุนสำรองเลี้ยงชีพ"
+    }
+  },
+  "Dashboard": {
+    "labels": {
+      "income": "รายได้",
+      "expense": "ค่าใช้จ่าย",
+      "totalincome": "รายได้ทั้งหมด",
+      "totalexpense": "ค่าใช้จ่ายทั้งหมด",
+      "totaltax": "ภาษีทั้งหมด",
+      "netincome": "รายได้สุทธิ"
+    },
+    "tabs": {
+      "income": "รายได้",
+      "expense": "ค่าใช้จ่าย",
+      "tax": "ภาษี"
+    },
+    "from_previous_year": "จากปีที่แล้ว",
+    "Charts": {
+      "locale": "th-TH",
+      "currencyCode": "THB",
+      "year": "ข้อมูลจากปี"
+    }
+  },
+  "DashboardAdmin": {
+    "customer": "ลูกค้า",
+    "blog": "บล็อก",
+    "appointments": "นัดหมาย",
+    "notifications": "การแจ้งเตือน",
+    "loading": "กำลังโหลด...",
+    "totalCustomersRegistered": "จำนวนลูกค้าทั้งหมดที่ลงทะเบียน",
+    "totalBlogsPublished": "จำนวนบล็อกทั้งหมดที่เผยแพร่",
+    "totalAppointmentsScheduled": "จำนวนนัดหมายทั้งหมดที่นำมาเปิดประกอบ",
+    "recentNotifications": "การแจ้งเตือนล่าสุดและการอัปเดต",
+    "company": "บริษัท",
+    "recentTransactions": "ลูกค้าที่ใช้บริการกับ Mtax",
+    "uploadFile": "อัปโหลดไฟล์",
+    "contact": "ติดต่อ",
+    "status": "สถานะ",
+    "date": "วันที่เป็นสมาชิก",
+    "details": "รายละเอียด",
+    "recentBlogs": "บล็อกล่าสุด",
+    "noBlogs": "ไม่มีบล็อกที่มีอยู่",
+    "calendar": "ปฏิทิน",
+    "calendarDescription": "ดูและจัดการการนัดหมายของคุณในปฏิทิน",
+    "appointmentsFor": "นัดหมายสำหรับ {date}",
+    "noAppointments": "ไม่มีนัดหมายสำหรับวันที่นี้",
+    "overview": "ภาพรวม",
+    "employee": "ข้อมูลพนักงาน",
+    "dataVisualization": "Data Visualization",
+    "name": "ชื่อ"
+  },
+  "Uploadcsv": {
+    "cardTitle": "อัปโหลดไฟล์ CSV",
+    "cardDescription": "เลือกบริษัท ระบุเดือนและปี แล้วอัปโหลดไฟล์ CSV",
+    "companyLabel": "บริษัท",
+    "selectCompanyPlaceholder": "เลือกบริษัท",
+    "monthLabel": "เดือน",
+    "selectMonthPlaceholder": "เลือกเดือน",
+    "yearLabel": "ปี",
+    "selectYearPlaceholder": "เลือกปี",
+    "csvFileLabel": "ไฟล์ CSV",
+    "uploadButton": "อัปโหลด",
+    "uploading": "กำลังอัปโหลด...",
+    "noFileSelectedTitle": "ไม่มีไฟล์ที่เลือก",
+    "noFileSelectedText": "กรุณาเลือกไฟล์เพื่ออัปโหลด",
+    "uploadSuccessTitle": "อัปโหลดสำเร็จ",
+    "uploadSuccessText": "ไฟล์ถูกอัปโหลดสำเร็จแล้ว!",
+    "uploadErrorTitle": "Oops...",
+    "uploadErrorText": "มีข้อผิดพลาดเกิดขึ้น!",
+    "uploadFailedTitle": "อัปโหลดเสียหาย",
+    "uploadFailedText": "การอัปโหลดไฟล์เสียหายเนื่องจากข้อผิดพลาดของเครือข่ายหรือเซิร์ฟเวอร์"
+  },
+  "Radian": {
+    "employeeCount": "จำนวนพนักงาน",
+    "employeeDistribution": "สัดส่วนของพนักงานตามเพศ",
+    "male": "ชาย",
+    "female": "หญิง",
+    "notSpecified": "ไม่ระบุ",
+    "employees": "พนักงาน",
+    "totalEmployees": "พนักงานทั้งหมด: {count} ในปี {year}",
+    "gender": "เพศ",
+    "total": "ทั้งหมด"
+  },
+  "RangeCommission": {
+    "employees": "พนักงาน",
+    "range1": "฿0-฿10,000",
+    "range2": "฿10,001-฿20,000",
+    "range3": "฿20,001-฿30,000",
+    "range4": "฿30,001-฿40,000",
+    "range5": "฿40,001-฿50,000++",
+    "error": "ข้อผิดพลาด",
+    "distribution": "ช่วงรายได้จากค่าคอมมิชชั่นของพนักงานสำหรับปีนี้",
+    "commissionRangesThisYear": "ช่วงรายได้จากค่าคอมมิชชั่นในปีนี้",
+    "showingDistribution": "แสดงช่วงรายได้จากค่าคอมมิชชั่นของพนักงานตามช่วง",
+    "commissionRanges": "ช่วงรายได้จากค่าคอมมิชชั่น"
+  },
+  "RangeDiligence": {
+    "employees": "พนักงาน",
+    "range1": "฿0-฿10,000",
+    "range2": "฿10,001-฿20,000",
+    "range3": "฿20,001-฿30,000",
+    "range4": "฿30,001-฿40,000",
+    "range5": "฿40,001-฿50,000++",
+    "error": "ข้อผิดพลาด",
+    "distribution": "ช่วงรายได้จากค่าความขยันของพนักงานสำหรับปีนี้",
+    "diligenceRangesThisYear": "ช่วงรายได้จากค่าความขยันในปีนี้",
+    "showingDistribution": "แสดงช่วงรายได้จากค่าความขยันของพนักงานตามช่วง",
+    "diligenceRanges": "ช่วงรายได้จากค่าความขยัน"
+  },
+  "EmployeeDialog": {
+    "title": "พนักงานในช่วง",
+    "searchPlaceholder": "ค้นหาตามชื่อ...",
+    "name": "ชื่อ",
+    "totalCommission": "ค่าคอมมิชชั่น",
+    "totalDiligence": "ค่าความขยัน",
+    "noEmployeesFound": "ไม่พบพนักงาน",
+    "previous": "ก่อนหน้า",
+    "next": "ถัดไป",
+    "pageInfo": "หน้า {current} จาก {total}",
+    "noEmployeesInRange": "ไม่มีพนักงานในช่วงนี้",
+    "close": "ปิด"
+  },
+  "SupportAdmin": {
+    "title": "การจัดการรายงานปัญหา",
+    "description": "จัดการรายงานปัญหาและดูรายละเอียด",
+    "searchPlaceholder": "ค้นหาตามชื่อหรือหมวดหมู่...",
+    "tableHeaders": {
+      "name": "ชื่อ",
+      "category": "หมวดหมู่",
+      "status": "สถานะ",
+      "createdAt": "วันที่สร้าง",
+      "actions": "การดำเนินการ"
+    },
+    "status": {
+      "pending": "รอดำเนินการ",
+      "inProgress": "กำลังดำเนินการ",
+      "resolved": "แก้ไขแล้ว"
+    },
+    "categories": {
+      "data_problem": "ปัญหาเกี่ยวกับข้อมูล",
+      "dashboard_problem": "ปัญหาเกี่ยวกับแดชบอร์ด",
+      "appointment_problem": "ปัญหาเกี่ยวกับการนัดหมาย",
+      "feedback": "คำถามทั่วไป"
+    },
+    "actions": "ตัวเลือก",
+    "problemResolutionReport": "รายงานการแก้ไขปัญหา",
+    "delete": "ลบ",
+    "pagination": {
+      "previous": "ก่อนหน้า",
+      "next": "ถัดไป",
+      "page": "หน้า {current} จาก {total}"
+    },
+    "dialog": {
+      "title": "รายละเอียดรายงานปัญหา",
+      "category": "หมวดหมู่",
+      "status": "สถานะ",
+      "description": "คำอธิบาย",
+      "createdAt": "วันที่สร้าง",
+      "resolutionReportFor": "รายงานการแก้ไขสำหรับ",
+      "enterResolutionReportFor": "กรอกรายงานการแก้ไขสำหรับ",
+      "enterResolutionDetails": "กรอกรายละเอียดการแก้ไข...",
+      "cancel": "ยกเลิก",
+      "submit": "ส่ง"
+    },
+    "cancel": "ยกเลิก",
+    "submit": "ส่ง",
+    "resolutionReportFor": "รายงานการแก้ไขสำหรับ",
+    "descriptionFor": "คำอธิบายสำหรับ",
+    "confirmDeleteTitle": "ยืนยันการลบ",
+    "confirmDeleteText": "คุณแน่ใจหรือไม่ที่จะลบรายงานนี้?",
+    "confirmDeleteButton": "ลบ"
+  },
+  "ProblemReportForm": {
+    "title": "แบบฟอร์มรายงานปัญหา",
+    "name": "ชื่อ",
+    "company": "บริษัท",
+    "email": "อีเมล",
+    "category": "หมวดหมู่",
+    "description": "คำอธิบาย",
+    "placeholders": {
+      "name": "กรอกชื่อของคุณ",
+      "company": "กรอกชื่อบริษัทของคุณ",
+      "email": "m@example.com"
+    },
+    "categories": {
+      "data_problem": "ปัญหาเกี่ยวกับข้อมูล",
+      "dashboard_problem": "ปัญหาเกี่ยวกับแดชบอร์ด",
+      "appointment_problem": "ปัญหาเกี่ยวกับการนัดหมาย",
+      "feedback": "คำถามทั่วไป"
+    },
+    "selectCategory": "เลือกหมวดหมู่",
+    "yourQuestion": "คำถามของคุณ",
+    "enterQuestion": "กรุณากรอกคำถามของคุณที่นี่...",
+    "problemDescription": "คำอธิบายปัญหา",
+    "describeProblem": "กรุณาอธิบายปัญหาที่คุณพบ...",
+    "submitReport": "ส่งรายงาน",
+    "thankYouTitle": "ขอบคุณ!",
+    "thankYouText": "รายงานของคุณถูกส่งเรียบร้อยแล้ว",
+    "errorTitle": "เกิดข้อผิดพลาด",
+    "errorText": "เกิดข้อผิดพลาดในการส่งรายงาน กรุณาลองอีกครั้ง"
+  },
+  "Support":{
+    "title": "การสนับสนุน",
+    "description": "สนับสนุนลูกค้าและติดต่อกับทีมงาน",
+    "report": "รายงาน",
+    "chat": "แชท",
+    "search": "ค้นหา..."
+  },
+  "Topbar":{
+    "welcome": "ยินดีต้อนรับ",
+    "companyPlaceholder": "บริษัท: {name}",
+    "namePlaceholder": "ชื่อ: {name}"
+  },
+  "FinancialOverview": {
+    "filterData": "กรองข้อมูล",
+    "viewSummaryAllOrders": "ดูสรุปทั้งหมดของคำสั่ง",
+    "financialOverview": "ภาพรวมทางการเงิน",
+    "financialSummary": "สรุปภาพรวมทางการเงิน",
+    "yearSummary": "สรุปทั้งหมดของปี {year}: มกราคม - ธันวาคม",
+    "totalIncome": "รวมรายได้",
+    "totalExpense": "รวมค่าใช้จ่าย",
+    "totalTax": "รวมภาษี",
+    "netIncome": "รวมรายได้สุทธิ",
+    "summaryForPeriod": "สรุปสำหรับ {year}",
+    "year": "ปี",
+    "month": "เดือน",
+    "yearlySummary": "สรุปทั้งหมดของปี",
+    "analyzingData": "วิเคราะห์รายได้, ค่าใช้จ่าย, และภาษีสำหรับ {year}.",
+    "filter": "กรอง",
+    "overviewOfFinances": "ภาพรวมทางการเงิน",
+    "dataTypes": "ชนิดข้อมูล",
+    "applyFilters": "นำตัวกรองมาใช้",
+    "setDimensions": "ตั้งขนาด",
+    "chartType": "ชนิดของกราฟ",
+    "barChart": "กราฟแท่ง",
+    "areaChart": "กราฟพื้นที่",
+    "lineChart": "กราฟเส้น",
+    "labels": {
+      "Income": "รายได้",
+      "Expense": "ค่าใช้จ่าย",
+      "Tax": "ภาษี",
+      "netIncome": "รวมรายได้สุทธิ"
+    },
+    "filterYear": "กรองปี",
+    "chooseYear": "เลือกปี",
+    "chooseYears": "เลือกปีที่จะแสดงในกราฟ",
+    "saveChanges": "บันทึกการเปลี่ยนแปลง",
+    "BarChart": "กราฟแท่ง",
+    "AreaChart": "กราฟพื้นที่",
+    "LineChart": "กราฟเส้น",
+    "month_1": "มกราคม",
+    "month_2": "กุมภาพันธ์",
+    "month_3": "มีนาคม",
+    "month_4": "เมษายน",
+    "month_5": "พฤษภาคม",
+    "month_6": "มิถุนายน",
+    "month_7": "กรกฎาคม",
+    "month_8": "สิงหาคม",
+    "month_9": "กันยายน",
+    "month_10": "ตุลาคม",
+    "month_11": "พฤศจิกายน",
+    "month_12": "ธันวาคม",
+    "summaryForYear": "สรุปสำหรับ {year}"
+  },
+  "FinancialBreakdown": {
+    "financialBreakdown": "สัดส่วนทางการเงิน",
+    "viewSummaryAllOrders": "แสดงสรุปสัดส่วนทางการเงินทั้งหมด",
+    "filterData": "กรองข้อมูล",
+    "setDimensions": "ตั้งขนาด",
+    "selectYear": "เลือกปี",
+    "filter": "กรอง",
+    "labels": {
+      "income": "รายได้",
+      "expense": "ค่าใช้จ่าย",
+      "tax": "ภาษี",
+      "salary": "ค่าจ้าง",
+      "shiftAllowance": "ค่าทำงานพิเศษ",
+      "foodAllowance": "ค่าอาหาร",
+      "overtime": "ค่าล่วงเลย",
+      "diligence": "ค่าความขยัน",
+      "beverage": "ค่าอาหารน้ำมั้น",
+      "commission": "ค่าคอมมิชชั่น",
+      "brokerFee": "ค่านายหน้า",
+      "otherIncome": "รายได้อื่นๆ",
+      "loan": "กู้ยืม",
+      "salaryAdvance": "ค่าจ้างล่วงหน้า",
+      "commissionDeduction": "ค่าคอมมิชชั่นหักลบ",
+      "otherDeductions": "ค่าหักลบอื่นๆ",
+      "employeeTax": "ภาษีพนักงาน",
+      "companyTax": "ภาษาบริษัท",
+      "socialSecurityEmployee": "ประกันสังคมพนักงาน",
+      "socialSecurityCompany": "ประกันสังคมบริษัท",
+      "providentFund": "กองทุนประกันสังคม",
+      "bonus": "โบนัส",
+      "other": "อื่นๆ",
+      "incomeDetails": "รายได้สำหรับ {year}",
+      "expenseDetails": "ค่าใช้จ่ายสำหรับ {year}",
+      "taxDetails": "ภาษีสำหรับ {year}"
+    },
+    "item": "รายการ",
+    "amount": "จำนวน",
+    "percentage": "ร้อยละ",
+    "total": "รวม",
+    "yearlySummary": "สรุปทั้งหมดของปี {year}",
+    "analyzingData": "วิเคราะห์รายได้, ค่าใช้จ่าย, และภาษีสำหรับ {year}.",
+    "year": "ปี"
+  },
+
+  "CommissionDiligence": {
+    "commissionAndDiligence": "ค่าคอมมิชชั่น & ค่าความขยัน",
+    "year": "ปี",
+    "range": "ช่วง",
+    "count": "จำนวน",
+    "employees": "พนักงาน",
+    "totalCommission": "ค่าคอมมิชชั่นรวม",
+    "totalDiligence": "ค่าความขยันรวม",
+    "viewSummary": "ดูสรุป",
+    "filterData": "กรองข้อมูล",
+    "setDimensions": "ตั้งค่าการกรองข้อมูล",
+    "selectYear": "เลือกปี",
+    "filter": "กรอง",
+    "yearlySummary": "สรุปทั้งหมดของปี {year}",
+    "apply": "ใช้งาน",
+    "searchEmployee": "ค้นหาชื่อพนักงาน",
+    "employeeName": "ชื่อพนักงาน",
+    "commissionValue": "ค่าคอมมิชชั่น",
+    "commissionRange": "ช่วงคอมมิชชั่น",
+    "diligenceValue": "ค่าความขยัน",
+    "diligenceRange": "ช่วงความขยัน",
+    "pageInfo": "หน้า {current} จาก {total}",
+    "previous": "ก่อนหน้า",
+    "next": "ถัดไป",
+    "employeeDetails": "รายละเอียดพนักงาน",
+    "resetFilter": "ยกเลิกการกรอง"
+  }
+
+}

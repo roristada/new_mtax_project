@@ -1,6 +1,6 @@
 import React from 'react';
 import { TrendingUp } from "lucide-react";
-import { Pie, PieChart, ResponsiveContainer, Cell, Legend } from "recharts";
+import { Pie, PieChart, ResponsiveContainer, Cell, Legend, Tooltip } from "recharts";
 import {
   Card,
   CardContent,
@@ -15,6 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../../../components/ui/chart";
+import { useTranslations } from 'next-intl';
 
 interface TaxBreakdown {
   employeeTax: number;
@@ -41,12 +42,14 @@ const generateVibrantColors = (numColors: number) => {
 };
 
 export const TaxBreakdownDonutChart: React.FC<TaxBreakdownDonutChartProps> = ({ taxBreakdown }) => {
+  const t = useTranslations('Charts');
+
   if (!taxBreakdown) {
     return (
       <Card className="flex flex-col">
         <CardHeader className="items-center pb-0">
-          <CardTitle>Tax Breakdown</CardTitle>
-          <CardDescription>No data available</CardDescription>
+          <CardTitle>{t('tax_breakdown')}</CardTitle>
+          <CardDescription>{t('no_data_available')}</CardDescription>
         </CardHeader>
       </Card>
     );
@@ -57,7 +60,7 @@ export const TaxBreakdownDonutChart: React.FC<TaxBreakdownDonutChartProps> = ({ 
 
   const chartData = Object.entries(taxBreakdown)
     .map(([key, value], index) => ({
-      name: key.charAt(0).toUpperCase() + key.slice(1),
+      name: t(`tax_labels.${key}`),
       value: value,
       fill: COLORS[index],
     }))
@@ -66,7 +69,7 @@ export const TaxBreakdownDonutChart: React.FC<TaxBreakdownDonutChartProps> = ({ 
   const chartConfig: ChartConfig = Object.fromEntries(
     categories.map((key, index) => [
       key,
-      { label: key.charAt(0).toUpperCase() + key.slice(1), color: COLORS[index] }
+      { label: t(`tax_labels.${key}`), color: COLORS[index] }
     ])
   );
 
@@ -106,10 +109,29 @@ export const TaxBreakdownDonutChart: React.FC<TaxBreakdownDonutChartProps> = ({ 
     );
   };
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      const percentage = ((data.value / totalTax) * 100).toFixed(1);
+      return (
+        <div className="custom-tooltip bg-white p-4 rounded-lg shadow-md border border-gray-200">
+          <p className="font-semibold text-lg mb-2">{data.name}</p>
+          <p className="text-sm text-gray-600 mb-1">
+            {t('amount')}: <span className="font-medium">{formatSalary(data.value)}</span>
+          </p>
+          <p className="text-sm text-gray-600">
+            {t('percentage')}: <span className="font-medium">{percentage}%</span>
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   const formatSalary = (salary: number) => {
-    return new Intl.NumberFormat("th-TH", {
+    return new Intl.NumberFormat(t('locale'), {
       style: "currency",
-      currency: "THB",
+      currency: t('currencyCode'),
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(salary)
@@ -118,8 +140,8 @@ export const TaxBreakdownDonutChart: React.FC<TaxBreakdownDonutChartProps> = ({ 
   return (
     <Card className="flex flex-col h-full">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Tax Breakdown</CardTitle>
-        <CardDescription>Employee Tax Distribution</CardDescription>
+        <CardTitle>{t('tax_breakdown')}</CardTitle>
+        <CardDescription>{t('employee_tax_distribution')}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -128,10 +150,7 @@ export const TaxBreakdownDonutChart: React.FC<TaxBreakdownDonutChartProps> = ({ 
         >
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent />}
-              />
+              <Tooltip content={<CustomTooltip />} />
               <Pie
                 data={chartData}
                 dataKey="value"
@@ -155,10 +174,10 @@ export const TaxBreakdownDonutChart: React.FC<TaxBreakdownDonutChartProps> = ({ 
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm mt-8">
         <div className="flex items-center gap-2 font-medium leading-none">
-          Total Tax: {formatSalary(totalTax)} <TrendingUp className="h-4 w-4" />
+          {t('total_tax')}: {formatSalary(totalTax)} <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing Tax breakdown for the current period
+          {t('showing_tax_breakdown')}
         </div>
       </CardFooter>
     </Card>

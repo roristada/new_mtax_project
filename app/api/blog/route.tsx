@@ -1,9 +1,19 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
+import { Storage } from '@google-cloud/storage';
+import { v4 as uuidv4 } from "uuid";
 
 const prisma = new PrismaClient();
+
+const storage = new Storage({
+  projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+  credentials: {
+    client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
+    private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+  },
+});
+
+const bucketName = 'mtax-storage-file';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,7 +26,6 @@ export async function POST(request: NextRequest) {
     const status = formData.get("status") as string;
     console.log(status)
 
-    
     const authorCheck = await prisma.user.findUnique({
       where: { email: email },
     });
@@ -28,10 +37,19 @@ export async function POST(request: NextRequest) {
     let picturePath = null;
     if (picture) {
       const buffer = Buffer.from(await picture.arrayBuffer());
-      const pictureName = `${Date.now()}-${picture.name}`;
-      picturePath = path.join(process.cwd(), "public", "img_upload","blog_pic", pictureName); // Ensure path points to the right directory
-      await fs.writeFile(picturePath, new Uint8Array(buffer)); // Write the buffer as Uint8Array
-      picturePath = `/img_upload/blog_pic/${pictureName}`; // Store the relative path in the DB
+      const pictureName = `${uuidv4()}-${picture.name}`;
+      
+      // Upload the file to Google Cloud Storage
+      const bucket = storage.bucket(bucketName);
+      const blob = bucket.file(`blog_pic/${pictureName}`);
+      await blob.save(buffer, {
+        metadata: {
+          contentType: picture.type,
+        },
+      });
+
+      // Generate a public URL for the uploaded file
+      picturePath = `https://storage.googleapis.com/${bucketName}/blog_pic/${pictureName}`;
     }
 
     const createPost = await prisma.post.create({
@@ -42,7 +60,7 @@ export async function POST(request: NextRequest) {
         },
         content,
         category,
-        picture: picturePath, // Store image path in DB
+        picture: picturePath, // Store the Google Cloud Storage URL in DB
         status
       },
     });
@@ -81,6 +99,7 @@ export async function GET() {
       },
     });
 
+
     // Format categories for easier access
     const categoryNames = categories.map((category) => category.category);
 
@@ -91,4 +110,3 @@ export async function GET() {
     return NextResponse.json({ error: "Failed to fetch posts" }, { status: 500 });
   }
 }
-

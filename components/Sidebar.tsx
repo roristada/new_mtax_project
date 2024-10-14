@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import { Link } from "../i18n/routing";
 import {
   Home,
   Users2,
@@ -13,6 +13,7 @@ import {
   LibraryBig,
   BarChartBig,
   LayoutDashboard,
+  LogOut,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import {
@@ -35,37 +36,60 @@ import { useParams, usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const adminLinks = [
-  { id: 1, title: "Home", url: "/dashboard/admin", icon: Home },
+  { id: 1, title: "home", url: "/dashboard/admin", icon: Home },
   {
     id: 2,
-    title: "Appointment",
+    title: "appointment",
     url: "/appointment/admin",
     icon: CalendarPlus2,
   },
-  { id: 3, title: "Register", url: "/register", icon: UserRoundPen },
-  { id: 4, title: "Blog", url: "/blog/admin", icon: LibraryBig },
-  { id: 5, title: "Support", url: "/support/admin", icon: MessageSquareWarning },
+  { id: 3, title: "register", url: "/register", icon: UserRoundPen },
+  { id: 4, title: "blog", url: "/blog/admin", icon: LibraryBig },
+  {
+    id: 5,
+    title: "support",
+    url: "/support/admin",
+    icon: MessageSquareWarning,
+  },
   // New Overview link for admin
-  { id: 6, title: "Overview", url: "/dashboard/:id", icon: LayoutDashboard },
-  { id: 7, title: "Employee", url: "/dashboard/:id/employee", icon: Users2 },
+  { id: 6, title: "overview", url: "/dashboard/:id", icon: LayoutDashboard },
+  { id: 7, title: "employee", url: "/dashboard/:id/employee", icon: Users2 },
   {
     id: 8,
-    title: "Data Details",
+    title: "dataDetails",
     url: "/dashboard/:id/data_details",
     icon: BarChartBig,
+    subMenu: [
+      { id: 'data_visualization', title: 'dataVisualization', url: '/dashboard/:id/data_details/data_visualization' },
+      { id: 'financial-overview', title: 'financialOverview', url: '/dashboard/:id/data_details/financial-overview' },
+      { id: 'financial-breakdown', title: 'financialBreakdown', url: '/dashboard/:id/data_details/financial-breakdown' },
+      { id: 'commission-diligence', title: 'commissionDiligence', url: '/dashboard/:id/data_details/commission-diligence' },
+    ]
   },
 ];
 
 const customerLinks = [
-  { id: 1, title: "Home", url: "/dashboard/:id", icon: Home },
-  { id: 2, title: "Employee", url: "/dashboard/:id/employee", icon: Users2 },
-  { id: 3, title: "Data Details", url: "/dashboard/:id/data_details", icon: LineChart },
+  { id: 1, title: "home", url: "/dashboard/:id", icon: Home },
+  { id: 2, title: "employee", url: "/dashboard/:id/employee", icon: Users2 },
+  {
+    id: 3,
+    title: "dataDetails",
+    url: "/dashboard/:id/data_details",
+    icon: LineChart,
+    subMenu: [
+      { id: 'data_visualization', title: 'dataVisualization', url: '/dashboard/:id/data_details/data_visualization' },
+      { id: 'financial-overview', title: 'financialOverview', url: '/dashboard/:id/data_details/financial-overview' },
+      { id: 'financial-breakdown', title: 'financialBreakdown', url: '/dashboard/:id/data_details/financial-breakdown' },
+      { id: 'commission-diligence', title: 'commissionDiligence', url: '/dashboard/:id/data_details/commission-diligence' },
+    ]
+  },
   {
     id: 4,
-    title: "Support",
+    title: "support",
     url: "/support/:id",
     icon: MessageSquareWarning,
   },
@@ -77,16 +101,57 @@ export default function Sidebar() {
   const params = useParams();
   const pathname = usePathname();
   const id = params.slug as string;
+  
+  const t = useTranslations("Sidebar");
+
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+
+  const toggleSubmenu = (id: string) => {
+    setOpenSubmenu(openSubmenu === id ? null : id);
+  };
 
   const getBaseUrl = () => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       return window.location.origin;
     }
     // Fallback for server-side rendering
-    return process.env.NEXT_PUBLIC_BASE_URL || 'https://newmtaxproject-production.up.railway.app/';
+    return (
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      "https://newmtaxproject-production.up.railway.app/"
+    );
   };
 
   const getUrl = useCallback((url: string) => url.replace(":id", id), [id]);
+
+  // Ensure pathname is just the path part of the URL
+  const currentPathname = new URL(pathname, getBaseUrl()).pathname;
+  console.log("Current Pathname:", currentPathname);
+
+  const isLinkActive = useCallback(
+    (url: string) => {
+      const currentUrl = getUrl(url);
+      const languagePrefix = currentPathname.split("/")[1];
+      const adjustedCurrentPathname = `/${languagePrefix}${currentUrl}`;
+  
+      if (url === '/dashboard/:id') {
+        return currentPathname === adjustedCurrentPathname;
+      }
+  
+      // Only match submenu items explicitly
+      if (url.includes('data_details') && url.includes('sub_menu')) {
+        return false;
+      }
+  
+      // For submenu items, use exact matching
+      if (url.includes('data_details/(sub_menu)')) {
+        return currentPathname === adjustedCurrentPathname;
+      }
+  
+      // For other items, continue using startsWith
+      return currentPathname.startsWith(adjustedCurrentPathname);
+    },
+    [currentPathname, getUrl]
+  );
 
   useEffect(() => {
     const handleAuthentication = async () => {
@@ -96,13 +161,13 @@ export default function Sidebar() {
             const expires_session = new Date(session.expires).getTime();
             const nowDate = Date.now();
             if (expires_session < nowDate) {
-              await signOut({ callbackUrl: `${getBaseUrl()}/`});
+              await signOut({ callbackUrl: `${getBaseUrl()}/` });
               // await signOut({ callbackUrl: `/`});
             }
           }
         }
-       } 
-       //else if (status === "unauthenticated") {
+      }
+      //else if (status === "unauthenticated") {
       //   router.push("/login");
       // }
     };
@@ -110,11 +175,15 @@ export default function Sidebar() {
     handleAuthentication();
   }, [status, session, router]); // Add router to the dependency array
 
+  const languagePrefix = pathname.split("/")[1]; // Extract the language prefix
+  const adjustedPathname = pathname.replace(`/${languagePrefix}`, ""); // Remove the prefix for comparison
+
   const isAdminOnUserDashboard =
     session?.user?.role === "admin" &&
-    pathname.startsWith("/dashboard/") &&
-    pathname !== "/dashboard/admin" &&
-    pathname !== "/dashboard/formUpload";
+    adjustedPathname.startsWith("/dashboard/") &&
+    adjustedPathname !== "/dashboard/admin" &&
+    adjustedPathname !== "/dashboard/formUpload";
+
   const links = useMemo(() => {
     if (session?.user?.role === "admin") {
       return isAdminOnUserDashboard
@@ -133,76 +202,80 @@ export default function Sidebar() {
           <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
             <Link
               href="/"
-              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-10 md:w-full md:text-base"
+              className={`group flex h-12 w-full max-w-[200px] items-center justify-center rounded-lg px-4 text-xl font-bold text-white transition-all duration-300 ease-in-out hover:from-blue-700 hover:to-purple-700 hover:shadow-lg `}
             >
-              <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
-              <span>Mtax</span>
+              <span className="text-2xl text-blue-500">M</span>
+              <span className="relative">
+                <span className="relative z-10 text-red-500">tax</span>
+                <span className="absolute inset-x-0 bottom-0 h-2 w-full bg-white/20 transform skew-x-12"></span>
+              </span>
               <span className="sr-only">Mtax</span>
             </Link>
             {links.map((link) => (
-              <Tooltip key={link.id}>
-                <TooltipTrigger asChild>
-                  <Link
-                    href={getUrl(link.url)}
-                    className={`flex h-9 w-9 items-center rounded-lg transition-colors md:h-8 md:w-full p-5 gap-2 ${
-                      pathname === getUrl(link.url)
-                        ? "bg-[#EDF9FD] text-gray-500"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {link.icon && <link.icon className="h-5 w-5" />}
-                    <span className="hidden lg:block">{link.title}</span>
-                    {/* The text is hidden on small screens (sm and below) and only shown on medium screens (md and above) */}
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent side="right">{link.title}</TooltipContent>
-              </Tooltip>
+              <div key={link.id} className="w-full">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      href={link.subMenu ? '#' : getUrl(link.url)}
+                      className={`flex items-center rounded-lg transition-all duration-300 ease-in-out md:w-full p-3 gap-2 relative overflow-hidden ${
+                        isLinkActive(link.url)
+                          ? "bg-gradient-to-r from-blue-200 to-purple-200 text-blue-800 shadow-sm"
+                          : "text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      }`}
+                      onClick={() => link.subMenu && toggleSubmenu(link.id.toString())}
+                    >
+                      {link.icon && (
+                        <link.icon className={`h-5 w-5 ${isLinkActive(link.url) ? 'text-blue-700' : 'text-gray-500'}`} />
+                      )}
+                      <span className={`hidden lg:block relative z-10 font-medium ${
+                        isLinkActive(link.url) ? 'text-blue-800' : 'text-gray-700 dark:text-gray-300'
+                      }`}>
+                        {t(link.title)}
+                      </span>
+                      {isLinkActive(link.url) && (
+                        <span className="absolute right-0 top-0 h-full w-1 bg-blue-400 rounded-l"></span>
+                      )}
+                      {link.subMenu && (
+                        <span className={`ml-auto transform transition-transform duration-200 ${openSubmenu === link.id.toString() ? 'rotate-180' : ''}`}>▼</span>
+                      )}
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">{t(link.title)}</TooltipContent>
+                </Tooltip>
+                {link.subMenu && openSubmenu === link.id.toString() && (
+                  <div className="ml-4 mt-2 space-y-2">
+                    {link.subMenu.map((subItem) => (
+                      <Link
+                        key={subItem.id}
+                        href={getUrl(subItem.url)}
+                        className={`block rounded-md py-2 px-3 text-sm ${
+                          isLinkActive(subItem.url)
+                            ? "bg-blue-100 text-blue-800"
+                            : "text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        }`}
+                      >
+                        {t(subItem.title)}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
           <nav className="mt-auto flex flex-col md:block gap-4 px-2 sm:py-5">
             <div className="flex items-center mx-auto md:block">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="w-full p-2 gap-2"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-user rounded-full border"
-                    >
-                      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                      <circle cx="12" cy="7" r="4" />
-                    </svg>
-
-                    <label className="hidden md:block" htmlFor="">
-                      {session?.user?.company}
-                    </label>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                  <DropdownMenuLabel>
-                    {session?.user?.role?.toUpperCase()}:{" "}
-                    {session?.user?.company}
-                  </DropdownMenuLabel>
-
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => signOut({ callbackUrl: 'https://newmtaxproject-production.up.railway.app/' })}
-                  >
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Button
+                className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center gap-2"
+                onClick={() =>
+                  signOut({
+                    callbackUrl:
+                      "https://newmtaxproject-production.up.railway.app/",
+                  })
+                }
+              >
+                <LogOut className="w-5 h-5" />
+                <span>Logout</span>
+              </Button>
             </div>
           </nav>
         </aside>

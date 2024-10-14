@@ -1,7 +1,7 @@
 "use client";
 
 import { TrendingUp } from "lucide-react";
-import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
+import { Label, PolarRadiusAxis, RadialBar, RadialBarChart, Tooltip } from "recharts";
 import { useState } from "react";
 
 import {
@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../../../components/ui/select";
+import { useTranslations } from "next-intl";
 
 interface EmployeeCountGenderByYear {
   year: number;
@@ -40,12 +41,12 @@ export default function Radian({
 }: {
   employeeCountGenderByYear: EmployeeCountGenderByYear[];
 }) {
-  // Determine the latest year from the data
+  const t = useTranslations('Radian');
+
   const latestYear = Math.max(
     ...employeeCountGenderByYear.map((item) => item.year)
   ).toString();
 
-  // Initialize selectedYear with the latest year
   const [selectedYear, setSelectedYear] = useState<string>(latestYear);
 
   const handleYearChange = (value: string) => {
@@ -69,16 +70,16 @@ export default function Radian({
 
   const chartConfig = {
     male: {
-      label: "Male",
-      color: "hsl(210, 100%, 50%)", // Blue color
+      label: t('male'),
+      color: "hsl(210, 100%, 50%)",
     },
     female: {
-      label: "Female",
-      color: "hsl(340, 100%, 50%)", // Pink color
+      label: t('female'),
+      color: "hsl(340, 100%, 50%)",
     },
     null: {
-      label: "Not Specified",
-      color: "hsl(45, 100%, 50%)", // Yellow color
+      label: t('notSpecified'),
+      color: "hsl(45, 100%, 50%)",
     },
   } satisfies ChartConfig;
 
@@ -87,13 +88,50 @@ export default function Radian({
 
   const uniqueYears = Array.from(
     new Set(employeeCountGenderByYear.map((item) => item.year.toString()))
-  ).sort((a, b) => parseInt(b) - parseInt(a)); // Sort years in descending order
+  ).sort((a, b) => parseInt(b) - parseInt(a));
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      
+      return (
+        <div className="bg-white p-4 shadow-lg rounded-lg border border-gray-200">
+          <h3 className="text-lg font-bold mb-2 text-gray-800 border-b pb-2">{t('gender')}</h3>
+          <div className="space-y-2">
+            {Object.entries(chartConfig).map(([key, config]) => (
+              <div key={key} className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <div 
+                    className="w-3 h-3 rounded-full mr-2" 
+                    style={{ backgroundColor: config.color }}
+                  ></div>
+                  <span className="text-sm font-medium text-gray-700">{config.label}:</span>
+                </div>
+                <div className="text-sm">
+                  <span className="font-semibold text-gray-900">{data[key].toLocaleString()}</span>
+                  <span className="text-gray-500 ml-1">
+                    ({((data[key] / totalEmployees) * 100).toFixed(1)}%)
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 pt-2 border-t text-sm font-medium text-gray-700 flex justify-between items-center">
+            <span>{t('total')}:</span>
+            <span className="text-lg font-bold text-gray-900">{totalEmployees.toLocaleString()}</span>
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <Card className="flex flex-col h-full">
       <CardHeader className="text-center">
-        <CardTitle>Employee Count</CardTitle>
-        <CardDescription>Employee Distribution by Gender</CardDescription>
+        <CardTitle>{t('employeeCount')}</CardTitle>
+        <CardDescription>{t('employeeDistribution')}</CardDescription>
         <Select onValueChange={handleYearChange} value={selectedYear}>
           <SelectTrigger className="w-[180px] mx-auto mt-2">
             <SelectValue placeholder={selectedYear} />
@@ -119,7 +157,7 @@ export default function Radian({
             innerRadius="50%"
             outerRadius="80%"
           >
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <Tooltip content={<CustomTooltip />} />
             <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
               <Label
                 content={({ viewBox }) => {
@@ -138,7 +176,7 @@ export default function Radian({
                           y={(viewBox.cy || 0) + 4}
                           className="fill-muted-foreground"
                         >
-                          Employees
+                          {t('employees')}
                         </tspan>
                       </text>
                     );
@@ -195,7 +233,7 @@ export default function Radian({
           ))}
         </div>
         <div className="text-center text-muted-foreground mt-1">
-          Total Employees: {totalEmployees.toLocaleString()} in {selectedYear}
+          {t('totalEmployees', { count: totalEmployees.toLocaleString(), year: selectedYear })}
         </div>
       </CardFooter>
     </Card>

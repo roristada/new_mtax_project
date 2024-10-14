@@ -38,7 +38,7 @@ const Header = () => {
             <a href="https://www.myaccount-cloud.com" target="_blank">
             <Image
                 className="w-16 h-auto rounded-full mx-3"
-                src="/images/partner0.jpg" 
+                src="/images/partner1.jpg" 
                 width={500}
                 height={500}
                 alt="Picture of the author"/>
@@ -54,30 +54,20 @@ const Header = () => {
             <a href="https://www.tfac.or.th/" target="_blank">
             <Image
                 className="w-16 h-auto rounded-full mx-3"
-                src="/images/partner0.jpg" 
+                src="/images/partner4.jpg" 
                 width={500}
                 height={500}
                 alt="Picture of the author"/>
             </a>
-            <a href="https://www.thaitrade.com/home" target="_blank">
+            <a href="https://www.tfac.or.th/" target="_blank">
             <Image
                 className="w-16 h-auto rounded-full mx-3"
-                src="/images/partner0.jpg" 
+                src="/images/partner3.jpg" 
                 width={500}
                 height={500}
                 alt="Picture of the author"/>
             </a>
-            <a
-              href="https://ereg.dbd.go.th/ERegistMemberWeb/nonmemberpages/home.xhtml"
-              target="_blank"
-            >
-              <Image
-                className="w-16 h-auto rounded-full mx-3"
-                src="/images/partner0.jpg" 
-                width={500}
-                height={500}
-                alt="Picture of the author"/>
-            </a>
+            
           </div>
 
         </div>

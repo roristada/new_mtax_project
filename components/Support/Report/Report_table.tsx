@@ -46,6 +46,7 @@ import {
 } from "../../../components/ui/dialog"; // Import the dialog component
 import { Textarea } from "../../../components/ui/textarea";
 import Swal from "sweetalert2";
+import { useTranslations } from "next-intl";
 
 interface SupportCase {
   id: string; // Add the id property
@@ -58,6 +59,7 @@ interface SupportCase {
 }
 
 export default function SupportAdmin() {
+  const t = useTranslations('SupportAdmin');
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(6);
   const [report, setReport] = useState<SupportCase[]>([]); // Specify the array type as SupportCase[]
@@ -95,26 +97,22 @@ export default function SupportAdmin() {
 
   const handleReportSubmit = async () => {
     if (selectedCase) {
-      const currentSelectedCase = selectedCase; // Store the current case
-
-      // Close the main dialog before showing Swal
+      const currentSelectedCase = selectedCase;
       setSelectedCase(null);
 
-      // Ask for confirmation before submitting the report
       const result = await Swal.fire({
-        title: "Are you sure?",
-        text: "You are about to submit a resolution report!",
+        title: t('confirmSubmitTitle'),
+        text: t('confirmSubmitText'),
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, submit it!",
+        confirmButtonText: t('confirmSubmitButton'),
       });
 
-      // Re-open the dialog if the user cancels
       if (!result.isConfirmed) {
         setSelectedCase(currentSelectedCase);
-        return; // Exit if not confirmed
+        return;
       }
 
       try {
@@ -124,53 +122,41 @@ export default function SupportAdmin() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id: currentSelectedCase.id, // The unique id is now used here
-            problemReport, // The resolution details
+            id: currentSelectedCase.id,
+            problem_report: problemReport,
+            status: "resolved",
           }),
         });
 
         if (response.ok) {
-          console.log("Report updated successfully");
-          // Fetch the updated support cases
           const updatedResponse = await fetch(`/api/support/report`);
           const updatedData = await updatedResponse.json();
-          console.log("updatedData", updatedData);
-          setReport(updatedData.data); // Update the report state with the new data
-          setTotalPages(Math.ceil(updatedData.data.length / entriesPerPage)); // Update the total pages
+          setReport(updatedData.data);
+          setTotalPages(Math.ceil(updatedData.data.length / entriesPerPage));
 
-          // Show success message
-          Swal.fire("Submitted!", "Your report has been submitted.", "success");
+          Swal.fire(t('submitSuccessTitle'), t('submitSuccessText'), "success");
         } else {
           console.error("Failed to update the report");
-          Swal.fire(
-            "Error!",
-            "There was a problem submitting your report.",
-            "error"
-          );
+          Swal.fire(t('submitErrorTitle'), t('submitErrorText'), "error");
         }
       } catch (error) {
         console.error("Error submitting report:", error);
-        Swal.fire(
-          "Error!",
-          "There was an error processing your request.",
-          "error"
-        );
+        Swal.fire(t('submitErrorTitle'), t('submitErrorProcessText'), "error");
       }
 
-      // Clear the input after submission
       setProblemReport("");
     }
   };
 
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: t('confirmDeleteTitle'),
+      text: t('confirmDeleteText'),
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: t('confirmDeleteButton'),
     });
 
     if (result.isConfirmed) {
@@ -180,31 +166,21 @@ export default function SupportAdmin() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id }), // Pass the id of the report to be deleted
+          body: JSON.stringify({ id }),
         });
 
         if (response.ok) {
-          console.log("Report deleted successfully");
-          // Update the reports state to reflect the deletion
           setReport((prevReports) =>
             prevReports.filter((report) => report.id !== id)
           );
-          Swal.fire("Deleted!", "Your report has been deleted.", "success");
+          Swal.fire(t('deleteSuccessTitle'), t('deleteSuccessText'), "success");
         } else {
           console.error("Failed to delete report");
-          Swal.fire(
-            "Error!",
-            "There was a problem deleting the report.",
-            "error"
-          );
+          Swal.fire(t('deleteErrorTitle'), t('deleteErrorText'), "error");
         }
       } catch (error) {
         console.error("Error deleting report:", error);
-        Swal.fire(
-          "Error!",
-          "There was an error processing your request.",
-          "error"
-        );
+        Swal.fire(t('deleteErrorTitle'), t('deleteErrorProcessText'), "error");
       }
     }
   };
@@ -215,7 +191,7 @@ export default function SupportAdmin() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-center">
           <h2 className="text-xl md:text-2xl font-semibold">
-            Current Support Cases{" "}
+            {t('title')}{" "}
             <span className="text-sm font-normal text-gray-500 p-3 bg-gray-200 rounded">
               {report.length}
             </span>
@@ -225,9 +201,9 @@ export default function SupportAdmin() {
             <div className="relative">
               <Search className="absolute left-2 top-2.5 h-5 w-5 text-gray-400" />
               <Input
-                placeholder="Search by category or date"
-                value={searchQuery} // Bind input value to searchQuery state
-                onChange={(e) => setSearchQuery(e.target.value)} // Update searchQuery on input change
+                placeholder={t('searchPlaceholder')}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 w-64 rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
               />
             </div>
@@ -243,11 +219,11 @@ export default function SupportAdmin() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[300px] text-left">
-                  Categories
+                  {t('tableHeaders.category')}
                 </TableHead>
-                <TableHead>Date/Time</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Created by</TableHead>
+                <TableHead>{t('tableHeaders.createdAt')}</TableHead>
+                <TableHead>{t('tableHeaders.status')}</TableHead>
+                <TableHead>{t('tableHeaders.name')}</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -256,13 +232,7 @@ export default function SupportAdmin() {
                 paginatedReport.map((caseItem: any, index: number) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium truncate">
-                      {caseItem.category === "data_problem"
-                        ? "Data Problem"
-                        : caseItem.category === "Application_Problem"
-                        ? "Application Problem"
-                        : caseItem.category === "dashboard_problem"
-                        ? "Dashboard Problem"
-                        : "Any Question"}
+                      {t(`categories.${caseItem.category}`)}
                     </TableCell>
                     <TableCell>
                       {new Date(caseItem.createdAt).toLocaleString()}
@@ -278,7 +248,7 @@ export default function SupportAdmin() {
                                 : "bg-red-100 text-red-700"
                             }`}
                       >
-                        {caseItem.status}
+                        {t(`status.${caseItem.status}`)}
                       </span>
                     </TableCell>
                     <TableCell>{caseItem.name}</TableCell>
@@ -290,13 +260,13 @@ export default function SupportAdmin() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuLabel>{t('actions')}</DropdownMenuLabel>
                           {/* Trigger Dialog to show input */}
 
                           <DropdownMenuItem
                             onClick={() => setSelectedCase(caseItem)}
                           >
-                            Problem Resolution Report
+                            {t('problemResolutionReport')}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => {
@@ -304,7 +274,7 @@ export default function SupportAdmin() {
                               setSelectedCase(null); // Optionally close the dialog after deletion
                             }}
                           >
-                            Delete
+                            {t('delete')}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -314,7 +284,7 @@ export default function SupportAdmin() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center">
-                    No support cases found.
+                    {t('noSupportCases')}
                   </TableCell>
                 </TableRow>
               )}
@@ -376,12 +346,12 @@ export default function SupportAdmin() {
           <DialogContent className="p-6 rounded-lg shadow-lg bg-white">
             <DialogHeader>
               <DialogTitle className="text-lg font-semibold text-gray-800">
-                Problem Resolution Report
+                {t('problemResolutionReport')}
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                <span className="text-gray-600">Description for:</span>
+                <span className="text-gray-600">{t('descriptionFor')}</span>
                 <span className="font-bold text-blue-600">
                   {selectedCase.name}
                 </span>
@@ -394,7 +364,7 @@ export default function SupportAdmin() {
                 <>
                   <div className="flex items-center space-x-2">
                     <span className="text-gray-600">
-                      Resolution Report for:
+                      {t('resolutionReportFor')}
                     </span>
                     <span className="font-bold text-blue-600">
                       {selectedCase.name}
@@ -410,14 +380,14 @@ export default function SupportAdmin() {
                 <>
                   <div className="flex items-center space-x-2">
                     <span className="text-gray-600">
-                      Enter the resolution report for:
+                      {t('enterResolutionReportFor')}
                     </span>
                     <span className="font-bold text-blue-600">
                       {selectedCase.name}
                     </span>
                   </div>
                   <Textarea
-                    placeholder="Enter resolution details"
+                    placeholder={t('enterResolutionDetails')}
                     value={problemReport}
                     onChange={(e) => setProblemReport(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
@@ -427,14 +397,14 @@ export default function SupportAdmin() {
             </div>
             <DialogFooter className="flex justify-between">
               <Button variant="outline" onClick={() => setSelectedCase(null)}>
-                Cancel
+                {t('cancel')}
               </Button>
               {selectedCase.status !== "resolved" && (
                 <Button
                   onClick={handleReportSubmit}
                   className="bg-blue-600 text-white hover:bg-blue-700"
                 >
-                  Submit
+                  {t('submit')}
                 </Button>
               )}
             </DialogFooter>

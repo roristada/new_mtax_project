@@ -1,11 +1,25 @@
+import createNextIntlPlugin from 'next-intl/plugin';
+
+
+const withNextIntl = createNextIntlPlugin();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  
   images: {
-    domains: ['via.placeholder.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+        pathname: '/mtax-storage-file/**',
+      },
+    ],
   },
   reactStrictMode: true,
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);
+
+
+ 
+
+ 
 

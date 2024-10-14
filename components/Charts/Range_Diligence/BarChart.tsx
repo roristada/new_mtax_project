@@ -12,6 +12,7 @@ import {
 import { ChartContainer, ChartTooltipContent } from "../../../components/ui/chart"
 import EmployeeDialog from "../Range_Commission/EmployeeDialog"
 import Loading from "../../../components/Loading/Loading"
+import { useTranslations } from "next-intl"
 
 interface Employee {
   name: string
@@ -27,45 +28,45 @@ interface CommissionRange {
   range?: string
 }
 
-const chartConfig: Record<string, { label: string; color: string }> = {
-  count: {
-    label: "Employees",
-    color: "",
-  },
-  "0-10000": {
-    label: "฿0-฿10,000",
-    color: "hsl(var(--chart-1))",
-  },
-  "10001-20000": {
-    label: "฿10,001-฿20,000",
-    color: "hsl(var(--chart-2))",
-  },
-  "20001-30000": {
-    label: "฿20,001-฿30,000",
-    color: "hsl(var(--chart-3))",
-  },
-  "30001-40000": {
-    label: "฿30,001-฿40,000",
-    color: "hsl(var(--chart-4))",
-  },
-  "40001-null": {
-    label: "฿40,001-฿50,000++",
-    color: "hsl(var(--chart-5))",
-  },
-}
-
 export default function Component({rangeDiligence}:{rangeDiligence: CommissionRange[]}) {
-  
+  const t = useTranslations('RangeDiligence');
   
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [selectedEmployees, setSelectedEmployees] = useState<Employee[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const chartConfig: Record<string, { label: string; color: string }> = {
+    count: {
+      label: t('employees'),
+      color: "",
+    },
+    "0-10000": {
+      label: t('range1'),
+      color: "hsl(var(--chart-1))",
+    },
+    "10001-20000": {
+      label: t('range2'),
+      color: "hsl(var(--chart-2))",
+    },
+    "20001-30000": {
+      label: t('range3'),
+      color: "hsl(var(--chart-3))",
+    },
+    "30001-40000": {
+      label: t('range4'),
+      color: "hsl(var(--chart-4))",
+    },
+    "40001-null": {
+      label: t('range5'),
+      color: "hsl(var(--chart-5))",
+    },
+  }
+
   useEffect(() => {
     if (!rangeDiligence) {
       setLoading(true);
-    }else{
+    } else {
       setLoading(false);
     }
   }, [rangeDiligence]);
@@ -83,16 +84,14 @@ export default function Component({rangeDiligence}:{rangeDiligence: CommissionRa
   }
 
   if (loading) {
-    return (
-        <Loader2 className="h-8 w-8 animate-spin" />
-    )
+    return <Loader2 className="h-8 w-8 animate-spin" />
   }
 
   if (error) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Error</h2>
+          <h2 className="text-2xl font-bold text-red-600 mb-4">{t('error')}</h2>
           <p className="text-gray-600">{error}</p>
         </div>
       </div>
@@ -103,7 +102,7 @@ export default function Component({rangeDiligence}:{rangeDiligence: CommissionRa
     <Card className="w-full h-full">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold">{title}</CardTitle>
-        <CardDescription className="text-sm text-muted-foreground">Distribution for the year</CardDescription>
+        <CardDescription className="text-sm text-muted-foreground">{t('distribution')}</CardDescription>
       </CardHeader>
       <CardContent className="p-0 h-[300px] max-w-[500px] mx-auto">
         <ChartContainer config={chartConfig}>
@@ -148,18 +147,17 @@ export default function Component({rangeDiligence}:{rangeDiligence: CommissionRa
       <CardFooter className="flex flex-col items-start gap-2 text-sm pt-4">
         <div className="flex items-center gap-2 font-medium">
           <TrendingUp className="h-4 w-4 text-green-500" />
-          <span>Diligence Ranges this year</span>
+          <span>{t('diligenceRangesThisYear')}</span>
         </div>
-        <div className="text-muted-foreground">Showing employee distribution by ranges</div>
+        <div className="text-muted-foreground">{t('showingDistribution')}</div>
       </CardFooter>
     </Card>
   )
 
   return (
     <div className="w-full mx-auto p-4 space-y-8">
-      
       <div className="grid gap-8 md:grid-cols-1">
-        {renderChart(rangeDiligence, "Diligence Ranges")}
+        {renderChart(rangeDiligence, t('diligenceRanges'))}
       </div>
       <EmployeeDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} employees={selectedEmployees} />
     </div>

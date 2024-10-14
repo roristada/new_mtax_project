@@ -14,7 +14,7 @@ const handler = NextAuth({
         email: { label: 'Email', type: 'email', placeholder: 'john@doe.com' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials) return null;
 
         // Ensure email and password are provided
@@ -23,6 +23,8 @@ const handler = NextAuth({
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
+        
+        console.log('User fetched from Prisma:', user);  // Log user fetched
 
         // Check if user exists and password matches
         if (user && await bcrypt.compare(credentials.password, user.password)) {
@@ -31,9 +33,10 @@ const handler = NextAuth({
             email: user.email,
             company: user.company,
             role: user.role,
+            name: user.name,  // Ensure this line is present
           };
         }
-
+        
         // Return null if credentials are invalid
         return null;
       },
@@ -48,22 +51,25 @@ const handler = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        console.log("user",user);
         token.id = user.id;
         token.email = user.email;
         token.company = user.company;
+        token.name = user.name ;  // Add this line
         token.role = user.role;
       }
-      //console.log('JWT Token:', token);
+      console.log("JWT token:", token);
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id;
-        session.user.email = token.email;
-        session.user.company = token.company;
-        session.user.role = token.role;
-      }
-      //console.log('Session:', session);
+      session.user = {
+        id: token.id as string,
+        email: token.email as string,
+        company: token.company as string,
+        name: token.name as string,  // Ensure this line is present
+        role: token.role as string,
+      };
+      console.log("Session:", session);  // Add this log
       return session;
     },
   },

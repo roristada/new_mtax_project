@@ -190,8 +190,8 @@ const Navbar = () => {
                     <DropdownMenuItem>
                       <Link href={dashboardPath}>{t("dashboard")}</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>{t("support")}
-                      <Link href={"/support"}>{t("support")}</Link>
+                    <DropdownMenuItem>
+                      <Link href={supportPath}>{t("support")}</Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem

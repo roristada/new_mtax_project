@@ -2,8 +2,8 @@
 
 import React from "react";
 import { User } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Switch } from "@/components/ui/switch";
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { Switch } from "../components/ui/switch";
 import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";

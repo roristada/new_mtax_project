@@ -9,7 +9,7 @@
     "services": "บริการ",
     "knowledge": "ความรู้",
     "contact": "ติดต่อ",
-    "appointment": "นัดหมาย",
+    "appointment": "นัดหมายให้คำปรึกษา",
     "login": "เข้าสู่ระบบ",
     "myAccount": "บัญชีของฉัน",
     "dashboard": "แดชบอร์ด",
@@ -264,6 +264,7 @@
     "submitting": "กำลังส่งโพสต์..."
   },
   "PieChartIncome": {
+    "percentage": "เปอร์เซ็นต์",
     "labels": {
       "salary": "เงินเดือน",
       "shiftAllowance": "เบี้ยเลี้ยงกะ",

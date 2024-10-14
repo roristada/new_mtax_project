@@ -126,6 +126,21 @@ const BreakdownChart: React.FC<BreakdownChartProps> = ({ incomeBreakdown, expens
     );
   };
 
+  const formatThaiCurrency = (amount: number) => {
+    try {
+      return new Intl.NumberFormat('th-TH', {
+        style: 'currency',
+        currency: 'THB',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(amount);
+    } catch (error) {
+      console.error("Error formatting currency:", error);
+      // Fallback to a simple formatting if Intl.NumberFormat fails
+      return `฿${amount.toFixed(2)}`;
+    }
+  };
+
   const customLegend = (props: any) => {
     const { payload } = props;
   
@@ -172,15 +187,25 @@ const BreakdownChart: React.FC<BreakdownChartProps> = ({ incomeBreakdown, expens
               if (active && payload && payload.length) {
                 const data = payload[0].payload;
                 return (
-                  <div className="bg-white p-2 border rounded shadow" style={{ fontSize: "12px" }}>
-                    <p className="font-bold">{`${data.name}: ${((data.value / totalValue) * 100).toFixed(2)}%`}</p>
-                    <p>{`${t('value')}: ${data.value.toFixed(2)}`}</p>
+                  <div className="bg-white p-4 border rounded-lg shadow-lg" style={{ fontSize: "14px", maxWidth: "300px" }}>
+                    <h3 className="font-bold text-lg mb-2 border-b pb-2" style={{ color: data.color }}>{data.name}</h3>
+                    <div className="flex justify-between mb-2">
+                      <span className="font-semibold">{t('value')}:</span>
+                      <span>{formatThaiCurrency(data.value)}</span>
+                    </div>
+                    <div className="flex justify-between mb-2">
+                      <span className="font-semibold">{t('percentage')}:</span>
+                      <span>{((data.value / totalValue) * 100).toFixed(2)}%</span>
+                    </div>
                     {data.name === t('other') && otherItems.length > 0 && (
-                      <div className="mt-2">
-                        <p className="font-bold">{t('otherItems')}:</p>
-                        <ul>
+                      <div className="mt-4">
+                        <h4 className="font-bold mb-2">{t('otherItems')}:</h4>
+                        <ul className="space-y-1">
                           {otherItems.map((item, index) => (
-                            <li key={index}>{`${item.name}: ${((item.value / totalValue) * 100).toFixed(2)}%`}</li>
+                            <li key={index} className="flex justify-between">
+                              <span>{item.name}:</span>
+                              <span>{formatThaiCurrency(item.value)} ({((item.value / totalValue) * 100).toFixed(2)}%)</span>
+                            </li>
                           ))}
                         </ul>
                       </div>

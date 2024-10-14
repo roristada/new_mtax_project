@@ -62,7 +62,7 @@ const Header = () => {
             <a href="https://www.tfac.or.th/" target="_blank">
             <Image
                 className="w-16 h-auto rounded-full mx-3"
-                src="/images/partner3.jpg" 
+                src="/images/partner3.JPG" 
                 width={500}
                 height={500}
                 alt="Picture of the author"/>

@@ -8,7 +8,7 @@ const PayrollOutsourcingPage = () => {
       </h1>
 
       <section className="mb-8">
-        <img className="mx-auto h-auto my-10 object-cover" src="/images/payroll_service.png" alt="Payroll Outsourcing" width={300} height={300} />
+        <img className="mx-auto h-auto my-10 object-cover" src="/images/Payroll_service.png" alt="Payroll Outsourcing" width={300} height={300} />
         <h2 className="text-2xl font-semibold mb-4">ขอบเขตการให้บริการ</h2>
         <ul className="list-disc pl-6 space-y-2">
           <li><strong>Personnel data management:</strong> บริการจัดเก็บและติดตามความเปลี่ยนแปลงข้อมูลพนักงานตลอดระยะเวลาการจ้างงาน</li>

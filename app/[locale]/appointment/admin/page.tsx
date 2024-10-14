@@ -383,7 +383,7 @@ const AppointmentsManage = () => {
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>
-                                      Actions
+                                      {t('actions')}
                                     </DropdownMenuLabel>
 
                                     {/* Show Details and Delete for completed or canceled appointments */}
@@ -397,14 +397,14 @@ const AppointmentsManage = () => {
                                             )
                                           }
                                         >
-                                          Details
+                                          {t('details')}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                           onClick={() =>
                                             onClickActionsDelete(appointment.id)
                                           }
                                         >
-                                          Delete
+                                          {t('delete')}
                                         </DropdownMenuItem>
                                       </>
                                     ) : (
@@ -416,7 +416,7 @@ const AppointmentsManage = () => {
                                             )
                                           }
                                         >
-                                          Details
+                                          {t('details')}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                           onClick={() =>
@@ -426,7 +426,7 @@ const AppointmentsManage = () => {
                                             )
                                           }
                                         >
-                                          Confirm
+                                          {t('status.confirmed')}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                           onClick={() =>
@@ -446,7 +446,7 @@ const AppointmentsManage = () => {
                                             )
                                           }
                                         >
-                                          Cancel
+                                          {t('status.canceled')}
                                         </DropdownMenuItem>
                                         <Separator />
                                         <DropdownMenuItem
@@ -454,7 +454,7 @@ const AppointmentsManage = () => {
                                             onClickActionsDelete(appointment.id)
                                           }
                                         >
-                                          Delete
+                                          {t('delete')}
                                         </DropdownMenuItem>
                                       </>
                                     )}
@@ -466,7 +466,7 @@ const AppointmentsManage = () => {
                         ) : (
                           <TableRow>
                             <TableCell colSpan={8} className="text-center">
-                              No appointments found.
+                              {t('noAppointmentsFound')}
                             </TableCell>
                           </TableRow>
                         )}

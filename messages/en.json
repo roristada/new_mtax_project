@@ -114,6 +114,10 @@
     "description": "Manage your appointments and view their details.",
     "addAppointment": "Add Appointment",
     "searchPlaceholder": "Search by name or date",
+    "noAppointmentsFound": "No appointments found.",
+    "details": "Details",
+    "delete": "Delete",
+    
     "tableHeaders": {
       "name": "Name",
       "company": "Company",

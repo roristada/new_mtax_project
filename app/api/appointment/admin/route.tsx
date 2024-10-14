@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
             startTime: slot.startTime,
             endTime: slot.endTime,
             date: new Date(slot.date),
-            status: "pending",
+            status: "completed",
           },
         });
       } catch (err) {

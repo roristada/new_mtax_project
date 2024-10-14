@@ -114,6 +114,9 @@
     "description": "จัดการการนัดหมายของคุณและดูรายละเอียด",
     "addAppointment": "เพิ่มการนัดหมาย",
     "searchPlaceholder": "ค้นหาตามชื่อหรือวันที่",
+    "noAppointmentsFound": "ไม่พบการนัดหมาย",
+    "details": "รายละเอียด",
+    "delete": "ลบ",
     "tableHeaders": {
       "name": "ชื่อ",
       "company": "บริษัท",

@@ -126,7 +126,7 @@ const formatYearRange = (years: Set<number>): string => {
   return `${sortedYears[sortedYears.length - 1]}-${sortedYears[0]}`;
 };
 
-export default function FinancialOverview({ slug }: { slug: string }) {
+export default function FinancialOverview() {
   const params = useParams();
   const id = params.slug as string;
   const t = useTranslations("FinancialOverview");

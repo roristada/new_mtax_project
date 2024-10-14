@@ -71,7 +71,7 @@ import { useTranslations } from "next-intl";
 import { useParams, usePathname } from "next/navigation";
 // Assume this utility function exists
 import { useLocale } from "next-intl";
-import useAuthEffect from "@/lib/useAuthEffect";
+import useAuthEffect from "../../../../../../../lib/useAuthEffect";
 
 interface SelectedDataTypes {
   Income: boolean;

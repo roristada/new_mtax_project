@@ -29,7 +29,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Input } from "../../../../../../../components/ui/input";
 import { ArrowUpDown } from "lucide-react";
 import { X } from "lucide-react"; // Add this import for the reset icon
-import useAuthEffect from "@/lib/useAuthEffect";
+import useAuthEffect from "../../../../../../../lib/useAuthEffect";
 
 interface CommissionRange {
   min: number;

@@ -127,7 +127,7 @@ export default function BlogDetailWithSidebar({
                       </div>
                     </div>
                   </header>
-                  <Image
+                  <img
                     src={post.picture}
                     alt={post.title}
                     width={800}

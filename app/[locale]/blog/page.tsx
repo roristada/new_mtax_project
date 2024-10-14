@@ -174,7 +174,7 @@ export default function Blog() {
                 {publishedPosts.length > 0 ? (
                   publishedPosts.map((post) => (
                     <Card key={post.id} className="flex flex-col h-full">
-                      <div className="mb-4 relative w-full h-64">
+                      <div className="relative w-full h-64">
                         <img
                           src={post.picture || "https://via.placeholder.com/400x250"}
                           alt={post.title}

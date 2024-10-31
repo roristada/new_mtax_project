@@ -94,9 +94,6 @@ const TextEditer: React.FC<TextEditerProps> = ({ value, onChange }) => {
         placeholder: "Type something...",
       });
 
-      // Set initial content
-      quillRef.current.root.innerHTML = value;
-
       quillRef.current.on("text-change", () => {
         const content = quillRef.current?.root.innerHTML || "";
         onChange(content);
@@ -108,7 +105,13 @@ const TextEditer: React.FC<TextEditerProps> = ({ value, onChange }) => {
         }
       };
     }
-  }, [modules, formats, onChange, value]);
+  }, [modules, formats, onChange]);
+
+  useEffect(() => {
+    if (quillRef.current && value !== quillRef.current.root.innerHTML) {
+      quillRef.current.root.innerHTML = value;
+    }
+  }, [value]);
 
   return (
     <div className="flex flex-col items-center">

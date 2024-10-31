@@ -326,7 +326,7 @@ export default function Appointment() {
 
               <div className="my-4">
                 <ReCAPTCHA
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+                  sitekey={"6Lemg4YoAAAAAJPZvU6lqaLaV-4-KAC-UyjKjbVQ"}
                   onChange={handleCaptchaChange}
                   hl={locale}
                   theme="light"

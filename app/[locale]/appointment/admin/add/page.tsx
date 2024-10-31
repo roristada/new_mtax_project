@@ -518,7 +518,7 @@ export default function Appointment() {
 
                   <div className="space-y-2">
                     <ReCAPTCHA
-                      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+                      sitekey={"6Lemg4YoAAAAAJPZvU6lqaLaV-4-KAC-UyjKjbVQ"}
                       onChange={handleCaptchaChange}
                       hl="th"
                       theme="light"
@@ -602,7 +602,7 @@ export default function Appointment() {
 
                   <div className="space-y-2">
                     <ReCAPTCHA
-                      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+                      sitekey={"6Lemg4YoAAAAAJPZvU6lqaLaV-4-KAC-UyjKjbVQ"}
                       onChange={handleCaptchaChange}
                       hl="th"
                       theme="light"

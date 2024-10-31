@@ -1,10 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "../../../../components/ui/avatar";
+import {Link} from '../../../../i18n/routing';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../../../components/ui/avatar";
 import { Separator } from "../../../../components/ui/separator";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../../../../components/ui/card";
 import { Badge } from "../../../../components/ui/badge";
 import Navbar from "../../../../components/Navbar";
 import Footer from "../../../../components/Footer";
@@ -40,7 +50,7 @@ export default function BlogDetailWithSidebar({
   params: { id: string };
 }) {
   const [post, setPost] = useState<Post | null>(null);
-  const [recentPost, setRecentPost] = useState<Post[] | null>(null); 
+  const [recentPost, setRecentPost] = useState<Post[] | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -50,10 +60,15 @@ export default function BlogDetailWithSidebar({
         const res = await fetch(`/api/blog`);
         const data = await res.json();
         
-        const sortedPosts = data.posts.sort((a: Post, b: Post) => {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        }).slice(0, 5);
-        
+
+        const sortedPosts = data.posts
+          .sort((a: Post, b: Post) => {
+            return (
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+          })
+          .slice(0, 5);
+
         setRecentPost(sortedPosts);
       } catch (err) {
         console.log(err);
@@ -66,6 +81,7 @@ export default function BlogDetailWithSidebar({
       try {
         const res = await fetch(`/api/blog/${params.id}`);
         const data = await res.json();
+        console.log("data", data);
         setPost(data.post);
       } catch (err) {
         console.log(err);
@@ -91,10 +107,13 @@ export default function BlogDetailWithSidebar({
 
   const getInitials = (name: string) => {
     const nameParts = name.split(" ");
-    return nameParts.map((part) => part[0]).join("").toUpperCase();
+    return nameParts
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase();
   };
 
-  console.log("post?.picture",post?.picture)
+  console.log("post?.picture", post?.picture);
 
   return (
     <>
@@ -117,27 +136,30 @@ export default function BlogDetailWithSidebar({
                           src="/placeholder.svg?height=40&width=40"
                           alt="Author"
                         />
-                        <AvatarFallback>{getInitials(post.author.name)}</AvatarFallback>
+                        <AvatarFallback>
+                          {getInitials(post.author.name)}
+                        </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="text-sm font-medium">{post.author.name}</p>
+                        <p className="text-sm font-medium">
+                          {post.author.name}
+                        </p>
                         <p className="text-sm text-muted-foreground">
-                          Published on {new Date(post.createdAt).toLocaleDateString()}
+                          Published on{" "}
+                          {new Date(post.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
                   </header>
                   <img
-                    src={post.picture}
+                    src={post.picture || "https://via.placeholder.com/400x250"}
                     alt={post.title}
-                    width={800}
-                    height={400}
-                    className="object-cover my-12 mx-auto rounded-lg w-full"
+                    className="rounded-lg"
                   />
                   <Separator className="my-8" />
                   <div className="prose prose-lg dark:prose-invert max-w-none">
                     <p dangerouslySetInnerHTML={{ __html: post.content }} />
-                    
+
                     <Separator className="my-8" />
                   </div>
                 </>
@@ -156,11 +178,16 @@ export default function BlogDetailWithSidebar({
                     {recentPost && recentPost.length > 0 ? (
                       recentPost.map((recentPost) => (
                         <li key={recentPost.id}>
-                          <Link href={`/blog/${recentPost.id}`} className="text-sm hover:underline">
+                          <Link
+                            href={`/blog/${recentPost.id}`}
+                            className="text-sm hover:underline"
+                          >
                             {recentPost.title}
                           </Link>
                           <p className="text-xs text-muted-foreground">
-                            {new Date(recentPost.createdAt).toLocaleDateString()}
+                            {new Date(
+                              recentPost.createdAt
+                            ).toLocaleDateString()}
                           </p>
                         </li>
                       ))
@@ -170,7 +197,10 @@ export default function BlogDetailWithSidebar({
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Link href="/blog" className="text-sm hover:underline ml-auto">
+                  <Link
+                    href="/blog"
+                    className="text-sm hover:underline ml-auto"
+                  >
                     View all posts
                   </Link>
                 </CardFooter>
@@ -185,7 +215,8 @@ export default function BlogDetailWithSidebar({
                     {categories.length > 0 ? (
                       categories.map((category) => (
                         <Badge key={category} variant="secondary">
-                          {categoryMapping[category] || category} {/* Use mapping here */}
+                          {categoryMapping[category] || category}{" "}
+                          {/* Use mapping here */}
                         </Badge>
                       ))
                     ) : (

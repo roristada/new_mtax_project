@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
-
+  const locale = useLocale();
   useEffect(() => {
     if (status === "authenticated") {
       router.push("/");
@@ -102,7 +103,7 @@ export default function Login() {
             </div>
           </form>
 
-          
+          <Link className="text-sm text-muted-foreground hover:underline" href={`/${locale}/resetpassword`}>Reset Password</Link>
         </div>
       </div>
     </>

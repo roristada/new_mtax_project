@@ -118,6 +118,9 @@
     "details": "รายละเอียด",
     "delete": "ลบ",
     "actions": "การดำเนินการ",
+    "filterStatus": "กรองตามสถานะ",
+    "selectStatus": "เลือกสถานะ",
+    "showAll": "แสดงทั้งหมด",
     "tableHeaders": {
       "name": "ชื่อ",
       "company": "บริษัท",
@@ -133,7 +136,7 @@
       "pending": "รอดำเนินการ",
       "completed": "เสร็จสิ้น",
       "canceled": "ยกเลิก",
-      "confirmed": "ยืนยันแล้ว"
+      "confirmed": "ยืนยัน"
     },
     
     "pagination": {
@@ -147,6 +150,33 @@
       "email": "อีเมล",
       "telephone": "โทรศัพท์",
       "note": "หมายเหตุ"
+    },
+    "deleteAppointment": "ลบการนัดหมาย",
+    "deleteAppointmentText": "คุณแน่ใจหรือไม่ที่จะลบการนัดหมายนี้?",
+    "deleteAppointmentYes": "ยืนยัน",
+    "cancelDelete": "ยกเลิก",
+    "confirmAppointment": "ยืนยัน",
+    "statusAppointment": "ยืนยันการนัดหมาย",
+    "statusConfirm": "คุณแน่ใจหรือไม่ที่จะยืนยันการนัดหมายนี้?",
+    "action": "การดำเนินการ",
+    "statusTextDialog": {
+      "completed": "การให้คำปรึกษาสำเร็จ",
+      "canceled": "ยกเลิกการนัดหมาย",
+      "confirmed": "ยืนยันการนัดหมาย"
+    },
+    "statusTextDetail": {
+      "completed": "คุณต้องการยืนยันการให้คำปรึกษานี้?",
+      "canceled": "คุณต้องการยกเลิกการนัดหมายนี้?",
+      "confirmed": "คุณต้องการยืนยันการนัดหมายนี้?"
+    },
+    "error": {
+      "title": "เกิดข้อผิดพลาด!",
+      "message": "เกิดข้อผิดพลาดในการนัดหมาย"
+    },
+    "deleteDialog": {
+      "title": "ลบการนัดหมาย",
+      "message": "คุณแน่ใจหรือไม่ที่จะลบการนัดหมายนี้?",
+      "confirmDelete": "การนัดหมายถูกลบแล้ว"
     }
   },
   "AppointmentForm": {
@@ -156,6 +186,7 @@
       "customer": "ลูกค้า",
       "admin": "ผู้ดูแลระบบ"
     },
+    
     "fields": {
       "name": "ชื่อ",
       "company": "บริษัท",
@@ -173,15 +204,17 @@
       "submitting": "กำลังส่ง..."
     },
     "errors": {
+      "captchaRequired": "กรุณาตรวจสอบว่าคุณไม่ใช่หุ่นยนต์",
       "invalidEmail": "รูปแบบอีเมลไม่ถูกต้อง"
     },
     "success": {
-      "title": "ดีมาก!",
-      "message": "สร้างการนัดหมายสำเร็จ"
+      "title": "การนัดหมายสำเร็จ",
+      "message": "การนัดหมายของคุณสำเร็จแล้ว โปรดตรวจสอบอีเมลของคุณเพื่อรอการยืนยันจากทางเรา",
+      "messageAdmin": "การนัดหมายของคุณสำเร็จแล้ว"
     },
     "error": {
       "title": "เกิดข้อผิดพลาด!",
-      "message": "เกิดข้อผิดพลาดขณะสร้างการนัดหมาย"
+      "message": "เกิดข้อผิดพลาดขณะในการนัดหมาย"
     }
   },
   "Register": {
@@ -216,8 +249,8 @@
       "passwordMismatch": "รหัสผ่านไม่ตรงกัน"
     },
     "success": {
-      "title": "ดีมาก!",
-      "message": "ลงทะเบียนสำเร็จ!"
+      "title": "ลงทะเบียนสำเร็จ",
+      "message": "โปรดตรวจสอบอีเมลของคุณเพื่อทำการตั้งค่ารหัสผ่านสำหรับการเข้าสู่ระบบ"
     }
   },
   "BlogManage": {
@@ -498,7 +531,12 @@
     "salaryAdvance": "เงินเดือนล่วงหน้า",
     "commissionDeduction": "การหักค่าคอมมิชชั่น",
     "otherDeductions": "การหักอื่นๆ",
-    "expense": "ค่าใช้จ่าย"
+    "expense": "ค่าใช้จ่าย",
+    "genders": {
+      "M": "ชาย",
+      "F": "หญิง",
+      "Not Specified": "ไม่ระบุ"
+    }
   },
   "Employee_Chart": {
     "labels": {
@@ -575,6 +613,14 @@
       "socialSecurityEmployee": "ประกันสังคม (พนักงาน)",
       "socialSecurityCompany": "ประกันสังคม (บริษัท)",
       "providentFund": "กองทุนสำรองเลี้ยงชีพ"
+    },
+    "startDate": "วันที่เริ่มงาน",
+    "endDate": "วันที่สิ้นสุดการทำงาน",
+    "stillEmployed": "ยังทำงานอยู่",
+    "genders": {
+      "M": "ชาย",
+      "F": "หญิง",
+      "Not Specified": "ไม่ระบุ"
     }
   },
   "Dashboard": {
@@ -656,7 +702,8 @@
     "employees": "พนักงาน",
     "totalEmployees": "พนักงานทั้งหมด: {count} ในปี {year}",
     "gender": "เพศ",
-    "total": "ทั้งหมด"
+    "total": "ทั้งหมด",
+    "people": "คน"
   },
   "RangeCommission": {
     "employees": "พนักงาน",
@@ -709,6 +756,15 @@
       "createdAt": "วันที่สร้าง",
       "actions": "การดำเนินการ"
     },
+    "confirmSubmitTitle": "ยืนยันการส่งรายงานการแก้ไข",
+    "confirmSubmitText": "คุณแน่ใจหรือไม่ที่จะส่งรายงานการแก้ไขนี้?",
+    "confirmSubmitButton": "ยืนยัน",
+    "enterResolutionReportFor": "รายงานการแก้ไขสำหรับ",
+    "enterResolutionDetails": "กรอกรายละเอียดการแก้ไข...",
+    "submitSuccessTitle": "ส่งรายงานการแก้ไขสำเร็จ",
+    "submitSuccessText": "รายงานการแก้ไขถูกส่งเรียบร้อยแล้ว!",
+    "deleteSuccessTitle": "ลบรายงานการแก้ไขสำเร็จ",
+    "deleteSuccessText": "รายงานการแก้ไขถูกลบเรียบร้อยแล้ว!",
     "status": {
       "pending": "รอดำเนินการ",
       "inProgress": "กำลังดำเนินการ",

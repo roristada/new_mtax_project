@@ -2,10 +2,11 @@ import { useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2';
+import { useLocale } from 'next-intl';
 
 const useAuthEffect = (callback?: (authenticated: boolean) => void) => {
   const router = useRouter();
-  
+  const locale = useLocale();
   const { data: session, status } = useSession();
 
   const showErrorAndRedirect = useCallback(() => {
@@ -23,7 +24,7 @@ const useAuthEffect = (callback?: (authenticated: boolean) => void) => {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login");
+      router.push(`/${locale}/login`);
     }
     if (status === "authenticated" && session?.user) {
       

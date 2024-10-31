@@ -141,7 +141,7 @@ export default function EmployeeDetailsDialog({
                     {employee.firstName} {employee.lastName}
                   </p>
                   <p>
-                    <strong>{t('gender')}:</strong> {employee.gender}
+                    <strong>{t('gender')}:</strong> {t(`genders.${employee.gender}`)}
                   </p>
                 </div>
                 <div>

@@ -10,7 +10,7 @@ import { Button } from "../../../components/ui/button";
 import { Filter } from "lucide-react";
 import { Checkbox } from "../../../components/ui/checkbox";
 import { Badge } from "../../../components/ui/badge";
-import Image from 'next/image';
+
 
 interface Post {
   id: number;
@@ -58,7 +58,7 @@ export default function Blog() {
           throw new Error("Failed to fetch posts");
         }
         const data = await response.json();
-
+        console.log("data", data);
         setPosts(data.posts);
         const categoryKeys = Object.keys(categoryDisplayNames);
         setCategories(categoryKeys);

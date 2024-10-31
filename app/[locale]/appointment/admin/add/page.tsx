@@ -12,7 +12,7 @@ import {
 
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Label } from "../../../../../components/ui/label";
 import { Input } from "../../../../../components/ui/input";
 import { Button } from "../../../../../components/ui/button";
@@ -41,7 +41,8 @@ import useAuthAdmin from "../../../../../lib/useAuthAdmin";
 import { DatePickerWithRange } from "../../../../../components/Datepicker/Daterange";
 
 import AppointmentCalendar from "../../../../../components/Calendar/AppointmentCalendar";
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import ReCAPTCHA from "react-google-recaptcha";
 
 type Appointment = {
   id: number;
@@ -86,6 +87,8 @@ export default function Appointment() {
   const [fullyBookedDates, setFullyBookedDates] = useState<string[]>([]);
   const [BookedInDates, setBookedInDates] = useState<string[]>([]);
   const [isAuthChecked, setIsAuthChecked] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const locale = useLocale();
 
   const { data: session, status } = useSession();
 
@@ -158,6 +161,12 @@ export default function Appointment() {
 
   const handleAppointment = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!captchaToken) {
+      setError(t('errors.captchaRequired'));
+      return;
+    }
+
     const { name, company, email, telephone, startTime, endTime } = formData;
 
     // Client-side validation
@@ -183,6 +192,7 @@ export default function Appointment() {
         endTime,
         date,
         note: formData.note,
+        captchaToken, // Add captcha token
       }),
     });
 
@@ -197,12 +207,13 @@ export default function Appointment() {
     console.log(data);
 
     Swal.fire({
-      title: "Good job!",
-      text: "Appointment successfully created",
+      title: t('success.title'),
+      text: t('success.message'),
+
       icon: "success",
     }).then(() => {
       setLoading(false);
-      router.push("/");
+      router.push(`/${locale}/dashboard/admin`);
     });
   };
 
@@ -285,6 +296,12 @@ export default function Appointment() {
 
   const handleAdminAppointment = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!captchaToken) {
+      setError(t('errors.captchaRequired'));
+      return;
+    }
+
     const { name, company, email, telephone, timeSlots } = formAdminData;
 
     // Client-side validation
@@ -308,6 +325,7 @@ export default function Appointment() {
           telephone,
           timeSlots,
           note: formAdminData.note,
+          captchaToken, // Add captcha token
         }),
       });
 
@@ -315,24 +333,24 @@ export default function Appointment() {
         const data = await res.json();
         console.log("data", data);
         Swal.fire({
-          title: "Good job!",
-          text: "Appointment successfully created",
+          title: t('success.title'),
+          text: t('success.messageAdmin'),
           icon: "success",
         }).then(() => {
           setLoading(false);
         });
       } else {
         Swal.fire({
-          title: "Something went wrong!",
-          text: "You clicked the button!",
+          title: t('error.title'),
+          text: t('error.message'),
           icon: "error",
         });
         setLoading(false);
       }
     } catch (e) {
       Swal.fire({
-        title: "Something went wrong!",
-        text: "You clicked the button!",
+        title: t('error.title'),
+        text: t('error.message'),
         icon: "error",
       });
       setLoading(false);
@@ -341,6 +359,11 @@ export default function Appointment() {
   };
 
   const t = useTranslations('AppointmentForm');
+
+  // Add captcha handler
+  const handleCaptchaChange = (token: string | null) => {
+    setCaptchaToken(token);
+  };
 
   return (
     <>
@@ -492,8 +515,21 @@ export default function Appointment() {
                     />
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? "Submit..." : "Submit"}
+                  <div className="space-y-2">
+                    <ReCAPTCHA
+                      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+                      onChange={handleCaptchaChange}
+                      hl="th"
+                      theme="light"
+                    />
+                  </div>
+
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={loading || !captchaToken}
+                  >
+                    {loading ? t('buttons.submitting') : t('buttons.submit')}
                   </Button>
                 </div>
                 {error && <p className="text-red-500 mt-6">{error}</p>}
@@ -563,7 +599,20 @@ export default function Appointment() {
                     />
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={loading}>
+                  <div className="space-y-2">
+                    <ReCAPTCHA
+                      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+                      onChange={handleCaptchaChange}
+                      hl="th"
+                      theme="light"
+                    />
+                  </div>
+
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={loading || !captchaToken}
+                  >
                     {loading ? t('buttons.submitting') : t('buttons.submit')}
                   </Button>
                 </div>

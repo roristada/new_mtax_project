@@ -12,7 +12,7 @@ import {
 
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { Label } from "../../../components/ui/label";
 import { Input } from "../../../components/ui/input";
 import { Button } from "../../../components/ui/button";
@@ -28,6 +28,7 @@ import {
   PopoverTrigger,
 } from "../../../components/ui/popover";
 import { useTranslations } from 'next-intl';
+import ReCAPTCHA from "react-google-recaptcha";
 
 type Appointment = {
   date: string;
@@ -38,6 +39,8 @@ type Appointment = {
 export default function Appointment() {
   const t = useTranslations('AppointmentForm');
   const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
   const [date, setDate] = useState<Date | undefined>();
   const [formData, setFormData] = useState({
     name: "",
@@ -53,6 +56,8 @@ export default function Appointment() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [disabledTimes, setDisabledTimes] = useState<string[]>([]);
   const [fullyBookedDates, setFullyBookedDates] = useState<string[]>([]);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  
 
   useEffect(() => {
     // Fetch all appointments on initial load
@@ -138,6 +143,7 @@ export default function Appointment() {
         endTime,
         date,
         note: formData.note,
+        captchaToken,
       }),
     });
 
@@ -170,6 +176,11 @@ export default function Appointment() {
 
   const today = startOfToday();
   const oneMonthLater = addMonths(today, 1);
+
+  const handleCaptchaChange = (token: string | null) => {
+    setCaptchaToken(token);
+  };
+  console.log("captchaToken:",process.env.NEXT_PUBLIC_RECAPTCHA_KEY);
 
   return (
     <>
@@ -313,7 +324,16 @@ export default function Appointment() {
                 />
               </div>
 
-              <Button type="submit" className="w-full" disabled={loading}>
+              <div className="my-4">
+                <ReCAPTCHA
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+                  onChange={handleCaptchaChange}
+                  hl={locale}
+                  theme="light"
+                />
+              </div>
+
+              <Button type="submit" className="w-full" disabled={loading || !captchaToken}>
                 {loading ? t('buttons.submitting') : t('buttons.submit')}
               </Button>
             </div>

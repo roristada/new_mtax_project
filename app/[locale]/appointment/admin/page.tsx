@@ -17,11 +17,16 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../../components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../../../components/ui/tabs";
 import Loading from "../../../../components/Loading/Loading";
 import Swal from "sweetalert2";
 import useAuthAdmin from "../../../../lib/useAuthAdmin";
-import {Link} from '../../../../i18n/routing';
+import { Link } from "../../../../i18n/routing";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,7 +53,9 @@ import {
   FileTextIcon,
 } from "lucide-react";
 import { Separator } from "../../../../components/ui/separator";
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
+
+import { ChevronsUpDown } from "lucide-react";
 
 type Appointment = {
   id: number;
@@ -64,7 +71,7 @@ type Appointment = {
 };
 
 const AppointmentsManage = () => {
-  const t = useTranslations('AppointmentsManage');
+  const t = useTranslations("AppointmentsManage");
 
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -76,6 +83,8 @@ const AppointmentsManage = () => {
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null); // State for selected appointment
   const [isDialogOpen, setIsDialogOpen] = useState(false); // State for dialog visibility
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [statusFilter, setStatusFilter] = useState<string[]>([]); // ['pending', 'completed', 'canceled', 'confirmed']
 
   useAuthAdmin((authenticated) => {
     setIsAuthChecked(authenticated);
@@ -107,11 +116,16 @@ const AppointmentsManage = () => {
   }, [isAuthChecked]);
 
   // Filter appointments based on search query
-  const filteredAppointments = appointments.filter(
-    (appt) =>
+  const filteredAppointments = appointments.filter((appt) => {
+    const matchesSearch =
       appt.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      new Date(appt.date).toLocaleDateString().includes(searchQuery)
-  );
+      new Date(appt.date).toLocaleDateString().includes(searchQuery);
+
+    const matchesStatus =
+      statusFilter.length === 0 || statusFilter.includes(appt.status);
+
+    return matchesSearch && matchesStatus;
+  });
 
   // Get current appointments based on pagination
   const indexOfLastAppointment = currentPage * appointmentsPerPage;
@@ -156,13 +170,14 @@ const AppointmentsManage = () => {
 
   const onClickActionsDelete = async (appointmentId: number) => {
     Swal.fire({
-      title: "Delete appointment",
-      text: "Are you sure you want to delete this appointment?",
+      title: t("deleteAppointment"),
+      text: t("deleteAppointmentText"),
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: t("deleteAppointmentYes"),
+      cancelButtonText: t("cancelDelete"),
     }).then(async (result: any) => {
       if (result.isConfirmed) {
         try {
@@ -175,21 +190,21 @@ const AppointmentsManage = () => {
               appointments.filter((appt) => appt.id !== appointmentId)
             );
             Swal.fire({
-              title: "Deleted!",
-              text: "Your appointment has been deleted.",
+              title: t('deleteDialog.title'),
+              text: t('deleteDialog.confirmDelete'),
               icon: "success",
             });
           } else {
             Swal.fire({
-              title: "Error!",
-              text: "Failed to delete the appointment.",
+              title: t('error.title'),
+              text: t('error.message'),
               icon: "error",
             });
           }
         } catch (error) {
           Swal.fire({
-            title: "Error!",
-            text: "An error occurred while deleting the appointment.",
+            title: t('error.title'),
+            text: t('error.message'),
             icon: "error",
           });
           console.error("Failed to delete appointment:", error);
@@ -210,13 +225,14 @@ const AppointmentsManage = () => {
         : "confirmed";
 
     Swal.fire({
-      title: `Status appointment`,
-      text: `Are you sure you want to ${statusText} this appointment?`,
+      title: t(`statusTextDialog.${status}`),
+      text: t(`statusTextDetail.${status}`),
       icon: "info",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: `Yes, ${statusText} it!`,
+      cancelButtonText: t("cancelDelete"),
+      confirmButtonText: t("confirmAppointment"),
     }).then(async (result: any) => {
       if (result.isConfirmed) {
         try {
@@ -236,27 +252,38 @@ const AppointmentsManage = () => {
             );
 
             Swal.fire({
-              title: "Status!",
-              text: `The appointment status has been updated to ${statusText}.`,
+              title: t(`statusTextDialog.${status}`),
               icon: "success",
+              showConfirmButton: false,
+              timer: 1500,
             });
           } else {
             Swal.fire({
-              title: "Error!",
-              text: "Failed to update the appointment status.",
+              title: t("error.title"),
+              text: t("error.message"),
               icon: "error",
             });
           }
         } catch (error) {
           Swal.fire({
-            title: "Error!",
-            text: "An error occurred while updating the appointment.",
+            title: t("error.title"),
+            text: t("error.message"),
             icon: "error",
           });
           console.error("Failed to update appointment:", error);
         }
       }
     });
+  };
+
+  const toggleSort = () => {
+    setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+    const sorted = [...appointments].sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      return sortDirection === "asc" ? dateB - dateA : dateA - dateB;
+    });
+    setAppointments(sorted);
   };
 
   return (
@@ -274,28 +301,69 @@ const AppointmentsManage = () => {
               <CardHeader className="grid grid-cols-2">
                 <div>
                   <CardTitle className="text-xl font-bold">
-                    {t('title')}
+                    {t("title")}
                   </CardTitle>
-                  <CardDescription>
-                    {t('description')}
-                  </CardDescription>
+                  <CardDescription>{t("description")}</CardDescription>
                 </div>
                 <div className="ml-auto">
                   <Link href={`/appointment/admin/add`}>
-                    <Button>{t('addAppointment')}</Button>
+                    <Button>{t("addAppointment")}</Button>
                   </Link>
                 </div>
               </CardHeader>
               <CardContent>
-                {/* Add search input */}
-                <div className="mb-4">
+                <div className="flex justify-between items-center mb-4">
                   <input
                     type="text"
-                    placeholder={t('searchPlaceholder')}
+                    placeholder={t("searchPlaceholder")}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded"
+                    className="w-64 p-2 border border-gray-300 rounded"
                   />
+                  <div className="flex gap-2">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline">
+                          {statusFilter.length
+                            ? `${statusFilter.length} selected`
+                            : t("filterStatus")}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>
+                          {t("selectStatus")}
+                        </DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => setStatusFilter([])}>
+                          {t("showAll")}
+                        </DropdownMenuItem>
+                        {["pending", "completed", "canceled", "confirmed"].map(
+                          (status) => (
+                            <DropdownMenuItem
+                              key={status}
+                              onClick={() => {
+                                if (statusFilter.includes(status)) {
+                                  setStatusFilter(
+                                    statusFilter.filter((s) => s !== status)
+                                  );
+                                } else {
+                                  setStatusFilter([...statusFilter, status]);
+                                }
+                              }}
+                            >
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="checkbox"
+                                  checked={statusFilter.includes(status)}
+                                  readOnly
+                                />
+                                {t(`status.${status}`)}
+                              </div>
+                            </DropdownMenuItem>
+                          )
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </div>
                 {loading ? (
                   <Loading />
@@ -304,16 +372,40 @@ const AppointmentsManage = () => {
                     <Table className="w-full bg-white rounded-lg shadow-md">
                       <TableHeader>
                         <TableRow>
-                          <TableHead className="py-2">{t('tableHeaders.name')}</TableHead>
-                          <TableHead className="py-2">{t('tableHeaders.company')}</TableHead>
-                          <TableHead className="py-2">{t('tableHeaders.email')}</TableHead>
-                          <TableHead className="py-2">{t('tableHeaders.telephone')}</TableHead>
-                          <TableHead className="py-2">{t('tableHeaders.date')}</TableHead>
-                          <TableHead className="py-2">{t('tableHeaders.startTime')}</TableHead>
-                          <TableHead className="py-2">{t('tableHeaders.endTime')}</TableHead>
-                          <TableHead className="py-2">{t('tableHeaders.status')}</TableHead>
                           <TableHead className="py-2">
-                            <span className="sr-only">{t('tableHeaders.actions')}</span>
+                            {t("tableHeaders.name")}
+                          </TableHead>
+                          <TableHead className="py-2">
+                            {t("tableHeaders.company")}
+                          </TableHead>
+                          <TableHead className="py-2">
+                            {t("tableHeaders.email")}
+                          </TableHead>
+                          <TableHead className="py-2">
+                            {t("tableHeaders.telephone")}
+                          </TableHead>
+                          <TableHead className="py-2">
+                            <div
+                              className="flex items-center gap-1 cursor-pointer"
+                              onClick={toggleSort}
+                            >
+                              {t("tableHeaders.date")}
+                              <ChevronsUpDown className="h-4 w-4" />
+                            </div>
+                          </TableHead>
+                          <TableHead className="py-2">
+                            {t("tableHeaders.startTime")}
+                          </TableHead>
+                          <TableHead className="py-2">
+                            {t("tableHeaders.endTime")}
+                          </TableHead>
+                          <TableHead className="py-2">
+                            {t("tableHeaders.status")}
+                          </TableHead>
+                          <TableHead className="py-2">
+                            <span className="sr-only">
+                              {t("tableHeaders.actions")}
+                            </span>
                           </TableHead>
                         </TableRow>
                       </TableHeader>
@@ -360,13 +452,13 @@ const AppointmentsManage = () => {
                                 >
                                   {" "}
                                   {appointment.status === "pending"
-                                    ? "Pending"
+                                    ? t("status.pending")
                                     : appointment.status === "completed"
-                                    ? "Completed"
+                                    ? t("status.completed")
                                     : appointment.status === "canceled"
-                                    ? "Cancel"
+                                    ? t("status.canceled")
                                     : appointment.status === "confirmed"
-                                    ? "Confirmed"
+                                    ? t("status.confirmed")
                                     : ""}
                                 </Badge>
                               </TableCell>
@@ -383,7 +475,7 @@ const AppointmentsManage = () => {
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end">
                                     <DropdownMenuLabel>
-                                      {t('actions')}
+                                      {t("action")}
                                     </DropdownMenuLabel>
 
                                     {/* Show Details and Delete for completed or canceled appointments */}
@@ -397,14 +489,14 @@ const AppointmentsManage = () => {
                                             )
                                           }
                                         >
-                                          {t('details')}
+                                          {t("details")}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                           onClick={() =>
                                             onClickActionsDelete(appointment.id)
                                           }
                                         >
-                                          {t('delete')}
+                                          {t("delete")}
                                         </DropdownMenuItem>
                                       </>
                                     ) : (
@@ -416,7 +508,7 @@ const AppointmentsManage = () => {
                                             )
                                           }
                                         >
-                                          {t('details')}
+                                          {t("details")}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                           onClick={() =>
@@ -426,7 +518,7 @@ const AppointmentsManage = () => {
                                             )
                                           }
                                         >
-                                          {t('status.confirmed')}
+                                          {t("status.confirmed")}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                           onClick={() =>
@@ -436,7 +528,7 @@ const AppointmentsManage = () => {
                                             )
                                           }
                                         >
-                                          {t('status.completed')}
+                                          {t("status.completed")}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                           onClick={() =>
@@ -446,7 +538,7 @@ const AppointmentsManage = () => {
                                             )
                                           }
                                         >
-                                          {t('status.canceled')}
+                                          {t("status.canceled")}
                                         </DropdownMenuItem>
                                         <Separator />
                                         <DropdownMenuItem
@@ -454,7 +546,7 @@ const AppointmentsManage = () => {
                                             onClickActionsDelete(appointment.id)
                                           }
                                         >
-                                          {t('delete')}
+                                          {t("delete")}
                                         </DropdownMenuItem>
                                       </>
                                     )}
@@ -466,7 +558,7 @@ const AppointmentsManage = () => {
                         ) : (
                           <TableRow>
                             <TableCell colSpan={8} className="text-center">
-                              {t('noAppointmentsFound')}
+                              {t("noAppointmentsFound")}
                             </TableCell>
                           </TableRow>
                         )}
@@ -479,16 +571,16 @@ const AppointmentsManage = () => {
                         onClick={handlePrevPage}
                         disabled={currentPage === 1}
                       >
-                        {t('pagination.previous')}
+                        {t("pagination.previous")}
                       </Button>
                       <span>
-                        {t('pagination.page', { currentPage, totalPages })}
+                        {t("pagination.page", { currentPage, totalPages })}
                       </span>
                       <Button
                         onClick={handleNextPage}
                         disabled={currentPage === totalPages}
                       >
-                        {t('pagination.next')}
+                        {t("pagination.next")}
                       </Button>
                     </div>
                   </>
@@ -507,7 +599,7 @@ const AppointmentsManage = () => {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>{t('dialog.title')}</DialogTitle>
+              <DialogTitle>{t("dialog.title")}</DialogTitle>
               <DialogDescription>
                 <div className="grid grid-cols-2 gap-4">
                   <div>

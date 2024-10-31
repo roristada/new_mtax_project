@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Swal from "sweetalert2";
 import { Label } from "../../../components/ui/label";
 import { Input } from "../../../components/ui/input";
@@ -18,6 +18,7 @@ import {
 } from "../../../components/ui/select";
 
 export default function Register() {
+  const locale = useLocale();
   const t = useTranslations('Register');
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -59,15 +60,15 @@ export default function Register() {
       return;
     }
 
-    if (!validatePassword(password)) {
-      setError(t('errors.invalidPassword'));
-      return;
-    }
+    // if (!validatePassword(password)) {
+    //   setError(t('errors.invalidPassword'));
+    //   return;
+    // }
 
-    if (password !== confirm_password) {
-      setError(t('errors.passwordMismatch'));
-      return;
-    }
+    // if (password !== confirm_password) {
+    //   setError(t('errors.passwordMismatch'));
+    //   return;
+    // }
 
     setError("");
     setLoading(true);
@@ -96,7 +97,7 @@ export default function Register() {
       icon: "success",
     }).then(() => {
       setLoading(false);
-      router.push("/dashboard/admin");
+      router.push(`/${locale}/dashboard/admin`);
     });
   };
 
@@ -144,7 +145,7 @@ export default function Register() {
                   required
                 />
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="password">{t('fields.password')}</Label>
                 <Input
                   id="password"
@@ -163,7 +164,7 @@ export default function Register() {
                   onChange={handleChange}
                   required
                 />
-              </div>
+              </div> */}
               <div className="space-y-2">
                 <Label htmlFor="address">{t('fields.address')}</Label>
                 <Input

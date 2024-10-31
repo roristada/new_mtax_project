@@ -12,7 +12,7 @@ model User {
   name             String
   company          String
   email            String     @unique
-  password         String
+  password         String?
   address          String?
   telephone        String?
   role             String     @default("customer")
@@ -23,6 +23,7 @@ model User {
   receivedMessages Message[]  @relation("ReceivedMessages")
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
+  resetTokens      PasswordResetToken[]
 }
 
 model Post {
@@ -164,4 +165,17 @@ model Message {
   sender   User @relation("SentMessages", fields: [senderId], references: [id])
   receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id])
   room     Room @relation(fields: [roomId], references: [id]) 
+}
+
+model PasswordResetToken {
+  id        Int       @id @default(autoincrement())
+  token     String    @unique
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  used      Boolean   @default(false)
+  createdAt DateTime  @default(now())
+
+  @@index([token])
+  @@index([userId])
 }

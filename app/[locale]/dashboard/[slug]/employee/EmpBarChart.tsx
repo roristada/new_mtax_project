@@ -94,6 +94,8 @@ type Employee = {
   gender: string;
   currentSalary: number;
   year: number;
+  startDate: string;
+  endDate: string;
   incomes?: Income[];
   expenses?: Expense[];
   taxes?: Tax[];
@@ -426,29 +428,40 @@ const EmployeeChart: React.FC<EmployeeChartDialogProps> = ({
         </DialogHeader>
 
         <div className="py-4 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <p>
-                <strong>{t('employeeCode')}:</strong> {employee.employeeCode} {/* Translated */}
-              </p>
-              <p>
-                <strong>{t('name-lastName')}:</strong> {employee.title} {employee.firstName}{" "}
-                {employee.lastName}
-              </p>
-              <p>
-                <strong>{t('gender')}:</strong> {employee.gender} {/* Translated */}
-              </p>
-            </div>
-            <div>
-              <p>
-                <strong>{t('currentSalary')}:</strong>{" "} {/* Translated */}
-                {formatSalary(employee.currentSalary)}
-              </p>
-              <p>
-                <strong>{t('workingYear')}:</strong> {employee.year} {/* Translated */}
-              </p>
-            </div>
-          </div>
+        <Card>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <p>
+                    <strong>{t('employeeCode')}:</strong> {employee.employeeCode}
+                  </p>
+                  <p>
+                    <strong>{t('name-lastName')}</strong> {employee.title}{" "}
+                    {employee.firstName} {employee.lastName}
+                  </p>
+                  <p>
+                    <strong>{t('gender')}:</strong> {t(`genders.${employee.gender}`)}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    <strong>{t('currentSalary')}:</strong>{" "}
+                    {formatSalary(employee.currentSalary)}
+                  </p>
+                  <p>
+                    <strong>{t('workingYear')}:</strong> {employee.year}
+                  </p>
+                  <p>
+                    <strong>{t('startDate')}:</strong> {employee.startDate}
+                  </p>
+                  <p>
+                    <strong>{t('endDate')}:</strong>{" "}
+                    {employee.endDate || t('stillEmployed')}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           <Tabs defaultValue="all" className="w-full">
             <TabsList className="grid grid-cols-3 w-[80%] mx-auto">
@@ -496,6 +509,7 @@ const EmployeeChart: React.FC<EmployeeChartDialogProps> = ({
                           radius={4}
                         />
                         <Bar dataKey="tax" fill="var(--color-tax)" radius={4} />
+                        <Legend />
                       </BarChart>
                     </ChartContainer>
                   </CardContent>

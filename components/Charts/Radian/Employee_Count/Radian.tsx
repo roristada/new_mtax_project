@@ -108,7 +108,7 @@ export default function Radian({
                   <span className="text-sm font-medium text-gray-700">{config.label}:</span>
                 </div>
                 <div className="text-sm">
-                  <span className="font-semibold text-gray-900">{data[key].toLocaleString()}</span>
+                  <span className="font-semibold text-gray-900">{data[key].toLocaleString()} {t('people')}</span>
                   <span className="text-gray-500 ml-1">
                     ({((data[key] / totalEmployees) * 100).toFixed(1)}%)
                   </span>
@@ -118,7 +118,7 @@ export default function Radian({
           </div>
           <div className="mt-3 pt-2 border-t text-sm font-medium text-gray-700 flex justify-between items-center">
             <span>{t('total')}:</span>
-            <span className="text-lg font-bold text-gray-900">{totalEmployees.toLocaleString()}</span>
+            <span className="text-lg font-bold text-gray-900">{totalEmployees.toLocaleString()} {t('people')}</span>
           </div>
         </div>
       );
@@ -220,7 +220,7 @@ export default function Radian({
                 {config.label}:{" "}
                 {chartData[0][
                   key as keyof (typeof chartData)[0]
-                ].toLocaleString()}{" "}
+                ].toLocaleString()} {t('people')}{" "}
                 (
                 {(
                   (chartData[0][key as keyof (typeof chartData)[0]] /

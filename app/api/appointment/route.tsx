@@ -4,10 +4,29 @@ import nodemailer from "nodemailer";
 
 const prisma = new PrismaClient();
 
+async function verifyCaptcha(token: string) {
+  const response = await fetch(
+    `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`,
+    {
+      method: "POST",
+    }
+  );
+  const data = await response.json();
+  return data.success;
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { name, company, email, telephone, startTime, note, endTime, date } =
+    const { name, company, email, telephone, startTime, note, endTime, date, captchaToken } =
       await request.json();
+
+    const isCaptchaValid = await verifyCaptcha(captchaToken);
+    if (!isCaptchaValid) {
+      return NextResponse.json(
+        { error: "Invalid captcha verification" },
+        { status: 400 }
+      );
+    }
 
     const appointment = await prisma.appointment.create({
       data: {
@@ -30,14 +49,13 @@ export async function POST(request: NextRequest) {
 
     if (appointment) {
       const transporter = nodemailer.createTransport({
-        service: "gmail", // or another email service
+        service: "gmail",
         auth: {
-          user: process.env.EMAIL_USER, // your email address
-          pass: process.env.EMAIL_PASS, // your email password or app-specific password
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
         },
       });
 
-      // Define the email options
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
@@ -45,10 +63,8 @@ export async function POST(request: NextRequest) {
         text: `Dear ${name},\n\nYour appointment has been successfully created.\n\nDetails:\nCompany: ${company}\nDate: ${formattedDate}\nStart Time: ${startTime}\nEnd Time: ${endTime}\n\nThank you.`,
       };
 
-      // Send the email
       await transporter.sendMail(mailOptions);
     }
-    // Configure Nodemailer transport
 
     return NextResponse.json(
       {

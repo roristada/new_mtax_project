@@ -86,7 +86,7 @@ export default function Component() {
           new Map(companyList.map((item) => [item.name, item])).values()
         );
 
-        setCompanies(uniqueCompanies);
+        setCompanies(companyList);
       } catch (error) {
         console.error("Error fetching companies:", error);
       }

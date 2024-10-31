@@ -58,6 +58,7 @@ export default function Component() {
   });
 
   const [isPublished, setIsPublished] = useState(false);
+  const [content, setContent] = useState('');
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -103,15 +104,15 @@ export default function Component() {
     const formDataToSend = new FormData();
     formDataToSend.append("title", formData.title);
     formDataToSend.append("author", formData.author);
-    formDataToSend.append("content", formData.content);
+    formDataToSend.append("content", content);
     formDataToSend.append("email", formData.email);
     formDataToSend.append("category", formData.category);
     formDataToSend.append("status", formData.status);
     if (formData.picture) {
-      formDataToSend.append("picture", formData.picture); // Append the image file
+      formDataToSend.append("picture", formData.picture);
     }
 
-    console.log("formDataToSend front", formDataToSend)
+    
 
     try {
       const response = await fetch(`/api/blog`, {
@@ -159,6 +160,7 @@ export default function Component() {
     }));
   };
 
+
   return (
     <Card className="w-full max-w-2xl mx-auto my-auto mt-20">
       <CardHeader>
@@ -196,9 +198,10 @@ export default function Component() {
           <div className="space-y-2 mt-5">
             <Label htmlFor="content">{t('dialog.fields.content')}</Label>
             <TextEditer
-              onChange={(content: string) =>
-                setFormData((prevData) => ({ ...prevData, content }))
-              }
+              value={content}
+              onChange={(newContent: string) => {
+                setContent(newContent);
+              }}
             />
           </div>
           <div className="space-y-2 mt-5">

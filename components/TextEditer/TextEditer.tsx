@@ -106,7 +106,7 @@ const TextEditer: React.FC<TextEditerProps> = ({ value = '', onChange }) => {
         placeholder: "Type something...",
       });
 
-      // Set initial content
+      // Set initial content if exists
       if (value) {
         quillRef.current.root.innerHTML = value;
       }

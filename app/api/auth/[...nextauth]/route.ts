@@ -27,7 +27,7 @@ const handler = NextAuth({
         console.log('User fetched from Prisma:', user);  // Log user fetched
 
         // Check if user exists and password matches
-        if (user && await bcrypt.compare(credentials.password, user.password)) {
+        if (user && user.password && await bcrypt.compare(credentials.password, user.password)) {
           return {
             id: user.id.toString(),
             email: user.email,

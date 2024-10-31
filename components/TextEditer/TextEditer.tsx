@@ -5,11 +5,10 @@ import "quill/dist/quill.snow.css";
 
 // Interface for props
 interface TextEditerProps {
-  value?: string;
   onChange: (content: string) => void;
 }
 
-const TextEditer: React.FC<TextEditerProps> = ({ value = '', onChange }) => {
+const TextEditer: React.FC<TextEditerProps> = ({ onChange }) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const quillRef = useRef<Quill>();
 
@@ -106,11 +105,6 @@ const TextEditer: React.FC<TextEditerProps> = ({ value = '', onChange }) => {
         placeholder: "Type something...",
       });
 
-      // Set initial content if exists
-      if (value) {
-        quillRef.current.root.innerHTML = value;
-      }
-
       quillRef.current.on("text-change", () => {
         const content = quillRef.current?.root.innerHTML || "";
         onChange(content);
@@ -123,12 +117,6 @@ const TextEditer: React.FC<TextEditerProps> = ({ value = '', onChange }) => {
       }
     };
   }, [modules, formats, onChange]);
-
-  useEffect(() => {
-    if (quillRef.current && value !== quillRef.current.root.innerHTML) {
-      quillRef.current.root.innerHTML = value;
-    }
-  }, [value]);
 
   return (
     <div className="flex flex-col items-center">

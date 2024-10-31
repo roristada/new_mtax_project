@@ -23,7 +23,6 @@ interface User {
 }
 
 const Home = () => {
-  const t = useTranslations('HomePage');
   return (
     <main className=" w-full mx-auto">
       

@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     const category = formData.get("category") as string;
     const picture = formData.get("picture") as File | null;
     const status = formData.get("status") as string;
-    console.log(status)
+    console.log("formData back", formData)
 
     const authorCheck = await prisma.user.findUnique({
       where: { email: email },

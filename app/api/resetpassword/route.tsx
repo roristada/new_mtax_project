@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL_LOCAL}/th/set-password?token=${resetToken}`;
+    const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/th/set-password?token=${resetToken}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,

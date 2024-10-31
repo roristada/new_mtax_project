@@ -111,6 +111,8 @@ export default function Component() {
       formDataToSend.append("picture", formData.picture); // Append the image file
     }
 
+    console.log("formDataToSend front", formDataToSend)
+
     try {
       const response = await fetch(`/api/blog`, {
         method: "POST",
@@ -144,6 +146,8 @@ export default function Component() {
       });
       setLoading(false);
     }
+
+
   };
 
   const handleToggle = (checked: boolean) => {

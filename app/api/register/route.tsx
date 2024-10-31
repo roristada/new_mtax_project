@@ -9,6 +9,18 @@ export async function POST(request: NextRequest) {
   try {
     const {name, company, email, address, telephone, role} = await request.json();
     
+    // ตรวจสอบอีเมลซ้ำ
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return NextResponse.json(
+        { error: "duplicate_email" },
+        { status: 400 }
+      );
+    }
+
     // สร้าง token
     const resetToken = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 ชั่วโมง
@@ -49,8 +61,9 @@ export async function POST(request: NextRequest) {
     });
 
     // URL สำหรับตั้งรหัสผ่าน
-    //const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/set-password?token=${resetToken}`;
-    const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL_LOCAL}/th/set-password?token=${resetToken}`;
+    
+    // const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL_LOCAL}/th/set-password?token=${resetToken}`;
+    const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/th/set-password?token=${resetToken}`;
 
     // ส่งอีเมล
     const mailOptions = {

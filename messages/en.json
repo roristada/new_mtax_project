@@ -256,7 +256,9 @@
     "errors": {
       "invalidEmail": "Invalid email format",
       "invalidPassword": "Password must be at least 8 characters long and contain at least one letter and one number",
-      "passwordMismatch": "Passwords do not match"
+      "passwordMismatch": "Passwords do not match",
+      "emailExists": "Email already exists",
+      "systemError": "System error, please try again"
     },
     "success": {
       "title": "Registration successful!",

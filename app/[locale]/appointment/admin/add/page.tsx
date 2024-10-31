@@ -98,6 +98,7 @@ export default function Appointment() {
 
   useEffect(() => {
     // Fetch all appointments on initial load
+    console.log("process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY", process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY)
     async function fetchAppointments() {
       try {
         const res = await fetch(`/api/appointment`);

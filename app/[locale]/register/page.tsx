@@ -60,45 +60,44 @@ export default function Register() {
       return;
     }
 
-    // if (!validatePassword(password)) {
-    //   setError(t('errors.invalidPassword'));
-    //   return;
-    // }
-
-    // if (password !== confirm_password) {
-    //   setError(t('errors.passwordMismatch'));
-    //   return;
-    // }
-
     setError("");
     setLoading(true);
 
-    const res = await fetch(`/api/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, company, email, password, confirm_password, address, telephone, role }),
-    });
+    try {
+      const res = await fetch(`/api/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, company, email, password, confirm_password, address, telephone, role }),
+      });
 
-    if (!res.ok) {
+      const data = await res.json();
+
+      if (!res.ok) {
+        setLoading(false);
+        if (data.error === 'duplicate_email') {
+          setError(t('errors.emailExists'));
+          return;
+        }
+        setError(data.error || "Registration failed");
+        return;
+      }
+
+      console.log(data);
+
+      Swal.fire({
+        title: t('success.title'),
+        text: t('success.message'),
+        icon: "success",
+      }).then(() => {
+        setLoading(false);
+        router.push(`/${locale}/dashboard/admin`);
+      });
+    } catch (error) {
       setLoading(false);
-      const { error } = await res.json();
-      setError(error || "Registration failed");
-      return;
+      setError(t('errors.systemError'));
     }
-
-    const data = await res.json();
-    console.log(data);
-
-    Swal.fire({
-      title: t('success.title'),
-      text: t('success.message'),
-      icon: "success",
-    }).then(() => {
-      setLoading(false);
-      router.push(`/${locale}/dashboard/admin`);
-    });
   };
 
   return (

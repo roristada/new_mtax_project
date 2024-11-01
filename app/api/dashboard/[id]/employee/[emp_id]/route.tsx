@@ -67,3 +67,17 @@ export async function GET(req: NextRequest, { params }: { params: { id: string, 
         await prisma.$disconnect();
     }
 }
+
+export async function generateStaticParams() {
+  // Fetch all unique combinations of companyId and employeeCode
+  const employees = await prisma.employee.findMany({
+    select: { companyId: true, employeeCode: true },
+    distinct: ['companyId', 'employeeCode'], // Ensure you get unique combinations
+  });
+
+  // Return an array of params objects
+  return employees.map(employee => ({
+    id: employee.companyId.toString(), // Convert companyId to a string
+    emp_id: employee.employeeCode, // Use employeeCode as is
+  }));
+}

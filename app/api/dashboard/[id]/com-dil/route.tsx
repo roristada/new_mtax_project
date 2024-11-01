@@ -81,6 +81,18 @@ export async function GET(
   }
 }
 
+export async function generateStaticParams() {
+  // Fetch all unique IDs that you want to pre-render
+  const employees = await prisma.employee.findMany({
+    select: { companyId: true },
+  });
+
+  // Return an array of params objects
+  return employees.map(employee => ({
+    id: employee.companyId.toString(),
+  }));
+}
+
 function processRanges(employees: any[], field: 'commission' | 'diligence') {
     const ranges: CommissionRange[] = [
       { min: 0, max: 10000, count: 0, employees: [] },

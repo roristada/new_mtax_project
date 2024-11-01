@@ -22,3 +22,16 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         await prisma.$disconnect();
     }
 }
+
+export async function generateStaticParams() {
+  // Fetch all unique company IDs that you want to pre-render
+  const companies = await prisma.employee.findMany({
+    select: { companyId: true },
+    distinct: ['companyId'], // Ensure you get unique company IDs
+  });
+
+  // Return an array of params objects
+  return companies.map(company => ({
+    id: company.companyId.toString(), // Convert the ID to a string if necessary
+  }));
+}

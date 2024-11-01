@@ -177,3 +177,15 @@ export async function PATCH(
     );
   }
 }
+
+export async function generateStaticParams() {
+  // Fetch all unique appointment IDs that you want to pre-render
+  const appointments = await prisma.appointment.findMany({
+    select: { id: true },
+  });
+
+  // Return an array of params objects
+  return appointments.map(appointment => ({
+    id: appointment.id.toString(), // Convert the ID to a string if necessary
+  }));
+}

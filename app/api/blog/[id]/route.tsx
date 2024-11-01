@@ -145,3 +145,15 @@ export async function GET(
     );
   }
 }
+
+export async function generateStaticParams() {
+  // Fetch all unique post IDs that you want to pre-render
+  const posts = await prisma.post.findMany({
+    select: { id: true },
+  });
+
+  // Return an array of params objects
+  return posts.map(post => ({
+    id: post.id.toString(), // Convert the ID to a string if necessary
+  }));
+}

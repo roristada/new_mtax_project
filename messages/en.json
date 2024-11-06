@@ -1,4 +1,7 @@
 {
+  "NotFoundPage": {
+    "title": "Page Not Found"
+  },
   "HomePage": {
     "title": "Hello world!",
     "about": "Go to the about page"

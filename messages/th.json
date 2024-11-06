@@ -1,4 +1,7 @@
 {
+  "NotFoundPage": {
+    "title": "ไม่พบหน้าเว็บไซต์"
+  },
   "HomePage": {
     "title": "ยินดีต้อนรับสู่ MTAX",
     "about": "คลิกเพื่อไปยังหน้า about"

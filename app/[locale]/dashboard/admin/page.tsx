@@ -47,7 +47,6 @@ import {
   DialogFooter,
 } from "../../../../components/ui/dialog";
 import { useTranslations } from "next-intl";
-import { toast } from "../../../../hooks/use-toast";
 import Swal from 'sweetalert2';
 
 interface DashboardData {

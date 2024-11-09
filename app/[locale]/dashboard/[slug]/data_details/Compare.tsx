@@ -315,6 +315,7 @@ export default function Compare({ slug }: { slug: string }) {
   //-------------------------------------------------------------------------------------------------
   const SortuniqueYears = uniqueYears.sort((a, b) => b - a); // เรียงลำดับจากมากไปน้อย
   const latestYear = SortuniqueYears.length > 0 ? SortuniqueYears[0] : null;
+  console.log("latestYear", SortuniqueYears)
   const [selectedMonthYear, setSelectedMonthYear] = useState<number | null>(
     latestYear
   );

@@ -263,6 +263,10 @@ async function uploadToStorage(req: NextRequest) {
         });
       } catch (error) {
         console.error(`Error processing batch:`, error);
+        return {
+          status: "error",
+          message: `Error processing batch: ${error}`,
+        };
       }
     }
 

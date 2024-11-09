@@ -36,6 +36,10 @@ export async function DELETE(req: NextRequest) {
 
         // 2. ลบข้อมูลทั้งหมดจาก Database
         await prisma.$transaction(async (tx) => {
+            
+            await tx.passwordResetToken.deleteMany({
+                where: { userId: Number(userId) }
+            });
             // ลบข้อมูลจากตาราง tax
             await tx.tax.deleteMany({
                 where: { companyId: Number(userId) }

@@ -98,7 +98,6 @@ export default function Appointment() {
 
   useEffect(() => {
     // Fetch all appointments on initial load
-    console.log("process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY", process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY)
     async function fetchAppointments() {
       try {
         const res = await fetch(`/api/appointment`);
@@ -114,14 +113,14 @@ export default function Appointment() {
               dateMap[dateStr] = 0;
             }
             dateMap[dateStr]++;
-            console.log("dateMap:", dateMap);
+            
           });
 
           const fullyBooked = Object.keys(dateMap).filter(
-            (dateStr) => dateMap[dateStr] >= 3 // Assuming 3 time slots per day
+            (dateStr) => dateMap[dateStr] >= 3 
           );
           const Bookedday = Object.keys(dateMap).filter(
-            (dateStr) => dateMap[dateStr] > 0 // Assuming 3 time slots per day
+            (dateStr) => dateMap[dateStr] > 0 
           );
           console.log("Fully booked dates:", fullyBooked);
           setFullyBookedDates(fullyBooked);
@@ -227,13 +226,14 @@ export default function Appointment() {
 
   const today = startOfToday();
   const oneMonthLater = addMonths(today, 2);
+
   const dateFullyBookedDates = fullyBookedDates.map(
     (dateStr) => new Date(dateStr)
   );
   const dateBookedInDates = BookedInDates.map((dateStr) => new Date(dateStr));
 
   useEffect(() => {
-    // Update formAdminData with session info if available
+    
     if (session && session.user) {
       setFormAdminData((prevData) => {
         if (
@@ -245,12 +245,12 @@ export default function Appointment() {
             name: session.user?.role || "",
             company: session.user?.company || "",
             email: session.user?.email || "",
-            telephone: prevData.telephone, // Keep existing telephone
-            note: prevData.note, // Keep existing note
-            timeSlots: prevData.timeSlots, // Keep existing time slots
+            telephone: prevData.telephone, 
+            note: prevData.note, 
+            timeSlots: prevData.timeSlots, 
           };
         }
-        return prevData; // No change needed
+        return prevData; 
       });
     }
   }, [session]);
@@ -332,7 +332,6 @@ export default function Appointment() {
 
       if (res.ok) {
         const data = await res.json();
-        console.log("data", data);
         Swal.fire({
           title: t('success.title'),
           text: t('success.messageAdmin'),

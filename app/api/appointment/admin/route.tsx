@@ -25,17 +25,6 @@ export async function POST(request: NextRequest) {
 
     const { name, company, email, telephone, timeSlots, note } = body;
 
-    // Log the received data to ensure correctness
-    console.log("Received appointment data:", {
-      name,
-      company,
-      email,
-      telephone,
-      timeSlots,
-      note,
-    });
-
-    // Map over timeSlots and create each appointment
     const appointmentPromises = timeSlots.map(async (slot: TimeSlot) => {
       try {
         return await prisma.appointment.create({
@@ -52,12 +41,10 @@ export async function POST(request: NextRequest) {
         });
       } catch (err) {
         console.error("Failed to create appointment for slot:", slot, err);
-        throw err; // rethrow to catch in the main block
+        throw err; 
       }
     });
 
-    
-    
 
     return NextResponse.json(
       {

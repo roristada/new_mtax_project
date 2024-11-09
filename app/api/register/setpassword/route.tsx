@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         where: { id: passwordResetToken.userId },
         data: { password: hashedPassword }
       }),
-      // มาร์ค token ว่าถูกใช้แล้ว
+      // อัพเดท token ว่าถูกใช้แล้ว
       prisma.passwordResetToken.update({
         where: { id: passwordResetToken.id },
         data: { used: true }

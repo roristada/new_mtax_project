@@ -54,10 +54,10 @@ export async function DELETE(
 
   const email = appointment.email;
   const name = appointment.name;
-  const company = appointment.company; // Assuming you have a company field
-  const formattedDate = appointment.date.toLocaleDateString(); // Assuming date is a Date object
-  const startTime = appointment.startTime; // Assuming this is a string or formatted time
-  const endTime = appointment.endTime; // Assuming this is a string or formatted time
+  const company = appointment.company; 
+  const formattedDate = appointment.date.toLocaleDateString(); 
+  const startTime = appointment.startTime; 
+  const endTime = appointment.endTime; 
 
   if (appointment.status === "pending") {
     try {
@@ -77,7 +77,27 @@ export async function DELETE(
         from: process.env.EMAIL_USER,
         to: email,
         subject: "Appointment Cancellation Confirmation",
-        text: `Dear ${name},\n\nWe regret to inform you that your appointment has been canceled.\n\nDetails:\nCompany: ${company}\nDate: ${formattedDate}\nStart Time: ${startTime}\nEnd Time: ${endTime}\n\nIf you have any questions, please contact us.\n\nThank you.`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #333;">Appointment Cancellation</h2>
+            <p>Dear ${name},</p>
+            <p>We regret to inform you that your appointment has been canceled.</p>
+            
+            <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <h3 style="color: #444; margin-top: 0;">Appointment Details:</h3>
+              <p><strong>Company:</strong> ${company}</p>
+              <p><strong>Date:</strong> ${formattedDate}</p>
+              <p><strong>Time:</strong> ${startTime} - ${endTime}</p>
+            </div>
+            
+            <p>If you have any questions, please don't hesitate to contact us.</p>
+            <p>Thank you for your understanding.</p>
+            
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+              <p style="color: #666; font-size: 12px;">Best regards,<br>MTax Online Accounting<br>Payroll Outsourcing</p>
+            </div>
+          </div>
+        `,
       };
 
       await transporter.sendMail(mailOptions);
@@ -125,7 +145,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  const { status } = await req.json(); // Expecting status from the request body
+  const { status } = await req.json(); 
 
   if (!["completed", "canceled", "confirmed"].includes(status)) {
     return NextResponse.json({ error: "Invalid status" }, { status: 400 });
@@ -136,27 +156,62 @@ export async function PATCH(
       where: { id: Number(id) },
       data: { status },
     });
-
-    // Set up nodemailer transporter for sending email
+    
     if (status === "canceled" || status === "confirmed") {
-      // Set up nodemailer transporter
+      
       const transporter = nodemailer.createTransport({
-        service: "gmail", // Or another email service
+        service: "gmail", 
         auth: {
-          user: process.env.EMAIL_USER, // Your email address
-          pass: process.env.EMAIL_PASS, // Your email password or an app-specific password
+          user: process.env.EMAIL_USER, 
+          pass: process.env.EMAIL_PASS, 
         },
       });
     
       const emailContent = status === "canceled" 
-        ? `Dear ${appointment.name},\n\nYour appointment scheduled for ${appointment.date.toLocaleDateString()} ${appointment.startTime} to ${appointment.endTime} has been canceled. Please contact us if you need further assistance.\n\nBest regards,\nMtax Online Accounting: Payroll Outsourcing`
-        : `Dear ${appointment.name},\n\nYour appointment scheduled for ${appointment.date.toLocaleDateString()} ${appointment.startTime} to ${appointment.endTime} has been confirmed. We look forward to seeing you.\n\nBest regards,\nMtax Online Accounting: Payroll Outsourcing`;
+        ? `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #d32f2f;">Appointment Canceled</h2>
+            <p>Dear ${appointment.name},</p>
+            <p>Your appointment has been canceled.</p>
+            
+            <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <h3 style="color: #444; margin-top: 0;">Appointment Details:</h3>
+              <p><strong>Date:</strong> ${appointment.date.toLocaleDateString()}</p>
+              <p><strong>Time:</strong> ${appointment.startTime} - ${appointment.endTime}</p>
+            </div>
+            
+            <p>Please contact us if you need further assistance.</p>
+            
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+              <p style="color: #666; font-size: 12px;">Best regards,<br>MTax Online Accounting<br>Payroll Outsourcing</p>
+            </div>
+          </div>
+        `
+        : `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #2e7d32;">Appointment Confirmed</h2>
+            <p>Dear ${appointment.name},</p>
+            <p>Your appointment has been confirmed.</p>
+            
+            <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <h3 style="color: #444; margin-top: 0;">Appointment Details:</h3>
+              <p><strong>Date:</strong> ${appointment.date.toLocaleDateString()}</p>
+              <p><strong>Time:</strong> ${appointment.startTime} - ${appointment.endTime}</p>
+            </div>
+            
+            <p>We look forward to seeing you!</p>
+            
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+              <p style="color: #666; font-size: 12px;">Best regards,<br>MTax Online Accounting<br>Payroll Outsourcing</p>
+            </div>
+          </div>
+        `;
     
       const mailOptions = {
-        from: process.env.EMAIL_USER, // Your email address
-        to: appointment.email, // The email of the person whose appointment was canceled or confirmed
+        from: process.env.EMAIL_USER, 
+        to: appointment.email, 
         subject: status === "canceled" ? "Appointment Canceled" : "Appointment Confirmed",
-        text: emailContent,
+        html: emailContent,
       };
     
       if (mailOptions) {
@@ -177,3 +232,4 @@ export async function PATCH(
     );
   }
 }
+

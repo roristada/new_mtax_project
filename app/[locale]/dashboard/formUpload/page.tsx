@@ -71,7 +71,7 @@ export default function Component() {
     const fetchCompanies = async () => {
       
       try {
-        const res = await fetch(`/api/user`);
+        const res = await fetch(`/api/users`);
         const users: { id: string; company: string; role : string }[] = await res.json();
         console.log(users , "users");
 
@@ -82,9 +82,9 @@ export default function Component() {
             name: user.company,
           }));
 
-        const uniqueCompanies = Array.from(
-          new Map(companyList.map((item) => [item.name, item])).values()
-        );
+        // const uniqueCompanies = Array.from(
+        //   new Map(companyList.map((item) => [item.name, item])).values()
+        // );
 
         setCompanies(companyList);
       } catch (error) {

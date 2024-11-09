@@ -41,25 +41,26 @@ import { useTranslations } from "next-intl";
 
 const adminLinks = [
   { id: 1, title: "home", url: "/dashboard/admin", icon: Home },
+  { id: 2, title: "profile", url: "/profile", icon: UserRoundPen },
   {
-    id: 2,
+    id: 3,
     title: "appointment",
     url: "/appointment/admin",
     icon: CalendarPlus2,
   },
-  { id: 3, title: "register", url: "/register", icon: UserRoundPen },
-  { id: 4, title: "blog", url: "/blog/admin", icon: LibraryBig },
+  { id: 4, title: "register", url: "/register", icon: UserRoundPen },
+  { id: 5, title: "blog", url: "/blog/admin", icon: LibraryBig },
   {
-    id: 5,
+    id: 6,
     title: "support",
     url: "/support/admin",
     icon: MessageSquareWarning,
   },
   // New Overview link for admin
-  { id: 6, title: "overview", url: "/dashboard/:id", icon: LayoutDashboard },
-  { id: 7, title: "employee", url: "/dashboard/:id/employee", icon: Users2 },
+  { id: 7, title: "overview", url: "/dashboard/:id", icon: LayoutDashboard },
+  { id: 8, title: "employee", url: "/dashboard/:id/employee", icon: Users2 },
   {
-    id: 8,
+    id: 9,
     title: "dataDetails",
     url: "/dashboard/:id/data_details",
     icon: BarChartBig,
@@ -74,9 +75,10 @@ const adminLinks = [
 
 const customerLinks = [
   { id: 1, title: "home", url: "/dashboard/:id", icon: Home },
-  { id: 2, title: "employee", url: "/dashboard/:id/employee", icon: Users2 },
+  { id: 2, title: "profile", url: "/profile", icon: UserRoundPen },
+  { id: 3, title: "employee", url: "/dashboard/:id/employee", icon: Users2 },
   {
-    id: 3,
+    id: 4,
     title: "dataDetails",
     url: "/dashboard/:id/data_details",
     icon: LineChart,
@@ -88,7 +90,7 @@ const customerLinks = [
     ]
   },
   {
-    id: 4,
+    id: 5,
     title: "support",
     url: "/support/:id",
     icon: MessageSquareWarning,
@@ -96,12 +98,65 @@ const customerLinks = [
 ];
 
 export default function Sidebar() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
   const params = useParams();
   const pathname = usePathname();
-  const id = params.slug as string;
-  
+
+  // ดึง ID จาก params หรือ session
+  const id = params?.slug || (session?.user?.role === 'customer' ? session?.user?.id : '');
+
+  // ตรวจสอบว่า admin กำลังดูข้อมูลของ customer หรือไ���่
+  const isAdminOnUserDashboard = useMemo(() => {
+    const isAdmin = session?.user?.role === 'admin';
+    const hasSlug = Boolean(params?.slug);
+    const isUserDashboard = pathname?.includes(`/dashboard/${params?.slug}`);
+    const isNotAdminDashboard = !pathname?.includes('/dashboard/admin');
+
+    return isAdmin && hasSlug && isUserDashboard && isNotAdminDashboard;
+  }, [session?.user?.role, pathname, params?.slug]);
+
+  // สร้าง links ตาม role
+  const links = useMemo(() => {
+    console.log('Current role:', session?.user?.role);
+    console.log('isAdminOnUserDashboard:', isAdminOnUserDashboard);
+    
+    if (session?.user?.role === 'admin') {
+      // แสดงทุก link เมื่อ admin อยู่ใน user dashboard
+      if (isAdminOnUserDashboard) {
+        console.log('Showing all admin links including 7,8,9');
+        return [
+          ...adminLinks.filter(link => link.id <= 6), // admin links
+          ...adminLinks.filter(link => link.id >= 7)  // user dashboard links
+        ];
+      } else {
+        console.log('Showing only admin links (1-6)');
+        return adminLinks.filter(link => link.id <= 6);
+      }
+    }
+    console.log('Showing customer links');
+    return customerLinks;
+  }, [session?.user?.role, isAdminOnUserDashboard]);
+
+  const getUrl = useCallback((url: string) => {
+    // ถ้าเป็น URL ของ profile หรือหน้า admin ไม่ต้องแทนที่ :id
+    if (url === '/profile' || url.includes('/dashboard/admin')) {
+      return url;
+    }
+
+    // ถ้าเป็น customer ใช้ id จาก session
+    if (session?.user?.role === 'customer') {
+      return url.replace(":id", session.user.id);
+    }
+
+    // ถ้าเป็น admin และมี params.slug (กำลังดูข้อมูลของ customer คนใดคนหนึ่ง)
+    if (session?.user?.role === 'admin' && params?.slug) {
+      return url.replace(":id", params.slug as string);
+    }
+
+    return url;
+  }, [session, params?.slug]);
+
   const t = useTranslations("Sidebar");
 
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
@@ -121,11 +176,8 @@ export default function Sidebar() {
     );
   };
 
-  const getUrl = useCallback((url: string) => url.replace(":id", id), [id]);
-
-  // Ensure pathname is just the path part of the URL
   const currentPathname = new URL(pathname, getBaseUrl()).pathname;
-  console.log("Current Pathname:", currentPathname);
+  
 
   const isLinkActive = useCallback(
     (url: string) => {
@@ -177,24 +229,7 @@ export default function Sidebar() {
 
   const languagePrefix = pathname.split("/")[1]; // Extract the language prefix
   const adjustedPathname = pathname.replace(`/${languagePrefix}`, ""); // Remove the prefix for comparison
-
-  const isAdminOnUserDashboard =
-    session?.user?.role === "admin" &&
-    adjustedPathname.startsWith("/dashboard/") &&
-    adjustedPathname !== "/dashboard/admin" &&
-    adjustedPathname !== "/dashboard/formUpload";
-
-  const links = useMemo(() => {
-    if (session?.user?.role === "admin") {
-      return isAdminOnUserDashboard
-        ? [...adminLinks]
-        : adminLinks.filter(
-            (link) => link.id !== 6 && link.id !== 7 && link.id !== 8
-          ); // Remove Overview link if not on user dashboard
-    }
-    return customerLinks;
-  }, [session?.user?.role, isAdminOnUserDashboard]);
-
+console.log(session?.user?.role);
   return (
     <TooltipProvider>
       <div className="flex min-h-screen w-full flex-col bg-muted/40">

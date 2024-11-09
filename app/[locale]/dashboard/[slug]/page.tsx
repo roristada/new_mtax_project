@@ -81,9 +81,9 @@ interface TaxBreakdown {
 }
 
 export default function Component({ params }: { params: { slug: string } }) {
-  const [isAuthChecked, setIsAuthChecked] = useState(false);
   const t = useTranslations('Dashboard');
 
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
   useAuthEffect((authenticated) => {
     setIsAuthChecked(authenticated);
   });

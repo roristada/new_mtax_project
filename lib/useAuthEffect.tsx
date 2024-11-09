@@ -11,7 +11,7 @@ const useAuthEffect = (callback?: (authenticated: boolean) => void) => {
   const showErrorAndRedirect = useCallback(() => {
     Swal.fire({
       icon: "error",
-      title: "Oops...",
+      title: "Permission Denied",
       text: "You don't have permission to access this page.",
       confirmButtonText: 'OK'
     }).then((result) => {
@@ -31,10 +31,8 @@ const useAuthEffect = (callback?: (authenticated: boolean) => void) => {
       const isAdmin = session.user.role === "admin";
 
       if (String(userID) === String(slug) || isAdmin) {
-        console.log('Access granted: User ID matches slug or user is admin');
         if (callback) callback(true);
       } else {
-        console.log('Access denied: User ID does not match slug and user is not admin');
         showErrorAndRedirect();
         if (callback) callback(false);
       }
@@ -43,3 +41,4 @@ const useAuthEffect = (callback?: (authenticated: boolean) => void) => {
 };
 
 export default useAuthEffect;
+

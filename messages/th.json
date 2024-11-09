@@ -6,6 +6,11 @@
     "title": "ยินดีต้อนรับสู่ MTAX",
     "about": "คลิกเพื่อไปยังหน้า about"
   },
+  "Header": {
+    "mtax" : "Mtax",
+    "onlineAccounting": "Online Accounting",
+    "describe": "Mtax เราเป็นหนึ่งบริษัทผู้ให้บริการงานบันทึกบัญชีออนไลน์ (Online Accounting), งานด้านบัญชีภาษี (Tax Accounting), งานด้านบัญชีการเงิน (Financial Accounting) งานด้านบัญชีบริหาร (Management Accounting), งานด้านเงินเดือนพนักงาน (Payroll Outsourcing), จัดตั้งบริษัท (Business Startup) เราให้บริการเสมือนเป็นส่วนหนึ่งของทีมกิจการท่าน เราพร้อมก้าวเดินและเติบโตไปพร้อมกัน เราจะเป็นฟันเฟืองตัวหนึ่งของกิจการ เราจะรักษาผลประโยชน์ของกิจการท่านเป็นสิ่งที่เราคำนึงถึงเป็นอันดับแรก เรามีทีมงานที่มีคุณภาพและพัฒนาอย่างต่อเนื่องเพื่อพร้อมให้คำปรึกษาและดูแลงานที่รับผิดชอบอย่างเต็มประสิทธิภาพ"
+  },
   "Navbar": {
     "home": "หน้าหลัก",
     "about": "เกี่ยวกับเรา",
@@ -97,6 +102,7 @@
   },
   "Sidebar": {
     "home": "หน้าหลัก",
+    "profile": "ข้อมูลส่วนตัว",
     "appointment": "นัดหมาย",
     "register": "ลงทะเบียน",
     "blog": "บล็อก",
@@ -168,7 +174,7 @@
       "confirmed": "ยืนยันการนัดหมาย"
     },
     "statusTextDetail": {
-      "completed": "คุณต้องการยืนยันการให้คำปรึกษานี้?",
+      "completed": "คุณต้องการยืนยันก��รให้คำปรึกษานี้?",
       "canceled": "คุณต้องการยกเลิกการนัดหมายนี้?",
       "confirmed": "คุณต้องการยืนยันการนัดหมายนี้?"
     },
@@ -319,7 +325,7 @@
       "commissionDeduction": "การหักค่าคอมมิชชั่น",
       "otherDeductions": "การหักอื่น ๆ",
       "employeeTax": "ภาษีเงินได้ (พนักงาน)",
-      "companyTax": "ภาษีเงินได้ (บริษัท)",
+      "companyTax": "ภาษีเง���นได้ (บริษัท)",
       "socialSecurityEmployee": "ประกันสังคม (พนักงาน)",
       "socialSecurityCompany": "ประกันสังคม (บริษัท)",
       "providentFund": "กองทุนสำรองเลี้ยงชีพ"
@@ -650,6 +656,43 @@
     }
   },
   "DashboardAdmin": {
+    "delete_account": {
+      "confirmDeleteTitle": "ยืนยันการลบบัญชี",
+      "confirmDeleteText": "คุณแน่ใจหรือไม่ที่จะลบบัญชี? การลบจะลบข้อมูลและไฟล์ทั้งหมดที่เกี่ยวข้องเมื่อดำเนินการแล้วจะไม่สามารถนำข้อมูลกลับมาได้อีก",
+      "deleting": "กำลังลบบัญชี...",
+      "deletingMessage": "กรุณารอสักครู่ขณะที่เราลบบัญชีและข้อมูลทั้งหมดที่เกี่ยวข้อง",
+      "deleteSuccess": "การลบบัญชีสำเร็จ",
+      "deleteSuccessMessage": "บัญชีและข้อมูลทั้งหมดที่เกี่ยวข้องถูกลบเรียบร้อย",
+      "deleteError": "การลบผิดพลาด",
+      "deleteErrorMessage": "มีข้อผิดพลาดเกิดขึ้นขณะลบบัญชี",
+      "delete": "ลบบัญชี",
+      "cancel": "ยกเลิก"
+    },
+    "year": "ปี",
+    "delete": "ลบข้อมูล",
+    "delete_intable" :{
+      "noDataFound": "ไม่พบข้อมูล",
+      "noDataFoundDescription": "ไม่พบข้อมูลหรือไฟล์ที่มีอยู่สำหรับบริษัทนี้",
+      "deleteSuccessMessage": "การลบข้อมูลปี {year} สำเร็จ",
+      "confirmDeleteTitle": "ยืนยันการลบข้อมูลปี {year}",
+      "confirmDeleteText": "คุณแน่ใจหรือไม่ที่จะลบข้อมูล?",
+      "deleteSuccess": "การลบข้อมูลสำเร็จ",
+      "deleteError": "การลบข้อมูลผิดพลาด",
+      "deleteErrorMessage": "มีข้อผิดพลาดเกิดขึ้น!",
+      "deleting": "กำลังลบ...",
+      "deletingMessage": "กำลังลบข้อมูล...",
+      "deleteData": "ลบข้อมูล",
+      "deleteAccount": "ลบบัญชี",
+      "cancel": "ยกเลิก",
+      "delete": "ลบ",
+      "dataInDatabase": "ข้อมูลในฐานข้อมูล",
+      "filesInStorage": "ไฟล์ในการเก็บข้อมูล",
+      "files": "ไฟล์",
+      "yes": "พบข้อมูล",
+      "no": "ไม่พบข้อมูล",
+      "selectYearToDelete": "เลือกปีที่จะลบ"
+    },
+    "viewAll": "ดูทั้งหมด",
     "customer": "ลูกค้า",
     "blog": "บล็อก",
     "appointments": "นัดหมาย",
@@ -767,7 +810,7 @@
     "enterResolutionReportFor": "รายงานการแก้ไขสำหรับ",
     "enterResolutionDetails": "กรอกรายละเอียดการแก้ไข...",
     "submitSuccessTitle": "ส่งรายงานการแก้ไขสำเร็จ",
-    "submitSuccessText": "รายงานการแก้ไขถูกส่งเรียบร้อยแล้ว!",
+    "submitSuccessText": "รายงานการแก้ไขถูกส่งเรียบร้อยแล��ว!",
     "deleteSuccessTitle": "ลบรายงานการแก้ไขสำเร็จ",
     "deleteSuccessText": "รายงานการแก้ไขถูกลบเรียบร้อยแล้ว!",
     "status": {
@@ -836,7 +879,7 @@
     "thankYouTitle": "ขอบคุณ!",
     "thankYouText": "รายงานของคุณถูกส่งเรียบร้อยแล้ว",
     "errorTitle": "เกิดข้อผิดพลาด",
-    "errorText": "เกิดข้อผิดพลาดในการส่งรายงาน กรุณาลองอีกครั้ง"
+    "errorText": "เกิดข้���ผิดพลาดในการส่งรายงาน กรุณาลองอีกครั้ง"
   },
   "Support":{
     "title": "การสนับสนุน",
@@ -911,7 +954,7 @@
     "labels": {
       "income": "รายได้",
       "expense": "ค่าใช้จ่าย",
-      "tax": "ภาษี",
+      "tax": "ภ���ษี",
       "salary": "ค่าจ้าง",
       "shiftAllowance": "ค่าทำงานพิเศษ",
       "foodAllowance": "ค่าอาหาร",
@@ -968,7 +1011,7 @@
     "diligenceRange": "ช่วงความขยัน",
     "pageInfo": "หน้า {current} จาก {total}",
     "previous": "ก่อนหน้า",
-    "next": "ถัดไป",
+    "next": "��ัดไป",
     "employeeDetails": "รายละเอียดพนักงาน",
     "resetFilter": "ยกเลิกการกรอง"
   }

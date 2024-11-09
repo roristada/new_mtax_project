@@ -303,7 +303,6 @@ async function uploadToStorage(req: NextRequest) {
           for (const record of batch) {
     
             const employeeCode = record["รหัสพนักงาน"].toString();
-            console.log("employeeCode", employeeCode);
     
             // Find existing employee based on composite key
             let employee = await tx.employee.findFirst({

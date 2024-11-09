@@ -76,13 +76,13 @@ export default function Appointment() {
               dateMap[dateStr] = 0;
             }
             dateMap[dateStr]++;
-            console.log("dateMap:",dateMap)
+            
           });
 
           const fullyBooked = Object.keys(dateMap).filter(
             (dateStr) => dateMap[dateStr] >= 3 // Assuming 3 time slots per day
           );
-          console.log("Fully booked dates:", fullyBooked);
+          
           setFullyBookedDates(fullyBooked);
         }
       } catch (error) {
@@ -180,7 +180,6 @@ export default function Appointment() {
   const handleCaptchaChange = (token: string | null) => {
     setCaptchaToken(token);
   };
-  console.log("captchaToken:",process.env.NEXT_PUBLIC_RECAPTCHA_KEY);
 
   return (
     <>

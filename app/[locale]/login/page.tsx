@@ -26,19 +26,15 @@ export default function Login() {
   }, [router, status]);
 
   const handleSubmit = async (e: any) => {
-    e.preventDefault(); // Prevent the default form submission
-
-    setLoading(true); // Start loading
-
+    e.preventDefault(); 
+    setLoading(true); 
     try {
       const result = await signIn("credentials", {
         redirect: false,
         email,
         password,
       });
-
       setLoading(false);
-
       if (result?.error) {
         console.error(result.error);
         setError(
@@ -48,15 +44,19 @@ export default function Login() {
         );
         Swal.fire({
           icon: "error",
-          title: "Oops...",
-          text: "Invalid Email or Password!",
+          title: "Login",
+          text: "Invalid email or password",
         });
       } else {
-        router.push("/"); // Redirect on success
+        router.push("/"); 
       }
     } catch (error) {
       setLoading(false);
-      console.log("error", error);
+      Swal.fire({
+        icon: "error",
+        title: "Login",
+        text: "An unexpected error occurred",
+      }); 
     }
   };
 

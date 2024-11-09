@@ -78,7 +78,7 @@ const AppointmentsManage = () => {
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
   const [currentPage, setCurrentPage] = useState(1); // Pagination state
   const [appointmentsPerPage] = useState(10); // Appointments per page
-  const [isAuthChecked, setIsAuthChecked] = useState(false);
+  
 
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null); // State for selected appointment
@@ -86,6 +86,7 @@ const AppointmentsManage = () => {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [statusFilter, setStatusFilter] = useState<string[]>([]); // ['pending', 'completed', 'canceled', 'confirmed']
 
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
   useAuthAdmin((authenticated) => {
     setIsAuthChecked(authenticated);
   });
@@ -158,7 +159,7 @@ const AppointmentsManage = () => {
       const res = await fetch(`/api/appointment/${appointmentId}`);
       if (res.ok) {
         const data = await res.json();
-        setSelectedAppointment(data); // Assuming API returns an 'appointment' object
+        setSelectedAppointment(data); 
         setIsDialogOpen(true); // Open the dialog
       } else {
         console.error("Failed to fetch appointment details");

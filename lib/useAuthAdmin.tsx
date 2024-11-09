@@ -43,3 +43,4 @@ const useAuthEffect = (callback?: (authenticated: boolean) => void) => {
 };
 
 export default useAuthEffect;
+

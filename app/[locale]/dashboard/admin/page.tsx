@@ -25,6 +25,8 @@ import {
   Loader2,
   ScanSearch,
   Bell,
+  Trash,
+  FileX,
 } from "lucide-react";
 import useAuthAdmin from "../../../../lib/useAuthAdmin";
 import {
@@ -42,8 +44,11 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "../../../../components/ui/dialog";
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
+import { toast } from "../../../../hooks/use-toast";
+import Swal from 'sweetalert2';
 
 interface DashboardData {
   totalCustomer: number;
@@ -85,6 +90,19 @@ type Appointment = {
   status: string;
 };
 
+interface YearData {
+  year: number;
+  hasData: boolean;
+  hasFiles: boolean;
+  files: string[];
+}
+
+interface DeleteDataResponse {
+  databaseYears: number[];
+  storageFiles: Record<string, string[]>;
+  summary: YearData[];
+}
+
 const formatDateInThailand = (dateString: any) => {
   const date = new Date(dateString);
   return new Intl.DateTimeFormat("en-TH", {
@@ -103,6 +121,9 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+  const [deleteDataOpen, setDeleteDataOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [yearData, setYearData] = useState<DeleteDataResponse | null>(null);
   const t = useTranslations("DashboardAdmin");
   useAuthAdmin((authenticated) => {
     setIsAuthChecked(authenticated);
@@ -117,7 +138,6 @@ const Dashboard = () => {
         const fetchedData: DashboardData = await res.json();
         console.log("Fetched data:", fetchedData);
 
-        // Compare with existing data
         if (JSON.stringify(fetchedData) !== JSON.stringify(data)) {
           setData(fetchedData);
         }
@@ -139,7 +159,9 @@ const Dashboard = () => {
         );
 
         // Compare with existing appointments
-        if (JSON.stringify(sortedAppointments) !== JSON.stringify(appointments)) {
+        if (
+          JSON.stringify(sortedAppointments) !== JSON.stringify(appointments)
+        ) {
           setAppointments(sortedAppointments);
         }
         console.log(data);
@@ -194,6 +216,157 @@ const Dashboard = () => {
       selectedDate?.toLocaleDateString()
   );
 
+  const fetchYearData = async (userId: number) => {
+    try {
+      const response = await fetch(`/api/dashboard_admin/delete_data?companyId=${userId}`);
+      const data = await response.json();
+      setYearData(data);
+    } catch (error) {
+      console.error("Error fetching year data:", error);
+    }
+  };
+
+  // เพิ่ม function สำหรับลบข้อมูล
+  const deleteYearData = async (companyId: number, year: number) => {
+    try {
+      // ปิด Dialog ก่อนแสดง Swal
+      setDeleteDataOpen(false);
+
+      // Show confirmation dialog
+      const result = await Swal.fire({
+        title: t("delete_intable.confirmDeleteTitle", {year: year}),
+        text: t("delete_intable.confirmDeleteText"),
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: t("delete_intable.delete"),
+        cancelButtonText: t("delete_intable.cancel"),
+        // กำหนด z-index ให้สูงกว่า Dialog
+        
+      });
+
+      // If user confirms
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: t("delete_intable.deleting"),
+          html: t("delete_intable.deletingMessage"),
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+          
+        });
+
+        const response = await fetch(
+          `/api/dashboard_admin/delete_data?companyId=${companyId}&year=${year}`,
+          {
+            method: 'DELETE',
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to delete data');
+        }
+
+        const data = await response.json();
+        
+        // Refresh the data
+        await fetchYearData(companyId);
+        
+        await Swal.fire({
+          title: t("delete_intable.deleteSuccess"),
+          text: t("delete_intable.deleteSuccessMessage", {year: year}),
+          icon: 'success',
+          confirmButtonColor: '#10b981',
+         
+        });
+
+        // เปิด Dialog อีกครั้งหลังจากลบเสร็จ
+        setDeleteDataOpen(true);
+      } else {
+        // ถ้ากด Cancel ให้เปิด Dialog อีกครั้ง
+        setDeleteDataOpen(true);
+      }
+    } catch (error) {
+      console.error('Error deleting data:', error);
+      await Swal.fire({
+        title: t("delete_intable.deleteError"),
+        text: t("delete_intable.deleteErrorMessage"),
+        icon: 'error',
+        confirmButtonColor: '#dc2626',
+        
+      });
+      
+      // เปิด Dialog อีกครั้งในกรณีเกิด error
+      setDeleteDataOpen(true);
+    }
+  };
+
+  // เพิ่มฟังก์ชันลบบัญชี
+  const deleteAccount = async (userId: number) => {
+    try {
+      // ปิด Dialog ถ้ามีการเปิดอยู่
+      setDeleteDataOpen(false);
+
+      // แสดง confirmation dialog
+      const result = await Swal.fire({
+        title: t("delete_account.confirmDeleteTitle"),
+        text: t("delete_account.confirmDeleteText"),
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: t("delete_account.delete"),
+        cancelButtonText: t("delete_account.cancel"),
+      });
+
+      if (result.isConfirmed) {
+        // แสดง loading
+        Swal.fire({
+          title: t("delete_account.deleting"),
+          html: t("delete_account.deletingMessage"),
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
+        const response = await fetch(
+          `/api/users/delete_account?userId=${userId}`,
+          {
+            method: 'DELETE',
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to delete account');
+        }
+
+        const data = await response.json();
+
+        // แสดงข้อความสำเร็จ
+        await Swal.fire({
+          title: t("delete_account.deleteSuccess"),
+          text: t("delete_account.deleteSuccessMessage"),
+          icon: 'success',
+          confirmButtonColor: '#10b981',
+        });
+
+        // Refresh dashboard data
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      await Swal.fire({
+        title: t("delete_account.deleteError"),
+        text: t("delete_account.deleteErrorMessage"),
+        icon: 'error',
+        confirmButtonColor: '#dc2626',
+      });
+    }
+  };
+
   return (
     <>
       {!isAuthChecked ? (
@@ -205,75 +378,80 @@ const Dashboard = () => {
           <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
             <Card x-chunk="dashboard-01-chunk-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{t('customer')}</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  {t("customer")}
+                </CardTitle>
                 <Building2 className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {data ? data.totalCustomer : t('loading')}
+                  {data ? data.totalCustomer : t("loading")}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {t('totalCustomersRegistered')}
+                  {t("totalCustomersRegistered")}
                 </p>
               </CardContent>
             </Card>
             <Card x-chunk="dashboard-01-chunk-1">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{t('blog')}</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  {t("blog")}
+                </CardTitle>
                 <BookOpenText className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {data ? data.totalBlog : t('loading')}
+                  {data ? data.totalBlog : t("loading")}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {t('totalBlogsPublished')}
+                  {t("totalBlogsPublished")}
                 </p>
               </CardContent>
             </Card>
             <Card x-chunk="dashboard-01-chunk-2">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  {t('appointments')}
+                  {t("appointments")}
                 </CardTitle>
                 <CalendarCheck2 className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {data ? data.totalAppointment : t('loading')}
+                  {data ? data.totalAppointment : t("loading")}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {t('totalAppointmentsScheduled')}
+                  {t("totalAppointmentsScheduled")}
                 </p>
               </CardContent>
             </Card>
             <Card x-chunk="dashboard-01-chunk-3">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  {t('notifications')}
+                  {t("notifications")}
                 </CardTitle>
                 <Bell className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{unreadMessagesCount}</div>
                 <p className="text-xs text-muted-foreground">
-                  {t('recentNotifications')}
+                  {t("recentNotifications")}
                 </p>
               </CardContent>
             </Card>
           </div>
           <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-            <Card className="xl:col-span-2 xl:row-span-2" x-chunk="dashboard-01-chunk-4">
+            <Card
+              className="xl:col-span-2 xl:row-span-2"
+              x-chunk="dashboard-01-chunk-4"
+            >
               <CardHeader className="flex flex-row items-center">
                 <div className="grid gap-2">
-                  <CardTitle>{t('company')}</CardTitle>
-                  <CardDescription>
-                    {t('recentTransactions')}
-                  </CardDescription>
+                  <CardTitle>{t("company")}</CardTitle>
+                  <CardDescription>{t("recentTransactions")}</CardDescription>
                 </div>
                 <div className="ml-auto">
                   <Link href={`/dashboard/formUpload`}>
-                    <Button>{t('uploadFile')}</Button>
+                    <Button>{t("uploadFile")}</Button>
                   </Link>
                 </div>
               </CardHeader>
@@ -281,11 +459,13 @@ const Dashboard = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{t('customer')}</TableHead>
-                      <TableHead className="">{t('contact')}</TableHead>
-                      <TableHead className="">{t('name')}</TableHead>
-                      <TableHead className="">{t('date')}</TableHead>
-                      <TableHead className="text-center">{t('details')}</TableHead>
+                      <TableHead>{t("customer")}</TableHead>
+                      <TableHead className="">{t("contact")}</TableHead>
+                      <TableHead className="">{t("name")}</TableHead>
+                      <TableHead className="">{t("date")}</TableHead>
+                      <TableHead className="text-center">
+                        {t("details")}
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -298,36 +478,65 @@ const Dashboard = () => {
                           </div>
                         </TableCell>
                         <TableCell className="">{user.telephone}</TableCell>
-                        <TableCell className="">
-                          {user.name}
-                        </TableCell>
+                        <TableCell className="">{user.name}</TableCell>
                         <TableCell className="">
                           {formatDateInThailand(user.createdAt)}
                         </TableCell>
-                        <TableCell className="flex justify-center">
+                        <TableCell className="text-center">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="outline">
-                                {<ScanSearch className="h-6 w-6 " />}
+                              <Button variant="outline" className="p-2 mr-2">
+                                {<ScanSearch className="h-4 w-4 " />}
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                               <DropdownMenuSeparator />
                               <Link href={`/dashboard/${user.id}`}>
-                                <DropdownMenuItem>{t('overview')}</DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  {t("overview")}
+                                </DropdownMenuItem>
                               </Link>
 
                               <DropdownMenuSeparator />
                               <Link href={`/dashboard/${user.id}/employee`}>
-                                <DropdownMenuItem>{t('employee')}</DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  {t("employee")}
+                                </DropdownMenuItem>
                               </Link>
 
                               <DropdownMenuSeparator />
-                              <Link href={`/dashboard/${user.id}/data_details/data_visualization`}>
+                              <Link
+                                href={`/dashboard/${user.id}/data_details/data_visualization`}
+                              >
                                 <DropdownMenuItem>
-                                  {t('dataVisualization')}
+                                  {t("dataVisualization")}
                                 </DropdownMenuItem>
                               </Link>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="outline" className="p-2 ">
+                                {<Trash className="h-4 w-4" />}
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onSelect={async (event) => {
+                                event.preventDefault();
+                                setSelectedUserId(user.id);
+                                await fetchYearData(user.id);
+                                setDeleteDataOpen(true);
+                              }}>
+                                {t("delete_intable.deleteData")}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onSelect={(event) => {
+                                event.preventDefault();
+                                deleteAccount(user.id);
+                              }}>
+                                {t("delete_intable.deleteAccount")}
+                              </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
@@ -339,31 +548,41 @@ const Dashboard = () => {
             </Card>
             <div className=" grid row-span-2 gap-4">
               <Card x-chunk="dashboard-01-chunk-5">
-                <CardHeader>
-                  <CardTitle>{t('recentBlogs')}</CardTitle>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle>{t("recentBlogs")}</CardTitle>
+                  <Link href="/blog/admin">
+                    <Button variant="outline" size="sm">
+                      {t("viewAll")}
+                    </Button>
+                  </Link>
                 </CardHeader>
                 {data?.blog && data.blog.length > 0 ? (
-                  data.blog.map((blog) => (
-                    <CardContent key={blog.id} className="grid gap-8">
-                      <div className="flex items-center gap-4">
-                        <div className="grid gap-1">
-                          <p className="text-sm font-medium leading-none">
-                            <Link href={`/blog/${blog.id}`}>{blog.title}</Link>
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {blog.createdAt}
-                          </p>
+                  <>
+                    {/* Take only the first 5 blogs using slice(0,5) */}
+                    {data.blog.slice(0, 5).map((blog) => (
+                      <CardContent key={blog.id} className="grid gap-8">
+                        <div className="flex items-center gap-4">
+                          <div className="grid gap-1">
+                            <p className="text-sm font-medium leading-none">
+                              <Link href={`/blog/${blog.id}`}>
+                                {blog.title}
+                              </Link>
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {blog.createdAt}
+                            </p>
+                          </div>
+                          <div className="ml-auto font-medium">
+                            {blog.category}
+                          </div>
                         </div>
-                        <div className="ml-auto font-medium">
-                          {blog.category}
-                        </div>
-                      </div>
-                    </CardContent>
-                  ))
+                      </CardContent>
+                    ))}
+                  </>
                 ) : (
                   <CardContent className="grid gap-8">
                     <p className="text-sm text-muted-foreground">
-                      {t('noBlogs')}
+                      {t("noBlogs")}
                     </p>
                   </CardContent>
                 )}
@@ -371,10 +590,10 @@ const Dashboard = () => {
 
               <Card className="shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-xl font-bold">{t('calendar')}</CardTitle>
-                  <CardDescription>
-                    {t('calendarDescription')}
-                  </CardDescription>
+                  <CardTitle className="text-xl font-bold">
+                    {t("calendar")}
+                  </CardTitle>
+                  <CardDescription>{t("calendarDescription")}</CardDescription>
                 </CardHeader>
                 <CardContent className="w-full grid grid-col-1 lg:grid-cols-1 mx-auto">
                   <div className="w-full flex ">
@@ -388,13 +607,14 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
             </div>
-            
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>
-                  {t('appointmentsFor', { date: selectedDate?.toLocaleDateString() })}
+                  {t("appointmentsFor", {
+                    date: selectedDate?.toLocaleDateString(),
+                  })}
                 </DialogTitle>
               </DialogHeader>
               <CardContent>
@@ -418,11 +638,91 @@ const Dashboard = () => {
                     ))}
                   </div>
                 ) : (
-                  <p className="mt-2 text-gray-500">
-                    {t('noAppointments')}
-                  </p>
+                  <p className="mt-2 text-gray-500">{t("noAppointments")}</p>
                 )}
               </CardContent>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={deleteDataOpen} onOpenChange={setDeleteDataOpen}>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>{t("delete_intable.deleteData")}</DialogTitle>
+                <p className="text-sm text-muted-foreground">
+                  {t("delete_intable.selectYearToDelete")}
+                </p>
+              </DialogHeader>
+              <div className="max-h-[400px] overflow-y-auto">
+                {yearData?.summary && yearData.summary.length > 0 ? (
+                  yearData.summary.map((item) => (
+                    <div
+                      key={item.year}
+                      className="mb-4 p-4 border rounded-lg hover:bg-gray-50"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold">
+                            {t("year")}: {item.year}
+                          </h3>
+                          <div className="mt-2 space-y-1">
+                            <p className="text-sm">
+                              {t("delete_intable.dataInDatabase")}: 
+                              <Badge 
+                                variant={item.hasData ? "secondary" : "destructive"} 
+                                className="ml-2"
+                              >
+                                {item.hasData ? t("delete_intable.yes") : t("delete_intable.no")}
+                              </Badge>
+                            </p>
+                            <p className="text-sm">
+                              {t("delete_intable.filesInStorage")}: 
+                              <Badge 
+                                variant={item.hasFiles ? "secondary" : "destructive"} 
+                                className="ml-2"
+                              >
+                                {item.hasFiles ? t("delete_intable.yes") : t("delete_intable.no")}
+                              </Badge>
+                            </p>
+                            {item.files.length > 0 && (
+                              <div className="mt-2">
+                                <p className="text-sm font-medium">{t("delete_intable.files")}:</p>
+                                <ul className="ml-4 text-sm">
+                                  {item.files.map((file, index) => (
+                                    <li key={index}>{file}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => deleteYearData(selectedUserId!, item.year)}
+                        >
+                          {t("delete")}
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center p-8 text-center">
+                    <div className="text-muted-foreground mb-2">
+                      <FileX className="h-12 w-12 mx-auto mb-2" />
+                    </div>
+                    <h3 className="text-lg font-semibold mb-1">
+                      {t("delete_intable.noDataFound")}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {t("delete_intable.noDataFoundDescription")}
+                    </p>
+                  </div>
+                )}
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setDeleteDataOpen(false)}>
+                  {t("delete_intable.cancel")}
+                </Button>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         </main>

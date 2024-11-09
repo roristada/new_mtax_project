@@ -17,27 +17,22 @@ const handler = NextAuth({
       async authorize(credentials, req) {
         if (!credentials) return null;
 
-        // Ensure email and password are provided
         if (!credentials.email || !credentials.password) return null;
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
         
-        console.log('User fetched from Prisma:', user);  // Log user fetched
-
-        // Check if user exists and password matches
         if (user && user.password && await bcrypt.compare(credentials.password, user.password)) {
           return {
             id: user.id.toString(),
             email: user.email,
             company: user.company,
             role: user.role,
-            name: user.name,  // Ensure this line is present
+            name: user.name,  
           };
         }
         
-        // Return null if credentials are invalid
         return null;
       },
     }),
@@ -49,30 +44,43 @@ const handler = NextAuth({
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update") {
+        const updatedUser = await prisma.user.findUnique({
+          where: { id: Number(token.sub || token.id) },
+        });
+        
+        if (updatedUser) {
+          token.name = updatedUser.name;
+          token.email = updatedUser.email;
+          token.company = updatedUser.company;
+          token.role = updatedUser.role;
+        }
+      }
+      
       if (user) {
-        console.log("user",user);
         token.id = user.id;
         token.email = user.email;
         token.company = user.company;
-        token.name = user.name ;  // Add this line
+        token.name = user.name;
         token.role = user.role;
       }
-      console.log("JWT token:", token);
+      
       return token;
     },
     async session({ session, token }) {
+      
       session.user = {
-        id: token.id as string,
+        id: token.sub || token.id as string,
         email: token.email as string,
         company: token.company as string,
-        name: token.name as string,  // Ensure this line is present
+        name: token.name as string,
         role: token.role as string,
       };
-      console.log("Session:", session);  // Add this log
       return session;
     },
   },
 });
 
 export { handler as GET, handler as POST };
+

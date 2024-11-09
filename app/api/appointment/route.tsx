@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
         date: new Date(date),
       },
     });
+    
     const formattedDate = new Intl.DateTimeFormat("th-TH", {
       year: "numeric",
       month: "long",
@@ -59,8 +60,47 @@ export async function POST(request: NextRequest) {
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
-        subject: "Appointment Confirmation",
-        text: `Dear ${name},\n\nYour appointment has been successfully created.\n\nDetails:\nCompany: ${company}\nDate: ${formattedDate}\nStart Time: ${startTime}\nEnd Time: ${endTime}\n\nThank you.`,
+        subject: "Mtax Online Accounting : Appointment Request Received",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #2c3e50;">Appointment Request Received</h2>
+            <p style="color: #34495e;">Dear ${name},</p>
+            <p style="color: #34495e;">Thank you for submitting your appointment request. Our staff will review your request and contact you to confirm the appointment.</p>
+            
+            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
+              <h3 style="color: #2c3e50; margin-top: 0;">Appointment Details</h3>
+              <table style="width: 100%; color: #34495e;">
+                <tr>
+                  <td style="padding: 8px 0;"><strong>Company:</strong></td>
+                  <td>${company}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0;"><strong>Date:</strong></td>
+                  <td>${formattedDate}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0;"><strong>Start Time:</strong></td>
+                  <td>${startTime}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0;"><strong>End Time:</strong></td>
+                  <td>${endTime}</td>
+                </tr>
+              </table>
+            </div>
+            
+            <div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #ffc107;">
+              <p style="color: #856404; margin: 0;">
+                <strong>Note:</strong> This is not a confirmation of your appointment. 
+                Our staff will review your request and contact you shortly to confirm the appointment.
+              </p>
+            </div>
+
+            <p style="color: #34495e;">If you have any urgent questions, please contact us directly.</p>
+            <hr style="border: 1px solid #eee; margin: 20px 0;">
+            
+          </div>
+        `,
       };
 
       await transporter.sendMail(mailOptions);

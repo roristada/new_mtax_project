@@ -78,7 +78,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="container max-w-7xl mt-12 border-t pt-6 text-center text-sm text-muted-foreground">
-        &copy; 2024 Acme Accounting. All rights reserved.
+        &copy; 2024 Mtax. All rights reserved.
       </div>
     </footer>
   )

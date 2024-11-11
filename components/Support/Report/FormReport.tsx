@@ -15,7 +15,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
-import useAuthEffect from "@/lib/useAuthEffect";
+import useAuthEffect from "../../../lib/useAuthEffect";
 
 interface FormData {
   name: string;

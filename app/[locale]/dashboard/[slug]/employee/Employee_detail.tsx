@@ -124,10 +124,8 @@ export default function EmployeeDetailsDialog({
           <DialogTitle className="text-2xl font-bold">{t('title', { name: `${employee.title} ${employee.firstName} ${employee.lastName}` })}</DialogTitle>
           <DialogDescription className="flex text-muted-foreground">
             {t('viewDetails')}
-            
           </DialogDescription>
         </DialogHeader>
-
         <div className="py-4 space-y-6">
           <Card>
             <CardContent className="pt-6">

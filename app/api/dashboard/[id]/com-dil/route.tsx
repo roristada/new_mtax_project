@@ -29,7 +29,7 @@ export async function GET(
     let targetYear: number;
 
     if (!year) {
-      // If no year is provided, get the latest year
+      
       const latestYear = await prisma.employee.findFirst({
         where: { companyId: Number(companyId) },
         select: { year: true },
@@ -40,7 +40,7 @@ export async function GET(
       targetYear = parseInt(year);
     }
 
-    // Fetch data for the target year
+    
     const employees = await prisma.employee.findMany({
       where: { year: targetYear, companyId: Number(companyId) },
       include: {
@@ -54,11 +54,11 @@ export async function GET(
       },
     });
 
-    // Process the data to create commission and diligence ranges
+    
     const commissionRanges = processRanges(employees, 'commission');
     const diligenceRanges = processRanges(employees, 'diligence');
 
-    // Get all unique years
+    
     const allYears = await prisma.employee.findMany({
       select: { year: true },
       distinct: ['year'],

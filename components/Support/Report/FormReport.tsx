@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
+import useAuthEffect from "@/lib/useAuthEffect";
 
 interface FormData {
   name: string;
@@ -22,6 +23,7 @@ interface FormData {
   email: string;
   category: string;
   description: string;
+  userId: string;
 }
 
 export default function ProblemReportForm() {
@@ -29,6 +31,7 @@ export default function ProblemReportForm() {
   const [isAuthChecked, setIsAuthChecked] = useState(false);
   const locale = useLocale();
   const [formData, setFormData] = useState<FormData>({
+    userId: "",
     name: "",
     company: "",
     email: "",
@@ -39,14 +42,23 @@ export default function ProblemReportForm() {
   const route = useRouter();
   const t = useTranslations('ProblemReportForm');
 
+  useAuthEffect((authenticated) => {
+    setIsAuthChecked(authenticated);
+  });
+
   useEffect(() => {
+    if (!isAuthChecked) {
+      return;
+    }
     if (session) {
       setFormData((prevData) => ({
         ...prevData,
+        userId: session.user?.id || "",
         company: session.user?.company || "",
         email: session.user?.email || "",
       }));
     }
+    console.log(formData);
   }, [session]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,6 +66,7 @@ export default function ProblemReportForm() {
     console.log("Form submitted:", formData);
 
     setFormData({
+      userId: session?.user?.id || "",
       name: "",
       company: "",
       email: "",

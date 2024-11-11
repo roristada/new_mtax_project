@@ -32,7 +32,7 @@ export default function EmployeeDialog({ isOpen, onClose, employees }: EmployeeD
   const filteredEmployees = employees.filter(employee =>
     employee.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
-
+  
   useEffect(() => {
     if (!isOpen) {
       setCurrentPage(1)

@@ -18,9 +18,9 @@ export async function GET(req: Request) {
                 messages: {
                     where: {
                         isRead: false,
-                        // Assuming admin messages are always read
+                        
                         NOT: {
-                            senderId: { equals: 1 }, // Assuming admin ID is 1
+                            senderId: { equals: 1 }, 
                         },
                     },
                     select: {
@@ -33,7 +33,7 @@ export async function GET(req: Request) {
         const roomsWithUnreadCount = rooms.map(room => ({
             ...room,
             unreadMessagesCount: room.messages.length,
-            messages: undefined, // Remove messages from the response
+            messages: undefined, 
         }));
 
         

@@ -75,9 +75,7 @@ function EmployeeTable({
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   
   let allEmployees: Employee[] = [];
-  
   if (selectedRange) {
-
     const [type, minStr, maxStr] = selectedRange.split('-');
     const min = parseInt(minStr, 10);
     const max = maxStr === 'null' ? null : parseInt(maxStr, 10);
@@ -262,7 +260,6 @@ export default function CommissionDiligencePage() {
             `/api/dashboard/${slug}/com-dil?companyId=${slug}&year=${selectedYearCom}`
           );
           const data = await response.json();
-          console.log("Fetched data:", data); // เพิ่ม log นี้
           setRangeCommission(data.commissionRanges);
           setRangeDiligence(data.diligenceRanges);
         } catch (error) {

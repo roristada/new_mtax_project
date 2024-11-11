@@ -37,7 +37,6 @@ export async function PUT(
       const data = await request.json();
       const userId = params.id;
   
-      // ตรวจสอบ email ซ้ำ
       const existingEmail = await prisma.user.findFirst({
         where: {
           email: data.email,
@@ -53,8 +52,7 @@ export async function PUT(
           { status: 400 }
         );
       }
-  
-      // ตรวจสอบชื่อบริษัทซ้ำ
+      
       const existingCompany = await prisma.user.findFirst({
         where: {
           company: data.company,
@@ -71,7 +69,6 @@ export async function PUT(
         );
       }
   
-      // ถ้าไม่มีข้อมูลซ้ำ ทำการอัพเดท
       const updatedUser = await prisma.user.update({
         where: { id: parseInt(userId) },
         data: {

@@ -7,25 +7,25 @@ import { Storage } from '@google-cloud/storage';
 const prisma = new PrismaClient();
 
 interface CsvRecord {
-  รหัสพนักงาน: string;
-  รหัสบัตรรูด: string;
-  คำนำหน้าไทย: string;
-  ชื่อภาษาไทย: string;
-  นามสกุลภาษาไทย: string;
-  เพศ: string;
-  แผนก: string;
-  ตำแหน่ง: string;
-  วันเริ่มงาน: string;
-  วันที่ออก?: string;
-  เลขที่บัตรประชาชน: string;
-  เงินเดือนปัจจุบัน: string;
-  อายุ: string;
-  วันเกิด: string;
-  เดือน: string;
-  งวด: string;
-  เงินเดือน: string;
-  ค่ากะ: string;
-  ค่าอาหาร: string;
+  "รหัสพนักงาน": string;
+  "รหัสบัตรรูด": string;
+  "คำนำหน้าไทย": string;
+  "ชื่อภาษาไทย": string;
+  "นามสกุลภาษาไทย": string;
+  "เพศ": string;
+  "แผนก": string;
+  "ตำแหน่ง": string;
+  "วันเริ่มงาน": string;
+  "วันที่ออก"?: string;
+  "เลขที่บัตรประชาชน": string;
+  "เงินเดือนปัจจุบัน": string;
+  "อายุ": string;
+  "วันเกิด": string;
+  "เดือน": string;
+  "งวด": string;
+  "เงินเดือน": string;
+  "ค่ากะ": string;
+  "ค่าอาหาร": string;
   "รายได้ 2": string;
   "รายได้ 3": string;
   "รายได้ 4": string;
@@ -33,11 +33,11 @@ interface CsvRecord {
   "รายได้ 6": string;
   "รายได้ 7": string;
   "รายได้ 8": string;
-  ภาษีพนักงานจ่าย: string;
-  ภาษีบริษัทจ่ายให้: string;
+  "ภาษีพนักงานจ่าย": string;
+  "ภาษีบริษัทจ่ายให้": string;
   "ปกส พนักงาน": string;
   "ปกส บริษัท จ่าย": string;
-  กองทุนสำรอง: string;
+  "กองทุนสำรอง": string;
   "รายหัก 1": string;
   "รายหัก 2": string;
   "รายหัก 3": string;
@@ -119,32 +119,10 @@ async function uploadToStorage(req: NextRequest) {
     const gcsFile = bucket.file(fileName);
     await gcsFile.save(fileBuffer);
     console.log(`File uploaded to ${fileName}`);
-    // const publicUrl = `https://storage.googleapis.com/${bucketName}/${gcsFile.name}`
-    // console.log(publicUrl)
-
-    // const fileStream = gcsFile.createReadStream();
 
     const [fileContents] = await gcsFile.download();
     const fileString = fileContents.toString("utf-8");
 
-    // const arrayBuffer = await file.arrayBuffer();
-    // const fileName = file instanceof File ? file.name : "unknown";
-    // const dateFolder = new Date().toISOString().split("T")[0];
-
-    // const dirPath = path.join("public", "file_upload", dateFolder);
-
-    // if (!fs.existsSync(dirPath)) {
-    //   fs.mkdirSync(dirPath, { recursive: true });
-    // }
-
-    // const filePath = path.join(dirPath, fileName);
-    // fs.writeFileSync(filePath, new Uint8Array(arrayBuffer));
-
-    
-
-    // const parsedData: CsvRecord[] = await parseCSV(filePath);
-
-    
     
     const parsedData: CsvRecord[] = await new Promise((resolve, reject) => {
       Papa.parse<CsvRecord>(fileString, {
@@ -157,24 +135,15 @@ async function uploadToStorage(req: NextRequest) {
     });
 
     
-    // async function parseCSV(filePath: string): Promise<CsvRecord[]> {
-    //   const csvData = fs.readFileSync(filePath, "utf-8");
-    //   return Papa.parse<CsvRecord>(csvData, {
-    //     header: true,
-    //     dynamicTyping: true,
-    //     skipEmptyLines: true,
-    //   }).data;
-    // }
     
 
-    const batchSize = 100; // Adjust batch size as necessary
+    const batchSize = 100; 
     const batches = chunk(parsedData, batchSize);
     let recordsInserted = 0;
 
     for (const batch of batches) {
       try {
         await prisma.$transaction(async (tx) => {
-          // รวบรวมข้อมูลสำหรับ bulk create/update
           const employeeData = [];
           const incomeData = [];
           const expenseData = [];

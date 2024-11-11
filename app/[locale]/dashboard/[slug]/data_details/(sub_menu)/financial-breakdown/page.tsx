@@ -44,18 +44,6 @@ interface IncomeBreakdown {
   bonus: number;
 }
 
-interface YearlyIncomeBreakdown {
-  [year: number]: IncomeBreakdown;
-}
-
-interface YearlyExpenseBreakdown {
-  [year: number]: ExpenseBreakdown;
-}
-
-interface YearlyTaxBreakdown {
-  [year: number]: TaxBreakdown;
-}
-
 interface ExpenseBreakdown {
   loan: number;
   salaryAdvance: number;
@@ -69,6 +57,18 @@ interface TaxBreakdown {
   socialSecurityEmployee: number;
   socialSecurityCompany: number;
   providentFund: number;
+}
+
+interface YearlyIncomeBreakdown {
+  [year: number]: IncomeBreakdown;
+}
+
+interface YearlyExpenseBreakdown {
+  [year: number]: ExpenseBreakdown;
+}
+
+interface YearlyTaxBreakdown {
+  [year: number]: TaxBreakdown;
 }
 
 const createEmptyIncomeBreakdown = (): IncomeBreakdown => ({
@@ -128,7 +128,6 @@ export default function FinancialBreakdownPage() {
       }).format(amount);
     } catch (error) {
       console.error("Error formatting currency:", error);
-      // Fallback to a simple formatting if Intl.NumberFormat fails
       return `฿${amount.toFixed(2)}`;
     }
   };
@@ -243,7 +242,6 @@ export default function FinancialBreakdownPage() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 bg-gray-50">
-      
         <Card className="w-full mb-4 shadow-lg">
           <CardHeader className="flex flex-row justify-between items-center">
             <div>
@@ -327,9 +325,6 @@ export default function FinancialBreakdownPage() {
             </div>
           </CardFooter>
         </Card>
-      
-
-      
         <Card className="w-full mb-4 shadow-lg">
           <CardHeader>
             <CardTitle className="text-xl font-semibold flex items-center gap-2">

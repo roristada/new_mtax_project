@@ -153,7 +153,6 @@ const EmployeeChart: React.FC<EmployeeChartDialogProps> = ({
     "income" | "expense" | "tax"
   >("income");
   const [selectedMonth, setSelectedMonth] = useState<number | "all">("all");
-  // Add this line to use translations
   const t = useTranslations('Employee_Chart'); 
   const prepareIncomeData = (employee: Employee) => {
     return [
@@ -373,7 +372,7 @@ const EmployeeChart: React.FC<EmployeeChartDialogProps> = ({
 
       return {
         monthNumber: income.month,
-        monthName: t(`months.${income.month - 1}`), // Use the new translation
+        monthName: t(`months.${income.month - 1}`), 
         income: totalIncome,
         expense: totalExpense,
         tax: totalTax,
@@ -382,7 +381,6 @@ const EmployeeChart: React.FC<EmployeeChartDialogProps> = ({
     })
     .sort((a, b) => a.monthNumber - b.monthNumber);
 
-  // Check if all data values are zero
   const isDataEmpty = combinedData?.every(
     (data) => data.income === 0 && data.expense === 0 && data.tax === 0
   );

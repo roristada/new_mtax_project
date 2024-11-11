@@ -55,7 +55,7 @@ import FinancialMonthLineChart from "./(Charts)/Month/LineChart";
 
 import RangeComChart from "../../../../../components/Charts/Range_Commission/BarChart";
 import RangeDilChart from "../../../../../components/Charts/Range_Diligence/BarChart";
-import Radian from "../../../../../components/Charts/Radian/Employee_Count/Radian";
+import Radian from "../../../../../components/Charts/Radian/Radian";
 import ExportButton from "../../../../../components/ExportButton/ExportButton";
 
 import { useTranslations } from 'next-intl';
@@ -76,25 +76,6 @@ interface MonthlySummary {
   totalTax: number;
   netIncome: number;
 }
-
-const chartConfig = {
-  Income: {
-    label: "Income",
-    color: "hsl(var(--chart-1))",
-  },
-  Expense: {
-    label: "Expenses",
-    color: "hsl(var(--chart-2))",
-  },
-  Tax: {
-    label: "Tax",
-    color: "hsl(var(--chart-3))",
-  },
-  netIncome: {
-    label: "Net",
-    color: "hsl(var(--chart-4))",
-  },
-} satisfies ChartConfig;
 
 interface ChartData {
   monthIndex: number;
@@ -119,18 +100,6 @@ interface IncomeBreakdown {
   bonus: number;
 }
 
-interface YearlyIncomeBreakdown {
-  [year: number]: IncomeBreakdown;
-}
-
-interface YearlyExpenseBreakdown {
-  [year: number]: ExpenseBreakdown;
-}
-
-interface YearlyTaxBreakdown {
-  [year: number]: TaxBreakdown;
-}
-
 interface ExpenseBreakdown {
   loan: number;
   salaryAdvance: number;
@@ -146,12 +115,45 @@ interface TaxBreakdown {
   providentFund: number;
 }
 
+interface YearlyIncomeBreakdown {
+  [year: number]: IncomeBreakdown;
+}
+
+interface YearlyExpenseBreakdown {
+  [year: number]: ExpenseBreakdown;
+}
+
+interface YearlyTaxBreakdown {
+  [year: number]: TaxBreakdown;
+}
+
+
+
 const formatYearRange = (years: Set<number>): string => {
   const sortedYears = Array.from(years).sort((a, b) => b - a);
   if (sortedYears.length === 0) return "";
   if (sortedYears.length === 1) return sortedYears[0].toString();
   return `${sortedYears[sortedYears.length - 1]}-${sortedYears[0]}`;
 };
+
+const chartConfig = {
+  Income: {
+    label: "Income",
+    color: "hsl(var(--chart-1))",
+  },
+  Expense: {
+    label: "Expenses",
+    color: "hsl(var(--chart-2))",
+  },
+  Tax: {
+    label: "Tax",
+    color: "hsl(var(--chart-3))",
+  },
+  netIncome: {
+    label: "Net",
+    color: "hsl(var(--chart-4))",
+  },
+} satisfies ChartConfig;
 
 export default function Compare({ slug }: { slug: string }) {
   const t = useTranslations('Compare');
@@ -233,7 +235,6 @@ export default function Compare({ slug }: { slug: string }) {
         });
 
         setChartData(sortedData);
-
         // Set income, expense, and tax breakdown data
         setIncomeBreakdownData(groupDataByYear(data, "incomeBreakdown"));
         setExpenseBreakdownData(groupDataByYear(data, "expenseBreakdown"));
@@ -275,9 +276,8 @@ export default function Compare({ slug }: { slug: string }) {
     };
 
     fetchAllData();
-  }, [slug, isAuthChecked]); // Add slug to the dependency array
+  }, [slug, isAuthChecked]);
 
-  // Helper function to group data by year
   const groupDataByYear = (data: any[], key: string) => {
     return data.reduce((acc, item) => {
       if (item[key]) {
@@ -456,7 +456,7 @@ export default function Compare({ slug }: { slug: string }) {
       fetchYears();
       console.log(selectedMonthYear);
     }
-  }, [selectedMonthYear]); // Dependency array to run effect when selectedMonthYear changes
+  }, [selectedMonthYear]); // Dependency array to run effect when selectedMonthYear change
 
 
 

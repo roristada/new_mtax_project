@@ -10,17 +10,25 @@ import {
 
 import IncomeBreakdownDonutChart from "../../../../components/Charts/Donut/IncomeBreakdownDonutChart";
 import BarChart_Component from "../../../../components/Charts/Bar/BarChart";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../../components/ui/card";
 import { ChartConfig } from "../../../../components/ui/chart";
 
 import { useEffect, useMemo, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../../../components/ui/tabs";
 import ExpenseBreakdownDonutChart from "../../../../components/Charts/Donut/ExpenseBreakdownDonutChart ";
 import TaxBreakdownDonutChart from "../../../../components/Charts/Donut/TaxBreakdownDonutChart";
 import useAuthEffect from "../../../../lib/useAuthEffect";
 import { useTranslations } from "next-intl";
-
-
 
 interface MonthlySummary {
   month: number;
@@ -46,6 +54,12 @@ interface ChartData {
   Expense: number;
 }
 
+interface EmployeeData {
+  incomeBreakdown: IncomeBreakdown;
+  expenseBreakdown: ExpenseBreakdown;
+  taxBreakdown: TaxBreakdown;
+}
+
 interface IncomeBreakdown {
   salary: number;
   shiftAllowance: number;
@@ -57,12 +71,6 @@ interface IncomeBreakdown {
   brokerFee: number;
   otherIncome: number;
   bonus: number;
-}
-
-interface EmployeeData {
-  incomeBreakdown: IncomeBreakdown;
-  expenseBreakdown: ExpenseBreakdown;
-  taxBreakdown: TaxBreakdown;
 }
 
 interface ExpenseBreakdown {
@@ -81,13 +89,12 @@ interface TaxBreakdown {
 }
 
 export default function Component({ params }: { params: { slug: string } }) {
-  const t = useTranslations('Dashboard');
+  const t = useTranslations("Dashboard");
 
   const [isAuthChecked, setIsAuthChecked] = useState(false);
   useAuthEffect((authenticated) => {
     setIsAuthChecked(authenticated);
   });
- 
 
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [incomeBreakdown, setIncomeBreakdown] =
@@ -100,18 +107,16 @@ export default function Component({ params }: { params: { slug: string } }) {
   const [totalIncomedata, setTotalIncomedata] = useState(0);
   const [totalExpensedata, setTotalExpensedata] = useState(0);
   const [totalTaxdata, setTotalTaxdata] = useState(0);
-
   const [netIncomedata, setNetIncomedata] = useState(0);
-
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log(isAuthChecked)
   useEffect(() => {
-    if (!isAuthChecked){
+    if (!isAuthChecked) {
       return;
-    };
+    }
 
     setIsLoading(true);
+
     const fetchData = async () => {
       try {
         const res = await fetch(`/api/dashboard/` + params.slug);
@@ -135,9 +140,7 @@ export default function Component({ params }: { params: { slug: string } }) {
           (sum, value) => sum + value,
           0
         );
-
         const netIncome = totalIncome - totalExpense;
-
         setIncomeBreakdown(totalIncomeBreakdown);
         setExpenseBreakdown(totalExpenseBreakdown);
         setTaxBreakdown(totalTaxBreakdown);
@@ -172,19 +175,19 @@ export default function Component({ params }: { params: { slug: string } }) {
 
   const chartBarConfig = {
     income: {
-      label: t('labels.income'),
+      label: t("labels.income"),
       color: "hsl(var(--chart-1))",
     },
     expense: {
-      label: t('labels.expense'),
+      label: t("labels.expense"),
       color: "hsl(var(--chart-2))",
     },
   } satisfies ChartConfig;
 
   const formatThaiCurrency = (amount: number) => {
-    return new Intl.NumberFormat(t('Charts.locale'), {
+    return new Intl.NumberFormat(t("Charts.locale"), {
       style: "currency",
-      currency: t('Charts.currencyCode'),
+      currency: t("Charts.currencyCode"),
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
@@ -194,8 +197,6 @@ export default function Component({ params }: { params: { slug: string } }) {
     if (previous === 0) return 0;
     return ((current - previous) / previous) * 100;
   };
-
-  
 
   const FinancialCard = ({
     title,
@@ -224,7 +225,7 @@ export default function Component({ params }: { params: { slug: string } }) {
         <CardContent>
           <div className="text-2xl font-bold">{formatThaiCurrency(amount)}</div>
           <p className="text-xs text-muted-foreground mt-1">
-            {t('Charts.year')} {year}
+            {t("Charts.year")} {year}
           </p>
           {percentageChange !== undefined && (
             <div
@@ -244,7 +245,8 @@ export default function Component({ params }: { params: { slug: string } }) {
                 <MinusIcon className="w-4 h-4 mr-1" />
               )}
               <span>
-                {Math.abs(percentageChange).toFixed(2)}% {t('from_previous_year')}
+                {Math.abs(percentageChange).toFixed(2)}%{" "}
+                {t("from_previous_year")}
               </span>
             </div>
           )}
@@ -259,25 +261,25 @@ export default function Component({ params }: { params: { slug: string } }) {
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <FinancialCard
-              title={t('labels.totalincome')}
+              title={t("labels.totalincome")}
               amount={totalIncomedata}
               icon={DollarSignIcon}
               year={chartData.length > 0 ? Number(chartData[0].year) : 0}
             />
             <FinancialCard
-              title={t('labels.totalexpense')}
+              title={t("labels.totalexpense")}
               amount={totalExpensedata}
               icon={DollarSignIcon}
               year={chartData.length > 0 ? Number(chartData[0].year) : 0}
             />
             <FinancialCard
-              title={t('labels.totaltax')}
+              title={t("labels.totaltax")}
               amount={totalTaxdata}
               icon={DollarSignIcon}
               year={chartData.length > 0 ? Number(chartData[0].year) : 0}
             />
             <FinancialCard
-              title={t('labels.netincome')}
+              title={t("labels.netincome")}
               amount={netIncomedata}
               icon={DollarSignIcon}
               year={chartData.length > 0 ? Number(chartData[0].year) : 0}
@@ -291,16 +293,19 @@ export default function Component({ params }: { params: { slug: string } }) {
                     <Loader2 className="h-8 w-8 animate-spin" />
                   </div>
                 ) : (
-                  <BarChart_Component chartData={memoizedChartData} chartConfig={chartBarConfig} />
+                  <BarChart_Component
+                    chartData={memoizedChartData}
+                    chartConfig={chartBarConfig}
+                  />
                 )}
               </CardContent>
             </Card>
             <Card>
               <Tabs defaultValue="income" className="mt-8 w-full">
                 <TabsList className="ms-6">
-                  <TabsTrigger value="income">{t('tabs.income')}</TabsTrigger>
-                  <TabsTrigger value="expense">{t('tabs.expense')}</TabsTrigger>
-                  <TabsTrigger value="tax">{t('tabs.tax')}</TabsTrigger>
+                  <TabsTrigger value="income">{t("tabs.income")}</TabsTrigger>
+                  <TabsTrigger value="expense">{t("tabs.expense")}</TabsTrigger>
+                  <TabsTrigger value="tax">{t("tabs.tax")}</TabsTrigger>
                 </TabsList>
                 <TabsContent value="income">
                   <CardContent>
@@ -309,7 +314,9 @@ export default function Component({ params }: { params: { slug: string } }) {
                         <Loader2 className="h-8 w-8 animate-spin" />
                       </div>
                     ) : (
-                      <IncomeBreakdownDonutChart incomeBreakdown={memoizedIncomeBreakdown} />
+                      <IncomeBreakdownDonutChart
+                        incomeBreakdown={memoizedIncomeBreakdown}
+                      />
                     )}
                   </CardContent>
                 </TabsContent>
@@ -320,7 +327,9 @@ export default function Component({ params }: { params: { slug: string } }) {
                         <Loader2 className="h-8 w-8 animate-spin" />
                       </div>
                     ) : (
-                      <ExpenseBreakdownDonutChart ExpenseBreakdown={memoizedExpenseBreakdown} />
+                      <ExpenseBreakdownDonutChart
+                        ExpenseBreakdown={memoizedExpenseBreakdown}
+                      />
                     )}
                   </CardContent>
                 </TabsContent>
@@ -331,7 +340,9 @@ export default function Component({ params }: { params: { slug: string } }) {
                         <Loader2 className="h-8 w-8 animate-spin" />
                       </div>
                     ) : (
-                      <TaxBreakdownDonutChart taxBreakdown={memoizedTaxBreakdown} />
+                      <TaxBreakdownDonutChart
+                        taxBreakdown={memoizedTaxBreakdown}
+                      />
                     )}
                   </CardContent>
                 </TabsContent>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { TrendingUp, ArrowUpRight, ArrowDownRight, Loader2 } from "lucide-react"
+import { TrendingUp, Loader2 } from "lucide-react"
 import { Bar, BarChart, XAxis, YAxis, Tooltip, Cell, ResponsiveContainer } from "recharts"
 import {
   Card,
@@ -11,7 +11,7 @@ import {
 } from "../../../components/ui/card"
 import { ChartContainer, ChartTooltipContent } from "../../../components/ui/chart"
 import EmployeeDialog from "../Range_Commission/EmployeeDialog"
-import Loading from "../../../components/Loading/Loading"
+
 import { useTranslations } from "next-intl"
 
 interface Employee {

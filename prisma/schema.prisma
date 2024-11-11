@@ -24,6 +24,7 @@ model User {
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
   resetTokens      PasswordResetToken[]
+  reports          Report[]
 }
 
 model Post {
@@ -133,6 +134,7 @@ model Appointment {
 
 model Report {
   id             Int      @id @default(autoincrement())
+  userId         Int
   name           String
   company        String
   email          String
@@ -141,6 +143,7 @@ model Report {
   problem_report String?
   status         String   @default("pending")
   createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id])
 }
 
 model Room {
@@ -157,7 +160,6 @@ model Message {
   id        Int      @id @default(autoincrement())
   content   String
   timestamp DateTime @default(now())
-
   senderId   Int
   receiverId Int
   roomId     Int

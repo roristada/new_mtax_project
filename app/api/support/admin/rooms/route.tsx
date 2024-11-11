@@ -10,9 +10,9 @@ export async function GET(req: Request) {
         messages: {
           where: {
             isRead: false,
-            // Assuming admin messages are always read
+            
             NOT: {
-              senderId: { equals: 1 }, // Assuming admin ID is 1
+              senderId: { equals: 1 }, 
             },
           },
           select: {

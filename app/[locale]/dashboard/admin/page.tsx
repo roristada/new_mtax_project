@@ -63,7 +63,6 @@ interface DashboardData {
     createdAt: string;
   }[];
   blog: {
-    // Note: using `blog` instead of `blogs`
     id: number;
     title: string;
     category: string;
@@ -149,15 +148,12 @@ const Dashboard = () => {
       try {
         const res = await fetch(`/api/appointment`);
         const data = await res.json();
-
-        // Sort appointments by date
         const sortedAppointments = data.appointments.sort(
           (a: Appointment, b: Appointment) => {
             return new Date(a.date).getTime() - new Date(b.date).getTime();
           }
         );
 
-        // Compare with existing appointments
         if (
           JSON.stringify(sortedAppointments) !== JSON.stringify(appointments)
         ) {
@@ -167,7 +163,7 @@ const Dashboard = () => {
       } catch (error) {
         console.error("Failed to fetch appointments:", error);
       } finally {
-        setLoading(false); // Set loading to false after fetching data
+        setLoading(false); 
       }
     }
 
@@ -175,8 +171,6 @@ const Dashboard = () => {
       try {
         const res = await fetch(`/api/support/admin/rooms`);
         const data = await res.json();
-
-        // Compare with existing unread messages count
         if (data.unreadMessagesCount !== unreadMessagesCount) {
           setUnreadMessagesCount(data.unreadMessagesCount);
         }
@@ -225,13 +219,9 @@ const Dashboard = () => {
     }
   };
 
-  // เพิ่ม function สำหรับลบข้อมูล
   const deleteYearData = async (companyId: number, year: number) => {
     try {
-      // ปิด Dialog ก่อนแสดง Swal
       setDeleteDataOpen(false);
-
-      // Show confirmation dialog
       const result = await Swal.fire({
         title: t("delete_intable.confirmDeleteTitle", {year: year}),
         text: t("delete_intable.confirmDeleteText"),
@@ -241,11 +231,9 @@ const Dashboard = () => {
         cancelButtonColor: '#6b7280',
         confirmButtonText: t("delete_intable.delete"),
         cancelButtonText: t("delete_intable.cancel"),
-        // กำหนด z-index ให้สูงกว่า Dialog
         
       });
 
-      // If user confirms
       if (result.isConfirmed) {
         Swal.fire({
           title: t("delete_intable.deleting"),
@@ -267,10 +255,8 @@ const Dashboard = () => {
         if (!response.ok) {
           throw new Error('Failed to delete data');
         }
-
         const data = await response.json();
         
-        // Refresh the data
         await fetchYearData(companyId);
         
         await Swal.fire({
@@ -281,10 +267,8 @@ const Dashboard = () => {
          
         });
 
-        // เปิด Dialog อีกครั้งหลังจากลบเสร็จ
         setDeleteDataOpen(true);
       } else {
-        // ถ้ากด Cancel ให้เปิด Dialog อีกครั้ง
         setDeleteDataOpen(true);
       }
     } catch (error) {
@@ -297,18 +281,13 @@ const Dashboard = () => {
         
       });
       
-      // เปิด Dialog อีกครั้งในกรณีเกิด error
       setDeleteDataOpen(true);
     }
   };
 
-  // เพิ่มฟังก์ชันลบบัญชี
   const deleteAccount = async (userId: number) => {
     try {
-      // ปิด Dialog ถ้ามีการเปิดอยู่
       setDeleteDataOpen(false);
-
-      // แสดง confirmation dialog
       const result = await Swal.fire({
         title: t("delete_account.confirmDeleteTitle"),
         text: t("delete_account.confirmDeleteText"),
@@ -321,7 +300,6 @@ const Dashboard = () => {
       });
 
       if (result.isConfirmed) {
-        // แสดง loading
         Swal.fire({
           title: t("delete_account.deleting"),
           html: t("delete_account.deletingMessage"),
@@ -341,18 +319,13 @@ const Dashboard = () => {
         if (!response.ok) {
           throw new Error('Failed to delete account');
         }
-
         const data = await response.json();
-
-        // แสดงข้อความสำเร็จ
         await Swal.fire({
           title: t("delete_account.deleteSuccess"),
           text: t("delete_account.deleteSuccessMessage"),
           icon: 'success',
           confirmButtonColor: '#10b981',
         });
-
-        // Refresh dashboard data
         window.location.reload();
       }
     } catch (error) {

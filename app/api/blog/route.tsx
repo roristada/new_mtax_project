@@ -11,8 +11,7 @@ const storage = new Storage({
     client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
     private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY?.replace(/\\n/g, '\n'),
   },
-});
-
+})
 const bucketName = 'mtax-storage-file';
 
 export async function POST(request: NextRequest) {
@@ -80,7 +79,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    // Fetch posts with author information
+    
     const data = await prisma.post.findMany({
       include: {
         author: {
@@ -91,19 +90,16 @@ export async function GET() {
       },
     });
 
-    // Fetch unique categories
+    
     const categories = await prisma.post.groupBy({
       by: ['category'],
       _count: {
-        category: true, // Count the number of posts in each category (optional)
+        category: true, 
       },
     });
 
-
-    // Format categories for easier access
     const categoryNames = categories.map((category) => category.category);
 
-    // Return both posts and categories
     return NextResponse.json({ posts: data, categories: categoryNames }, { status: 200 });
 
   } catch (error) {

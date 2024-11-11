@@ -11,13 +11,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../../../components/ui/card";
+} from "../../ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "../../../../components/ui/chart";
+} from "../../ui/chart";
 
 import {
   Select,
@@ -25,7 +25,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../../../components/ui/select";
+} from "../../ui/select";
 import { useTranslations } from "next-intl";
 
 interface EmployeeCountGenderByYear {

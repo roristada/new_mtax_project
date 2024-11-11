@@ -45,7 +45,7 @@ export async function GET(req: Request) {
     },
   });
 
-  // Process data to calculate summaries
+  
   const summaries = calculateMonthlyFinancialSummaries(incomeData, expenseData, taxData);
 
   return NextResponse.json(summaries);
@@ -151,7 +151,7 @@ function calculateMonthlyFinancialSummaries(income: any[], expense: any[], tax: 
     }
   });
 
-  // Calculate net income for each month
+  
   Object.values(monthlyData).forEach((data) => {
     data.netIncome = data.totalIncome - data.totalExpense - data.totalTax;
   });

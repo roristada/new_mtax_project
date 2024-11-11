@@ -80,9 +80,8 @@ const BreakdownChart: React.FC<BreakdownChartProps> = ({ incomeBreakdown, expens
     : [];
 
   const totalValue = chartData.reduce((acc, entry) => acc + entry.value, 0);
-
-  // Group small slices into "Other"
-  const threshold = 0.03; // 3%
+  
+  const threshold = 0.03; 
   const groupedData = chartData.reduce((acc, entry) => {
     if (entry.value / totalValue < threshold) {
       const otherIndex = acc.findIndex((item) => item.name === "Other");
@@ -182,6 +181,7 @@ const BreakdownChart: React.FC<BreakdownChartProps> = ({ incomeBreakdown, expens
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
+          
           <Tooltip
             content={({ active, payload }) => {
               if (active && payload && payload.length) {

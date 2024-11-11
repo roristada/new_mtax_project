@@ -303,8 +303,7 @@ console.log(session?.user?.role);
                 className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center gap-2"
                 onClick={() =>
                   signOut({
-                    callbackUrl:
-                      "https://newmtaxproject-production.up.railway.app/",
+                    callbackUrl: getBaseUrl(),
                   })
                 }
               >

@@ -22,10 +22,13 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
-import { ChartContainer, ChartTooltipContent } from "../../../components/ui/chart";
+import {
+  ChartContainer,
+  ChartTooltipContent,
+} from "../../../components/ui/chart";
 import EmployeeDialog from "./EmployeeDialog";
 import Loading from "../../../components/Loading/Loading";
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 
 interface Employee {
   name: string;
@@ -46,8 +49,8 @@ export default function Component({
 }: {
   rangeCommission: CommissionRange[];
 }) {
-  const t = useTranslations('RangeCommission');
-  
+  const t = useTranslations("RangeCommission");
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedEmployees, setSelectedEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,27 +58,27 @@ export default function Component({
 
   const chartConfig: Record<string, { label: string; color: string }> = {
     count: {
-      label: t('employees'),
+      label: t("employees"),
       color: "",
     },
     "0-10000": {
-      label: t('range1'),
+      label: t("range1"),
       color: "hsl(var(--chart-1))",
     },
     "10001-20000": {
-      label: t('range2'),
+      label: t("range2"),
       color: "hsl(var(--chart-2))",
     },
     "20001-30000": {
-      label: t('range3'),
+      label: t("range3"),
       color: "hsl(var(--chart-3))",
     },
     "30001-40000": {
-      label: t('range4'),
+      label: t("range4"),
       color: "hsl(var(--chart-4))",
     },
     "40001-null": {
-      label: t('range5'),
+      label: t("range5"),
       color: "hsl(var(--chart-5))",
     },
   };
@@ -108,7 +111,7 @@ export default function Component({
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">{t('error')}</h2>
+          <h2 className="text-2xl font-bold text-red-600 mb-4">{t("error")}</h2>
           <p className="text-gray-600">{error}</p>
         </div>
       </div>
@@ -120,7 +123,7 @@ export default function Component({
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold">{title}</CardTitle>
         <CardDescription className="text-sm text-muted-foreground">
-          {t('distribution')}
+          {t("distribution")}
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0 h-[300px] max-w-[500px] mx-auto">
@@ -168,11 +171,9 @@ export default function Component({
       <CardFooter className="flex flex-col items-start gap-2 text-sm pt-4">
         <div className="flex items-center gap-2 font-medium">
           <TrendingUp className="h-4 w-4 text-green-500" />
-          <span>{t('commissionRangesThisYear')}</span>
+          <span>{t("commissionRangesThisYear")}</span>
         </div>
-        <div className="text-muted-foreground">
-          {t('showingDistribution')}
-        </div>
+        <div className="text-muted-foreground">{t("showingDistribution")}</div>
       </CardFooter>
     </Card>
   );
@@ -180,7 +181,7 @@ export default function Component({
   return (
     <div className="w-full mx-auto p-4 space-y-8">
       <div className="grid gap-8 md:grid-cols-1">
-        {renderChart(rangeCommission, t('commissionRanges'))}
+        {renderChart(rangeCommission, t("commissionRanges"))}
       </div>
       <EmployeeDialog
         isOpen={isDialogOpen}

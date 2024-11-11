@@ -7,11 +7,12 @@ const prisma = new PrismaClient();
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, company, email, category, description } = body;
+    const { name, company, email, category, description , userId} = body;
 
     
     const report = await prisma.report.create({
       data: {
+        userId: parseInt(userId),
         name,
         company,
         email,
@@ -44,12 +45,11 @@ export async function PATCH(request: Request) {
     const body = await request.json();
     const { id, problemReport } = body;
 
-    // Update the report in the database
     const updatedReport = await prisma.report.update({
       where: { id },
       data: {
         problem_report: problemReport,
-        status: "resolved", // Optionally, update the status to "resolved" if applicable
+        status: "resolved", 
       },
     });
 
@@ -62,9 +62,8 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const { id } = await request.json(); // Extract the id from the request body
+    const { id } = await request.json(); 
 
-    // Delete the report in the database
     const deletedReport = await prisma.report.delete({
       where: { id },
     });

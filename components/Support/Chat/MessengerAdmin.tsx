@@ -112,7 +112,9 @@ export default function MessengerAdmin({ selectedRoom }: MessengerAdminProps) {
   }
 
   if (!selectedRoom) {
-    return <div className="text-center">Please select a room to start chatting.</div>;
+    return (
+      <div className="text-center">Please select a room to start chatting.</div>
+    );
   }
 
   return (

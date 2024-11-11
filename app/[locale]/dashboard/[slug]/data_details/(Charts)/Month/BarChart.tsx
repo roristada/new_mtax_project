@@ -16,7 +16,6 @@ import {
   YAxis,
 } from "recharts";
 
-// Function to convert month numbers to abbreviated names
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 interface MonthlySummary {

@@ -49,24 +49,24 @@ import Swal from "sweetalert2";
 import { useTranslations } from "next-intl";
 
 interface SupportCase {
-  id: string; // Add the id property
+  id: string; 
   name: string;
   category: string;
   status: string;
   description: string;
   createdAt: string;
-  problem_report?: string; // Optional property for the resolution report
+  problem_report?: string; 
 }
 
 export default function SupportAdmin() {
   const t = useTranslations('SupportAdmin');
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(6);
-  const [report, setReport] = useState<SupportCase[]>([]); // Specify the array type as SupportCase[]
+  const [report, setReport] = useState<SupportCase[]>([]); 
   const [totalPages, setTotalPages] = useState(0);
-  const [selectedCase, setSelectedCase] = useState<SupportCase | null>(null); // Allow null for cases where no case is selected
-  const [problemReport, setProblemReport] = useState(""); // For storing the report input
-  const [searchQuery, setSearchQuery] = useState(""); // Add state for search query
+  const [selectedCase, setSelectedCase] = useState<SupportCase | null>(null); 
+  const [problemReport, setProblemReport] = useState(""); 
+  const [searchQuery, setSearchQuery] = useState(""); 
 
   useEffect(() => {
     const fetchSupport = async () => {
@@ -79,7 +79,6 @@ export default function SupportAdmin() {
     fetchSupport();
   }, [entriesPerPage]);
 
-  // Filter the report based on the search query
   const filteredReport = report.filter((caseItem) => {
     const categoryMatch = caseItem.category
       .toLowerCase()
@@ -90,7 +89,6 @@ export default function SupportAdmin() {
     return categoryMatch || dateMatch;
   });
 
-  // Calculate the starting and ending index for slicing the filtered report
   const startIndex = (currentPage - 1) * entriesPerPage;
   const endIndex = startIndex + entriesPerPage;
   const paginatedReport = filteredReport.slice(startIndex, endIndex);

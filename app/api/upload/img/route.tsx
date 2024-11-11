@@ -1,4 +1,4 @@
-// /app/api/upload/route.ts
+
 import { NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
@@ -33,20 +33,17 @@ export async function POST(req: Request) {
   const fileName = `${uuidv4()}-${file.name}`;
 
   try {
-    // Convert the file to a buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-
-    // Upload the file to Google Cloud Storage
     const bucket = storage.bucket(bucketName);
-    const blob = bucket.file(`img_upload/${fileName}`); // Add 'img_upload/' prefix
+    const blob = bucket.file(`img_upload/${fileName}`); 
     await blob.save(buffer, {
       metadata: {
         contentType: file.type,
       },
     });
 
-    // Generate a public URL for the uploaded file
+    
     const publicUrl = `https://storage.googleapis.com/${bucketName}/img_upload/${fileName}`;
 
     return NextResponse.json({ url: publicUrl });

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient(); // Adjust the path to your Prisma setup
+const prisma = new PrismaClient(); 
 
-// GET request: Check if the customer has an existing room
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const customerId = searchParams.get("customerId");
@@ -27,7 +27,6 @@ export async function GET(req: Request) {
   }
 }
 
-// POST request: Create a new room for the customer
 export async function POST(req: Request) {
   const { customerId } = await req.json();
 

@@ -62,7 +62,7 @@ export async function PATCH(
 
   try {
     const body = await req.json();
-    const { title, content, category, status } = body; // Extract data from the request body
+    const { title, content, category, status } = body; 
 
     const updatedPost = await prisma.post.update({
       where: { id: Number(id) },
@@ -70,7 +70,7 @@ export async function PATCH(
         title,
         content,
         category,
-        status: status || "completed", // Update with provided status or default to "completed"
+        status: status || "completed", 
       },
     });
 
@@ -113,7 +113,7 @@ export async function GET(
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
-    // If the post has a picture, generate a signed URL
+    
     let pictureUrl = post.picture;
     if (pictureUrl && pictureUrl.startsWith('https://storage.googleapis.com/')) {
       const fileName = pictureUrl.split('/').pop();
@@ -124,7 +124,7 @@ export async function GET(
           .getSignedUrl({
             version: 'v4',
             action: 'read',
-            expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+            expires: Date.now() + 15 * 60 * 1000, 
           });
         pictureUrl = url;
       }

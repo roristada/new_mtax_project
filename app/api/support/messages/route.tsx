@@ -7,15 +7,12 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
   const { content, senderId } = await req.json();
 
-  console.log(content, senderId );
-
   const room = await prisma.room.findUnique({
     where: { customerId: senderId },
     select: {
       id: true,
     }
   });
-  console.log(room)
   
   if (!room) {
     return NextResponse.json(
@@ -66,7 +63,7 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const userId = searchParams.get('userId'); // Assume userId is passed in query params
+  const userId = searchParams.get('userId'); 
   
 
   const room = await prisma.room.findUnique({
@@ -75,8 +72,6 @@ export async function GET(req: Request) {
       id: true,
     }
   });
-  
-  console.log("userID" ,userId , room)// Fetch roomId from query params
 
   try {
     const messages = await prisma.message.findMany({

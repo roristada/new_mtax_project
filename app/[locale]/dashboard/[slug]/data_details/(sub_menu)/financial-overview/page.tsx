@@ -62,14 +62,12 @@ import {
 import FinancialBarChart from "../../(Charts)/BarChart";
 import FinancialLineChart from "../../(Charts)/LineChart";
 import FinancialAreaChart from "../../(Charts)/AreaChart";
-import PieChartComponent from "../../(Charts)/Breakdown/PieChartIncome";
 import FinancialMonthBarChart from "../../(Charts)/Month/BarChart";
 import FinancialMonthAreaChart from "../../(Charts)/Month/AreaChart";
 import FinancialMonthLineChart from "../../(Charts)/Month/LineChart";
 
 import { useTranslations } from "next-intl";
 import { useParams, usePathname } from "next/navigation";
-// Assume this utility function exists
 import { useLocale } from "next-intl";
 import useAuthEffect from "../../../../../../../lib/useAuthEffect";
 
@@ -130,7 +128,7 @@ export default function FinancialOverview() {
   const params = useParams();
   const id = params.slug as string;
   const t = useTranslations("FinancialOverview");
-  const locale = useLocale(); // Get the current locale
+  const locale = useLocale();
 
   const [loading, setLoading] = useState(true);
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -159,10 +157,6 @@ export default function FinancialOverview() {
     setIsAuthChecked(authenticated);
   });
 
-
-  
-
-
   //------------------------------------------------------------------------------------------------
 
   useEffect(() => {
@@ -187,15 +181,11 @@ export default function FinancialOverview() {
 
         setChartData(sortedData);
 
-        // Set income, expense, and tax breakdown data
-
-        // Update unique years and set selected years
         const sortedYears = years.sort((a: number, b: number) => b - a);
         setUniqueYears(sortedYears);
         const latestTwoYears = sortedYears.slice(0, 2);
         setSelectedYears(new Set(latestTwoYears));
 
-        // Set latest year for other selects
         if (sortedYears.length > 0) {
           const latestYear = sortedYears[0];
           setSelectedMonthYear(latestYear);
@@ -208,7 +198,6 @@ export default function FinancialOverview() {
           const monthData = await monthRes.json();
           setChartDataYear(monthData);
 
-          // Fetch commission and diligence data for the latest year
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -242,17 +231,13 @@ export default function FinancialOverview() {
   };
 
   //-------------------------------------------------------------------------------------------------
-  const SortuniqueYears = uniqueYears.sort((a, b) => b - a); // เรียงลำดับจากมากไปน้อย
+  const SortuniqueYears = uniqueYears.sort((a, b) => b - a); 
   const latestYear = SortuniqueYears.length > 0 ? SortuniqueYears[0] : null;
   const [selectedMonthYear, setSelectedMonthYear] = useState<number | null>(
     latestYear
   );
 
   const [selectedYear, setSelectedYear] = useState<number | null>(latestYear);
-
-  const handleYearChange = (year: number) => {
-    setSelectedYear(year);
-  };
 
   const handleYearlyDataChange = (year: number, checked: boolean) => {
     setSelectedYears((prev) => {
@@ -368,11 +353,10 @@ export default function FinancialOverview() {
     };
 
     if (selectedMonthYear) {
-      // Check if selectedMonthYear is not null
       fetchYears();
       console.log(selectedMonthYear);
     }
-  }, [selectedMonthYear]); // Dependency array to run effect when selectedMonthYear changes
+  }, [selectedMonthYear]); 
 
   //------------------------------------------------------------------------------------------------------------------------//
   const formatThaiCurrency = (amount: number) => {
@@ -668,7 +652,7 @@ export default function FinancialOverview() {
                                       <Select
                                         onValueChange={(value) =>
                                           handleMonthData(Number(value))
-                                        } // Use a function that calls handleMonthData
+                                        } 
                                       >
                                         <SelectTrigger className="border rounded-md p-2">
                                           <SelectValue
@@ -743,13 +727,13 @@ export default function FinancialOverview() {
                         <Tabs defaultValue="year" className="mt-2">
                           <TabsList className="grid grid-cols-1 sm:grid-cols-2 max-w-xl mx-auto">
                             <TabsTrigger
-                              onClick={() => onhandleClick("year")} // Wrap the function call in an arrow function
+                              onClick={() => onhandleClick("year")} 
                               value="year"
                             >
                               {t("year")}
                             </TabsTrigger>
                             <TabsTrigger
-                              onClick={() => onhandleClick("month")} // Same for the other one
+                              onClick={() => onhandleClick("month")} 
                               value="month"
                             >
                               {t("month")}

@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
     const companyId = params.id;
-    //console.log(companyId)
 
     try {
         const employees = await prisma.employee.findMany({
@@ -22,3 +21,4 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         await prisma.$disconnect();
     }
 }
+

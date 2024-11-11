@@ -105,7 +105,7 @@ const Blog_manage = () => {
 
   const handleEditPost = (post: BlogPost) => {
     setSelectedPost({
-      id: post.id, // Ensure id is always defined
+      id: post.id, 
       title: post.title || "",
       content: post.content || "",
       category: post.category || "",
@@ -115,7 +115,7 @@ const Blog_manage = () => {
       updatedAt: post.updatedAt,
       status: post.status || "Published",
     });
-    setIsDialogOpen(true); // Open the dialog
+    setIsDialogOpen(true); 
   };
 
   const handleDeletepost = (id: number) => {
@@ -177,19 +177,17 @@ const Blog_manage = () => {
           title: selectedPost.title,
           content: selectedPost.content,
           category: selectedPost.category,
-          status: selectedPost.status, // Ensure the status is included
+          status: selectedPost.status, 
         }),
       });
 
       if (res.ok) {
         const updatedPost = await res.json();
-
-        // Update the state with the modified post
         setPosts((prevPosts) => {
           const newPosts = prevPosts.map((post) =>
             post.id === updatedPost.id ? { ...post, ...updatedPost } : post
           );
-          console.log("New posts state:", newPosts); // Log the new posts state
+          console.log("New posts state:", newPosts); 
           return newPosts;
         });
 
@@ -198,8 +196,8 @@ const Blog_manage = () => {
           text: "Your Post has been updated.",
           icon: "success",
         });
-        setSelectedPost(null); // Close the dialog
-        setIsDialogOpen(false); // Ensure the dialog closes
+        setSelectedPost(null);
+        setIsDialogOpen(false); 
         fetchPosts();
       } else {
         Swal.fire({
@@ -219,7 +217,7 @@ const Blog_manage = () => {
   };
 
   if (!isMounted) {
-    return null; // or a loading spinner
+    return null; 
   }
 
   return (

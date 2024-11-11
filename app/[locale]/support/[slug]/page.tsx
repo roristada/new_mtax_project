@@ -122,7 +122,6 @@ const Support = () => {
   const handleRoomSelection = async (room: Room) => {
     setSelectedRoom(room);
     
-    // Mark messages as read
     try {
       const response = await fetch(`/api/support/messages/isRead`, {
         method: 'POST',
@@ -139,7 +138,7 @@ const Support = () => {
         throw new Error("Failed to update message read status");
       }
 
-      // Update local state to reflect read messages
+     
       setRooms(prevRooms => 
         prevRooms.map(r => 
           r.id === room.id ? { ...r, unreadMessagesCount: 0 } : r

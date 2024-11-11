@@ -891,7 +891,11 @@
   "Topbar":{
     "welcome": "ยินดีต้อนรับ",
     "companyPlaceholder": "บริษัท: {name}",
-    "namePlaceholder": "ชื่อ: {name}"
+    "namePlaceholder": "ชื่อ: {name}",
+    "adminViewing": "แอดมินกำลังดู",
+    "viewingCompany": "บริษัท: {company}",
+    "adminUser": "แอดมิน: {name}",
+    "adminUserRole": "แอดมิน: {name}"
   },
   "FinancialOverview": {
     "filterData": "กรองข้อมูล",

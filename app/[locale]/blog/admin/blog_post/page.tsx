@@ -38,7 +38,7 @@ interface FormData {
   email: string;
   category: string;
   picture: File | null;
-  status: string; // Add this line
+  status: string; 
 }
 
 export default function Component() {
@@ -53,7 +53,7 @@ export default function Component() {
     content: "",
     email: "",
     category: "",
-    picture: null, // Initially null
+    picture: null, 
     status: "",
   });
 
@@ -112,12 +112,10 @@ export default function Component() {
       formDataToSend.append("picture", formData.picture);
     }
 
-    
-
     try {
       const response = await fetch(`/api/blog`, {
         method: "POST",
-        body: formDataToSend, // Send FormData including the file
+        body: formDataToSend,
       });
 
       setLoading(true);
@@ -147,16 +145,13 @@ export default function Component() {
       });
       setLoading(false);
     }
-
-
   };
 
   const handleToggle = (checked: boolean) => {
     setIsPublished(checked);
-
     setFormData((prevData) => ({
       ...prevData,
-      status: checked ? "Published" : "Private", // Ensuring formData.status is updated
+      status: checked ? "Published" : "Private", 
     }));
   };
 

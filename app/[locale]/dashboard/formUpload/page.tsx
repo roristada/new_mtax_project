@@ -37,7 +37,7 @@ const yearOptions = generateYearOptions(2000);
 
 interface FormData {
   companyId: string;
-  companyName: string; // Add this line
+  companyName: string;
   month: string;
   year: string;
   file: File | null;
@@ -67,9 +67,7 @@ export default function Component() {
   });
 
   useEffect(() => {
-    
     const fetchCompanies = async () => {
-      
       try {
         const res = await fetch(`/api/users`);
         const users: { id: string; company: string; role : string }[] = await res.json();
@@ -81,10 +79,6 @@ export default function Component() {
             id: user.id,
             name: user.company,
           }));
-
-        // const uniqueCompanies = Array.from(
-        //   new Map(companyList.map((item) => [item.name, item])).values()
-        // );
 
         setCompanies(companyList);
       } catch (error) {

@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useMemo, useCallback } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 
-// Interface for props
+
 interface TextEditerProps {
   value?: string;
   onChange: (content: string) => void;
@@ -106,7 +106,6 @@ const TextEditer: React.FC<TextEditerProps> = ({ value = '', onChange }) => {
         placeholder: "Type something...",
       });
 
-      // Set initial content if exists
       if (value) {
         quillRef.current.root.innerHTML = value;
       }

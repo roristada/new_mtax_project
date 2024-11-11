@@ -898,7 +898,11 @@
   "Topbar": {
     "welcome": "Welcome",
     "companyPlaceholder": "Company: {name} ",
-    "namePlaceholder": "Name: {name}"
+    "namePlaceholder": "Name: {name}",
+    "adminViewing": "Admin Viewing",
+    "viewingCompany": "Company: {company}",
+    "adminUser": "Admin: {name}",
+    "adminUserRole": "Admin: {name}"
   },
   "FinancialOverview": {
     "filterData": "Filter Data",

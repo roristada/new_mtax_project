@@ -42,10 +42,9 @@ export default function Blog() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [categories, setCategories] = useState<string[]>([]); // New state for selected categories
+  const [categories, setCategories] = useState<string[]>([]); // 
   const [showCategoryFilter, setShowCategoryFilter] = useState(false);
   
-  // Initialize selectedCategories with all categories
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     Object.keys(categoryDisplayNames)
   );
@@ -78,7 +77,7 @@ export default function Blog() {
     fetchPosts();
   }, []);
 
-  // Function to toggle category selection
+  
   const toggleCategory = (category: string) => {
     setSelectedCategories((prevCategories) =>
       prevCategories.includes(category)
@@ -87,7 +86,7 @@ export default function Blog() {
     );
   };
 
-  // Filter posts to only include those with status "Published" and selected categories
+  
   const publishedPosts = posts.filter(
     (post) =>
       post.status === "Published" &&
@@ -96,7 +95,7 @@ export default function Blog() {
   );
   
 
-  // Function to clear all selected categories
+  
   const clearAllCategories = () => {
     setSelectedCategories([]);
   };

@@ -7,15 +7,12 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
   const { content, senderId,receiverId, roomId } = await req.json();
 
-  console.log(content, senderId, roomId);
-
   const room = await prisma.room.findUnique({
     where: { customerId: receiverId },
     select: {
       id: true,
     }
   });
-  console.log(room)
   
   if (!room) {
     return NextResponse.json(
@@ -25,7 +22,6 @@ export async function POST(req: Request) {
   }
   
   try {
-    
     const message = await prisma.message.create({
       data: {
         content,

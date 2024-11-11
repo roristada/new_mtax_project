@@ -101,14 +101,11 @@ export async function GET(
       },
     });
 
-    // Find the maximum year across all tables
     const recentYear = Math.max(
       recentYearIncome?.year || 0,
       recentYearExpense?.year || 0,
       recentYearTax?.year || 0
     );
-
-    
 
     if (recentYear === 0) {
       return NextResponse.json(
@@ -277,7 +274,6 @@ function calculateTotalFinancialSummary(
 }
 
 function calculateIncomeBreakdown(income: any[]): IncomeBreakdown {
-  // Initialize the breakdown with all values set to 0
   const incomeBreakdown: IncomeBreakdown = {
     salary: 0,
     shiftAllowance: 0,
@@ -291,7 +287,6 @@ function calculateIncomeBreakdown(income: any[]): IncomeBreakdown {
     bonus: 0,
   };
 
-  // Iterate over the income data and sum up each category
   income.forEach((inc) => {
     incomeBreakdown.salary += inc.salary || 0;
     incomeBreakdown.shiftAllowance += inc.shiftAllowance || 0;
@@ -309,7 +304,6 @@ function calculateIncomeBreakdown(income: any[]): IncomeBreakdown {
 }
 
 function calculateExpenseBreakdown(expense: any[]): ExpenseBreakdown {
-  // Initialize the breakdown with all values set to 0
   const expenseBreakdown: ExpenseBreakdown = {
     loan: 0,
     salaryAdvance: 0,
@@ -317,7 +311,7 @@ function calculateExpenseBreakdown(expense: any[]): ExpenseBreakdown {
     otherDeductions: 0,
   };
 
-  // Iterate over the income data and sum up each category
+  
   expense.forEach((exp) => {
     expenseBreakdown.loan += exp.loan || 0;
     expenseBreakdown.salaryAdvance += exp.salaryAdvance || 0;
@@ -329,7 +323,6 @@ function calculateExpenseBreakdown(expense: any[]): ExpenseBreakdown {
 }
 
 function calculateTaxBreakdown(tax: any[]): TaxBreakdown {
-  // Initialize the breakdown with all values set to 0
   const taxBreakdown: TaxBreakdown = {
     employeeTax:0,
   companyTax:0,

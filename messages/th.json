@@ -174,7 +174,7 @@
       "confirmed": "ยืนยันการนัดหมาย"
     },
     "statusTextDetail": {
-      "completed": "คุณต้องการยืนยันก��รให้คำปรึกษานี้?",
+      "completed": "คุณต้องการยืนยันการให้คำปรึกษานี้?",
       "canceled": "คุณต้องการยกเลิกการนัดหมายนี้?",
       "confirmed": "คุณต้องการยืนยันการนัดหมายนี้?"
     },
@@ -325,7 +325,7 @@
       "commissionDeduction": "การหักค่าคอมมิชชั่น",
       "otherDeductions": "การหักอื่น ๆ",
       "employeeTax": "ภาษีเงินได้ (พนักงาน)",
-      "companyTax": "ภาษีเง���นได้ (บริษัท)",
+      "companyTax": "ภาษีเงินได้ (บริษัท)",
       "socialSecurityEmployee": "ประกันสังคม (พนักงาน)",
       "socialSecurityCompany": "ประกันสังคม (บริษัท)",
       "providentFund": "กองทุนสำรองเลี้ยงชีพ"
@@ -810,7 +810,7 @@
     "enterResolutionReportFor": "รายงานการแก้ไขสำหรับ",
     "enterResolutionDetails": "กรอกรายละเอียดการแก้ไข...",
     "submitSuccessTitle": "ส่งรายงานการแก้ไขสำเร็จ",
-    "submitSuccessText": "รายงานการแก้ไขถูกส่งเรียบร้อยแล��ว!",
+    "submitSuccessText": "รายงานการแก้ไขถูกส่งเรียบร้อยแล้ว!",
     "deleteSuccessTitle": "ลบรายงานการแก้ไขสำเร็จ",
     "deleteSuccessText": "รายงานการแก้ไขถูกลบเรียบร้อยแล้ว!",
     "status": {
@@ -879,7 +879,7 @@
     "thankYouTitle": "ขอบคุณ!",
     "thankYouText": "รายงานของคุณถูกส่งเรียบร้อยแล้ว",
     "errorTitle": "เกิดข้อผิดพลาด",
-    "errorText": "เกิดข้���ผิดพลาดในการส่งรายงาน กรุณาลองอีกครั้ง"
+    "errorText": "เกิดข้อผิดพลาดในการส่งรายงาน กรุณาลองอีกครั้ง"
   },
   "Support":{
     "title": "การสนับสนุน",
@@ -958,7 +958,7 @@
     "labels": {
       "income": "รายได้",
       "expense": "ค่าใช้จ่าย",
-      "tax": "ภ���ษี",
+      "tax": "ภาษี",
       "salary": "ค่าจ้าง",
       "shiftAllowance": "ค่าทำงานพิเศษ",
       "foodAllowance": "ค่าอาหาร",
@@ -1015,7 +1015,7 @@
     "diligenceRange": "ช่วงความขยัน",
     "pageInfo": "หน้า {current} จาก {total}",
     "previous": "ก่อนหน้า",
-    "next": "��ัดไป",
+    "next": "ถัดไป",
     "employeeDetails": "รายละเอียดพนักงาน",
     "resetFilter": "ยกเลิกการกรอง"
   }

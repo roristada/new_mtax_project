@@ -1,0 +1,192 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id Int [pk, increment]
+  name String [not null]
+  company String [not null]
+  email String [unique, not null]
+  password String
+  address String
+  telephone String
+  role String [not null, default: 'customer']
+  posts Post [not null]
+  employees Employee [not null]
+  rooms Room [not null]
+  sentMessages Message [not null]
+  receivedMessages Message [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  resetTokens PasswordResetToken [not null]
+  reports Report [not null]
+}
+
+Table Post {
+  id Int [pk, increment]
+  picture String
+  title String [not null]
+  author User [not null]
+  authorId Int [not null]
+  content String
+  category String
+  status String [not null, default: 'Published']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Employee {
+  employeeCode String [not null]
+  companyId Int [not null]
+  cardCode String [not null]
+  title String
+  firstName String [not null]
+  lastName String [not null]
+  gender String
+  department String
+  position String
+  startDate String
+  endDate String
+  citizenId String
+  year Int [not null]
+  currentSalary Float
+  age Int
+  birthDate String
+  user User [not null]
+  incomes Income [not null]
+  expenses Expense [not null]
+  taxes Tax [not null]
+
+  indexes {
+    (employeeCode, companyId, year) [pk]
+  }
+}
+
+Table Income {
+  id Int [pk, increment]
+  employeeCode String [not null]
+  companyId Int [not null]
+  month Int
+  year Int [not null]
+  salary Float
+  shiftAllowance Float
+  foodAllowance Float
+  overtime Float
+  diligence Float
+  beverage Float
+  commission Float
+  brokerFee Float
+  otherIncome Float
+  bonus Float
+  employee Employee [not null]
+}
+
+Table Expense {
+  id Int [pk, increment]
+  employeeCode String [not null]
+  companyId Int [not null]
+  loan Float
+  salaryAdvance Float
+  commissionDeduction Float
+  otherDeductions Float
+  month Int
+  year Int [not null]
+  employee Employee [not null]
+}
+
+Table Tax {
+  id Int [pk, increment]
+  employeeCode String [not null]
+  companyId Int [not null]
+  employeeTax Float
+  companyTax Float
+  socialSecurityEmployee Float
+  socialSecurityCompany Float
+  providentFund Float
+  month Int
+  year Int [not null]
+  employee Employee [not null]
+}
+
+Table Appointment {
+  id Int [pk, increment]
+  name String [not null]
+  company String [not null]
+  email String [not null]
+  telephone String [not null]
+  startTime String [not null]
+  endTime String [not null]
+  note String
+  date DateTime [not null]
+  status String [not null, default: 'pending']
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Report {
+  id Int [pk, increment]
+  userId Int [not null]
+  name String [not null]
+  company String [not null]
+  email String [not null]
+  category String [not null]
+  description String [not null]
+  problem_report String
+  status String [not null, default: 'pending']
+  createdAt DateTime [default: `now()`, not null]
+  user User [not null]
+}
+
+Table Room {
+  id Int [pk, increment]
+  customerId Int [unique, not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  customer User [not null]
+  messages Message [not null]
+}
+
+Table Message {
+  id Int [pk, increment]
+  content String [not null]
+  timestamp DateTime [default: `now()`, not null]
+  senderId Int [not null]
+  receiverId Int [not null]
+  roomId Int [not null]
+  isRead Boolean [not null, default: false]
+  sender User [not null]
+  receiver User [not null]
+  room Room [not null]
+}
+
+Table PasswordResetToken {
+  id Int [pk, increment]
+  token String [unique, not null]
+  userId Int [not null]
+  user User [not null]
+  expiresAt DateTime [not null]
+  used Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Ref: Post.authorId > User.id
+
+Ref: Employee.companyId > User.id
+
+Ref: Income.(employeeCode, companyId, year) > Employee.(employeeCode, companyId, year)
+
+Ref: Expense.(employeeCode, companyId, year) > Employee.(employeeCode, companyId, year)
+
+Ref: Tax.(employeeCode, companyId, year) > Employee.(employeeCode, companyId, year)
+
+Ref: Report.userId > User.id
+
+Ref: Room.customerId > User.id
+
+Ref: Message.senderId > User.id
+
+Ref: Message.receiverId > User.id
+
+Ref: Message.roomId > Room.id
+
+Ref: PasswordResetToken.userId > User.id

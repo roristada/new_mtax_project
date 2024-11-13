@@ -1,6 +1,9 @@
 generator client {
   provider = "prisma-client-js"
 }
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
 
 datasource db {
   provider = "mysql"
@@ -69,18 +72,18 @@ model Income {
   id             Int      @id @default(autoincrement())
   employeeCode   String
   companyId      Int
-  month          Int? // Allow null values
+  month          Int? 
   year           Int
-  salary         Float? // Allow null values
-  shiftAllowance Float? // Allow null values
-  foodAllowance  Float? // Allow null values
-  overtime       Float? // Allow null values
-  diligence      Float? // Allow null values
-  beverage       Float? // Allow null values
-  commission     Float? // Allow null values
-  brokerFee      Float? // Allow null values
-  otherIncome    Float? // Allow null values
-  bonus          Float? // Allow null values
+  salary         Float? 
+  shiftAllowance Float? 
+  foodAllowance  Float? 
+  overtime       Float? 
+  diligence      Float? 
+  beverage       Float? 
+  commission     Float? 
+  brokerFee      Float? 
+  otherIncome    Float? 
+  bonus          Float? 
   employee       Employee @relation(fields: [employeeCode, companyId, year], references: [employeeCode, companyId, year])
 
   @@index([employeeCode, companyId, year, month]) // Optional: Add an index for faster queries
@@ -94,7 +97,7 @@ model Expense {
   salaryAdvance       Float?
   commissionDeduction Float?
   otherDeductions     Float?
-  month               Int? // Allow null values
+  month               Int? 
   year                Int
   employee            Employee @relation(fields: [employeeCode, companyId, year], references: [employeeCode, companyId, year])
 
@@ -110,7 +113,7 @@ model Tax {
   socialSecurityEmployee Float?
   socialSecurityCompany  Float?
   providentFund          Float?
-  month                  Int? // Allow null values
+  month                  Int? 
   year                   Int
   employee               Employee @relation(fields: [employeeCode, companyId, year], references: [employeeCode, companyId, year])
 

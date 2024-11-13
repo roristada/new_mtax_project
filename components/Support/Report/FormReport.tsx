@@ -27,9 +27,10 @@ interface FormData {
 }
 
 export default function ProblemReportForm() {
-  const { data: session } = useSession();
-  const [isAuthChecked, setIsAuthChecked] = useState(false);
+  const { data: session, status } = useSession();
+  const [isLoading, setIsLoading] = useState(true);
   const locale = useLocale();
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     userId: "",
     name: "",
@@ -47,19 +48,26 @@ export default function ProblemReportForm() {
   });
 
   useEffect(() => {
-    if (!isAuthChecked) {
+    if (status === 'loading') {
       return;
     }
-    if (session) {
-      setFormData((prevData) => ({
-        ...prevData,
+
+    setIsLoading(false);
+    
+    if (session?.user) {
+      setFormData(prev => ({
+        ...prev,
         userId: session.user?.id || "",
+        name: session.user?.name || "",
         company: session.user?.company || "",
         email: session.user?.email || "",
       }));
     }
-    console.log(formData);
-  }, [session]);
+  }, [status, session]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

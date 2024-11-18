@@ -249,10 +249,22 @@ async function uploadToStorage(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const data = await uploadToStorage(req);
-    return NextResponse.json({ message: "OK", data }, { status: 200 });
+    if (data.status === "error") {
+      return NextResponse.json(
+        { message: data.message },
+        { status: 400 }
+      );
+    }
+    return NextResponse.json({ 
+      message: "OK", 
+      data 
+    }, { 
+      status: 200 
+    });
   } catch (error) {
+    console.error("Upload error:", error);
     return NextResponse.json(
-      { status: "error", message: (error as Error).message },
+      { message: (error as Error).message || "An unknown error occurred" },
       { status: 500 }
     );
   }

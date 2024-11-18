@@ -129,7 +129,6 @@ export default function Component() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   
-    
     if (!formData.file) {
       Swal.fire({
         icon: "warning",
@@ -156,16 +155,17 @@ export default function Component() {
       const res = await fetch(`/api/upload`, { method: "POST", body: data });
       const responseData = await res.json();
   
-      if (res.ok && responseData.status === "success") {
+      if (res.ok) {
         Swal.fire({
           icon: "success",
           title: t("uploadSuccessTitle"),
-          text: responseData.message || t("uploadSuccessText"),
+          text: responseData.data.message || t("uploadSuccessText"),
         });
       } else {
         throw new Error(responseData.message || t("uploadErrorText"));
       }
     } catch (error) {
+      console.error("Upload error:", error);
       Swal.fire({
         icon: "error",
         title: t("uploadErrorTitle"),

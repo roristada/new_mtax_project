@@ -291,7 +291,7 @@ const AppointmentsManage = () => {
     <>
       <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 my-4">
         <Tabs defaultValue="all">
-          <div className="flex items-center">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <TabsList>
               <TabsTrigger value="all">All</TabsTrigger>
               <TabsTrigger value="calendar">Calendar</TabsTrigger>
@@ -299,29 +299,27 @@ const AppointmentsManage = () => {
           </div>
           <TabsContent value="all">
             <Card className="shadow-lg">
-              <CardHeader className="grid grid-cols-2">
+              <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <div>
-                  <CardTitle className="text-xl font-bold">
-                    {t("title")}
-                  </CardTitle>
+                  <CardTitle className="text-xl font-bold">{t("title")}</CardTitle>
                   <CardDescription>{t("description")}</CardDescription>
                 </div>
-                <div className="ml-auto">
+                <div className="w-full sm:w-auto sm:ml-auto">
                   <Link href={`/appointment/admin/add`}>
-                    <Button>{t("addAppointment")}</Button>
+                    <Button className="w-full sm:w-auto">{t("addAppointment")}</Button>
                   </Link>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                   <input
                     type="text"
                     placeholder={t("searchPlaceholder")}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-64 p-2 border border-gray-300 rounded"
+                    className="w-full sm:w-64 p-2 border border-gray-300 rounded"
                   />
-                  <div className="flex gap-2">
+                  <div className="w-full sm:w-auto">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="outline">
@@ -366,220 +364,188 @@ const AppointmentsManage = () => {
                     </DropdownMenu>
                   </div>
                 </div>
+
                 {loading ? (
                   <Loading />
                 ) : (
                   <>
-                    <Table className="w-full bg-white rounded-lg shadow-md">
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="py-2">
-                            {t("tableHeaders.name")}
-                          </TableHead>
-                          <TableHead className="py-2">
-                            {t("tableHeaders.company")}
-                          </TableHead>
-                          <TableHead className="py-2">
-                            {t("tableHeaders.email")}
-                          </TableHead>
-                          <TableHead className="py-2">
-                            {t("tableHeaders.telephone")}
-                          </TableHead>
-                          <TableHead className="py-2">
-                            <div
-                              className="flex items-center gap-1 cursor-pointer"
-                              onClick={toggleSort}
-                            >
-                              {t("tableHeaders.date")}
-                              <ChevronsUpDown className="h-4 w-4" />
-                            </div>
-                          </TableHead>
-                          <TableHead className="py-2">
-                            {t("tableHeaders.startTime")}
-                          </TableHead>
-                          <TableHead className="py-2">
-                            {t("tableHeaders.endTime")}
-                          </TableHead>
-                          <TableHead className="py-2">
-                            {t("tableHeaders.status")}
-                          </TableHead>
-                          <TableHead className="py-2">
-                            <span className="sr-only">
-                              {t("tableHeaders.actions")}
-                            </span>
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {currentAppointments.length > 0 ? (
-                          currentAppointments.map((appointment) => (
-                            <TableRow key={appointment.id}>
-                              <TableCell className="py-2 font-medium">
-                                {appointment.name}
-                              </TableCell>
-                              <TableCell className="py-2">
-                                {appointment.company}
-                              </TableCell>
-                              <TableCell className="py-2">
-                                {appointment.email}
-                              </TableCell>
-                              <TableCell className="py-2">
-                                {appointment.telephone}
-                              </TableCell>
-                              <TableCell className="py-2">
-                                {new Date(
-                                  appointment.date
-                                ).toLocaleDateString()}
-                              </TableCell>
-                              <TableCell className="py-2">
-                                {appointment.startTime}
-                              </TableCell>
-                              <TableCell className="py-2">
-                                {appointment.endTime}
-                              </TableCell>
-                              <TableCell className="py-2">
-                                <Badge
-                                  className={`py-1 px-2 ${
-                                    appointment.status === "pending"
-                                      ? "bg-yellow-500 text-white"
-                                      : appointment.status === "completed"
-                                      ? "bg-green-500 text-white"
-                                      : appointment.status === "canceled"
-                                      ? "bg-red-500 text-white"
-                                      : appointment.status === "confirmed"
-                                      ? "bg-blue-500 text-white"
-                                      : ""
-                                  }}`}
-                                >
-                                  {" "}
-                                  {appointment.status === "pending"
-                                    ? t("status.pending")
-                                    : appointment.status === "completed"
-                                    ? t("status.completed")
-                                    : appointment.status === "canceled"
-                                    ? t("status.canceled")
-                                    : appointment.status === "confirmed"
-                                    ? t("status.confirmed")
-                                    : ""}
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="py-2">
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button
-                                      variant="ghost"
-                                      className="h-8 w-8 p-0"
-                                    >
-                                      <span className="sr-only">Open menu</span>
-                                      <MoreHorizontal className="h-4 w-4" />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuLabel>
-                                      {t("action")}
-                                    </DropdownMenuLabel>
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>{t("tableHeaders.name")}</TableHead>
+                            <TableHead className="hidden sm:table-cell">{t("tableHeaders.company")}</TableHead>
+                            <TableHead className="hidden md:table-cell">{t("tableHeaders.email")}</TableHead>
+                            <TableHead className="hidden lg:table-cell">{t("tableHeaders.telephone")}</TableHead>
+                            <TableHead className="hidden sm:table-cell">
+                              <div className="flex items-center gap-1 cursor-pointer" onClick={toggleSort}>
+                                {t("tableHeaders.date")}
+                                <ChevronsUpDown className="h-4 w-4" />
+                              </div>
+                            </TableHead>
+                            <TableHead className="hidden md:table-cell">{t("tableHeaders.startTime")}</TableHead>
+                            <TableHead className="hidden md:table-cell">{t("tableHeaders.endTime")}</TableHead>
+                            <TableHead>{t("tableHeaders.status")}</TableHead>
+                            <TableHead>{t("tableHeaders.actions")}</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {currentAppointments.length > 0 ? (
+                            currentAppointments.map((appointment) => (
+                              <TableRow key={appointment.id}>
+                                <TableCell className="font-medium">
+                                  {appointment.name}
+                                  {/* Show mobile-only information */}
+                                  <div className="block sm:hidden text-sm text-muted-foreground">
+                                    {appointment.company}
+                                  </div>
+                                  <div className="block md:hidden text-sm text-muted-foreground">
+                                    {appointment.email}
+                                  </div>
+                                </TableCell>
+                                <TableCell className="hidden sm:table-cell">{appointment.company}</TableCell>
+                                <TableCell className="hidden md:table-cell">{appointment.email}</TableCell>
+                                <TableCell className="hidden lg:table-cell">{appointment.telephone}</TableCell>
+                                <TableCell className="hidden sm:table-cell">
+                                  {new Date(appointment.date).toLocaleDateString()}
+                                </TableCell>
+                                <TableCell className="hidden md:table-cell">{appointment.startTime}</TableCell>
+                                <TableCell className="hidden md:table-cell">{appointment.endTime}</TableCell>
+                                <TableCell>
+                                  <Badge
+                                    className={`whitespace-nowrap ${
+                                      appointment.status === "pending"
+                                        ? "bg-yellow-500"
+                                        : appointment.status === "completed"
+                                        ? "bg-green-500"
+                                        : appointment.status === "canceled"
+                                        ? "bg-red-500"
+                                        : "bg-blue-500"
+                                    } text-white`}
+                                  >
+                                    {t(`status.${appointment.status}`)}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button
+                                        variant="ghost"
+                                        className="h-8 w-8 p-0"
+                                      >
+                                        <span className="sr-only">Open menu</span>
+                                        <MoreHorizontal className="h-4 w-4" />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                      <DropdownMenuLabel>
+                                        {t("action")}
+                                      </DropdownMenuLabel>
 
-                                    {/* Show Details and Delete for completed or canceled appointments */}
-                                    {appointment.status === "completed" ||
-                                    appointment.status === "canceled" ? (
-                                      <>
-                                        <DropdownMenuItem
-                                          onClick={() =>
-                                            onClickActionsDetails(
-                                              appointment.id
-                                            )
-                                          }
-                                        >
-                                          {t("details")}
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                          onClick={() =>
-                                            onClickActionsDelete(appointment.id)
-                                          }
-                                        >
-                                          {t("delete")}
-                                        </DropdownMenuItem>
-                                      </>
-                                    ) : (
-                                      <>
-                                        <DropdownMenuItem
-                                          onClick={() =>
-                                            onClickActionsDetails(
-                                              appointment.id
-                                            )
-                                          }
-                                        >
-                                          {t("details")}
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                          onClick={() =>
-                                            onClickActionsStatus(
-                                              appointment.id,
-                                              "confirmed"
-                                            )
-                                          }
-                                        >
-                                          {t("status.confirmed")}
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                          onClick={() =>
-                                            onClickActionsStatus(
-                                              appointment.id,
-                                              "completed"
-                                            )
-                                          }
-                                        >
-                                          {t("status.completed")}
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                          onClick={() =>
-                                            onClickActionsStatus(
-                                              appointment.id,
-                                              "canceled"
-                                            )
-                                          }
-                                        >
-                                          {t("status.canceled")}
-                                        </DropdownMenuItem>
-                                        <Separator />
-                                        <DropdownMenuItem
-                                          onClick={() =>
-                                            onClickActionsDelete(appointment.id)
-                                          }
-                                        >
-                                          {t("delete")}
-                                        </DropdownMenuItem>
-                                      </>
-                                    )}
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
+                                      {/* Show Details and Delete for completed or canceled appointments */}
+                                      {appointment.status === "completed" ||
+                                      appointment.status === "canceled" ? (
+                                        <>
+                                          <DropdownMenuItem
+                                            onClick={() =>
+                                              onClickActionsDetails(
+                                                appointment.id
+                                              )
+                                            }
+                                          >
+                                            {t("details")}
+                                          </DropdownMenuItem>
+                                          <DropdownMenuItem
+                                            onClick={() =>
+                                              onClickActionsDelete(appointment.id)
+                                            }
+                                          >
+                                            {t("delete")}
+                                          </DropdownMenuItem>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <DropdownMenuItem
+                                            onClick={() =>
+                                              onClickActionsDetails(
+                                                appointment.id
+                                              )
+                                            }
+                                          >
+                                            {t("details")}
+                                          </DropdownMenuItem>
+                                          <DropdownMenuItem
+                                            onClick={() =>
+                                              onClickActionsStatus(
+                                                appointment.id,
+                                                "confirmed"
+                                              )
+                                            }
+                                          >
+                                            {t("status.confirmed")}
+                                          </DropdownMenuItem>
+                                          <DropdownMenuItem
+                                            onClick={() =>
+                                              onClickActionsStatus(
+                                                appointment.id,
+                                                "completed"
+                                              )
+                                            }
+                                          >
+                                            {t("status.completed")}
+                                          </DropdownMenuItem>
+                                          <DropdownMenuItem
+                                            onClick={() =>
+                                              onClickActionsStatus(
+                                                appointment.id,
+                                                "canceled"
+                                              )
+                                            }
+                                          >
+                                            {t("status.canceled")}
+                                          </DropdownMenuItem>
+                                          <Separator />
+                                          <DropdownMenuItem
+                                            onClick={() =>
+                                              onClickActionsDelete(appointment.id)
+                                            }
+                                          >
+                                            {t("delete")}
+                                          </DropdownMenuItem>
+                                        </>
+                                      )}
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          ) : (
+                            <TableRow>
+                              <TableCell colSpan={9} className="text-center py-4">
+                                {t("noAppointmentsFound")}
                               </TableCell>
                             </TableRow>
-                          ))
-                        ) : (
-                          <TableRow>
-                            <TableCell colSpan={8} className="text-center">
-                              {t("noAppointmentsFound")}
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </TableBody>
-                    </Table>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </div>
 
                     {/* Pagination Controls */}
-                    <div className="flex justify-between items-center mt-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4">
                       <Button
                         onClick={handlePrevPage}
                         disabled={currentPage === 1}
+                        className="w-full sm:w-auto"
                       >
                         {t("pagination.previous")}
                       </Button>
-                      <span>
+                      <span className="text-sm text-muted-foreground">
                         {t("pagination.page", { currentPage, totalPages })}
                       </span>
                       <Button
                         onClick={handleNextPage}
                         disabled={currentPage === totalPages}
+                        className="w-full sm:w-auto"
                       >
                         {t("pagination.next")}
                       </Button>
@@ -589,10 +555,8 @@ const AppointmentsManage = () => {
               </CardContent>
             </Card>
           </TabsContent>
-          <TabsContent className="w-[80%] mx-auto" value="calendar">
-            <AppointmentCalendar
-              appointments={appointments}
-            ></AppointmentCalendar>
+          <TabsContent value="calendar" className="w-full lg:w-[80%] mx-auto">
+            <AppointmentCalendar appointments={appointments} />
           </TabsContent>
         </Tabs>
       </main>

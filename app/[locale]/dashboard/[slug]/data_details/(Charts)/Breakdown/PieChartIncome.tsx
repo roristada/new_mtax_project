@@ -97,6 +97,28 @@ const BreakdownChart: React.FC<BreakdownChartProps> = ({ incomeBreakdown, expens
     return acc;
   }, [] as Array<{ name: string; value: number; color: string; items: Array<{ name: string; value: number }> }>);
 
+  const getChartDimensions = () => {
+    let outerRadius = 80;
+    let innerRadius = 40;
+
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth >= 640) { // sm
+        outerRadius = 100;
+        innerRadius = 50;
+      }
+      if (window.innerWidth >= 768) { // md
+        outerRadius = 120;
+        innerRadius = 60;
+      }
+      if (window.innerWidth >= 1024) { // lg
+        outerRadius = 150;
+        innerRadius = 80;
+      }
+    }
+
+    return { outerRadius, innerRadius };
+  };
+
   const renderCustomizedLabel = ({
     cx,
     cy,
@@ -118,7 +140,7 @@ const BreakdownChart: React.FC<BreakdownChartProps> = ({ incomeBreakdown, expens
         fill="black"
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
-        fontSize="12"
+        className="text-[10px] sm:text-xs lg:text-sm"
       >
         {`${groupedData[index].name} ${(percent * 100).toFixed(0)}%`}
       </text>
@@ -144,20 +166,30 @@ const BreakdownChart: React.FC<BreakdownChartProps> = ({ incomeBreakdown, expens
     const { payload } = props;
   
     return (
-      <ul className="flex flex-wrap justify-center gap-5" style={{ fontSize: '12px' }}>
+      <ul className="flex flex-wrap justify-center gap-2 sm:gap-4 px-2 text-[10px] sm:text-xs lg:text-sm">
         {payload.map((entry: any, index: number) => (
-          <li key={`item-${index}`} className="flex items-center">
-            <span style={{ color: entry.color }}>■</span>
-            <span className="ml-2">{entry.value}</span>
+          <li key={`item-${index}`} className="flex items-center whitespace-nowrap">
+            <span 
+              style={{ backgroundColor: entry.color }} 
+              className="inline-block w-2 h-2 sm:w-3 sm:h-3 mr-1"
+            />
+            <span>{entry.value}</span>
           </li>
         ))}
       </ul>
     );
   };
   
+  if (!chartData.length || totalValue === 0) {
+    return (
+      <div className="w-full h-[300px] sm:h-[400px] lg:h-[450px] flex items-center justify-center">
+        <p className="text-gray-500 text-base sm:text-lg">{t('noDataAvailable')}</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full h-[450px] grid grid-cols-1">
+    <div className="w-full h-[300px] sm:h-[400px] lg:h-[450px]">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -166,8 +198,8 @@ const BreakdownChart: React.FC<BreakdownChartProps> = ({ incomeBreakdown, expens
             nameKey="name"
             cx="50%"
             cy="50%"
-            outerRadius={150}
-            innerRadius={80}
+            outerRadius={getChartDimensions().outerRadius}
+            innerRadius={getChartDimensions().innerRadius}
             labelLine={true}
             label={renderCustomizedLabel}
             onMouseEnter={(data) => {
@@ -187,24 +219,27 @@ const BreakdownChart: React.FC<BreakdownChartProps> = ({ incomeBreakdown, expens
               if (active && payload && payload.length) {
                 const data = payload[0].payload;
                 return (
-                  <div className="bg-white p-4 border rounded-lg shadow-lg" style={{ fontSize: "14px", maxWidth: "300px" }}>
-                    <h3 className="font-bold text-lg mb-2 border-b pb-2" style={{ color: data.color }}>{data.name}</h3>
-                    <div className="flex justify-between mb-2">
+                  <div className="bg-white p-2 sm:p-4 border rounded-lg shadow-lg max-w-[200px] sm:max-w-[300px]">
+                    <h3 className="font-bold text-sm sm:text-lg mb-1 sm:mb-2 border-b pb-2" 
+                        style={{ color: data.color }}>
+                      {data.name}
+                    </h3>
+                    <div className="flex justify-between mb-1 sm:mb-2 text-xs sm:text-sm">
                       <span className="font-semibold">{t('value')}:</span>
                       <span>{formatThaiCurrency(data.value)}</span>
                     </div>
-                    <div className="flex justify-between mb-2">
+                    <div className="flex justify-between mb-1 sm:mb-2 text-xs sm:text-sm">
                       <span className="font-semibold">{t('percentage')}:</span>
                       <span>{((data.value / totalValue) * 100).toFixed(2)}%</span>
                     </div>
                     {data.name === t('other') && otherItems.length > 0 && (
-                      <div className="mt-4">
-                        <h4 className="font-bold mb-2">{t('otherItems')}:</h4>
+                      <div className="mt-2 sm:mt-4">
+                        <h4 className="font-bold text-xs sm:text-sm mb-1 sm:mb-2">{t('otherItems')}:</h4>
                         <ul className="space-y-1">
                           {otherItems.map((item, index) => (
-                            <li key={index} className="flex justify-between">
+                            <li key={index} className="flex justify-between text-xs sm:text-sm">
                               <span>{item.name}:</span>
-                              <span>{formatThaiCurrency(item.value)} ({((item.value / totalValue) * 100).toFixed(2)}%)</span>
+                              <span className="ml-2">{formatThaiCurrency(item.value)} ({((item.value / totalValue) * 100).toFixed(2)}%)</span>
                             </li>
                           ))}
                         </ul>
@@ -216,7 +251,12 @@ const BreakdownChart: React.FC<BreakdownChartProps> = ({ incomeBreakdown, expens
               return null;
             }}
           />
-          <Legend content={customLegend} layout="horizontal" verticalAlign="bottom" align="center" />
+          <Legend 
+            content={customLegend} 
+            layout="horizontal" 
+            verticalAlign="bottom" 
+            align="center"
+          />
         </PieChart>
       </ResponsiveContainer>
     </div>

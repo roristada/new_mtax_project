@@ -10,6 +10,7 @@ export async function GET(
   const { searchParams } = new URL(request.url);
   const year = searchParams.get("year");
   const companyId = searchParams.get("companyId");
+  console.log("check" ,year)
 
   interface Employee {
     name: string;

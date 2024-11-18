@@ -76,25 +76,33 @@ export async function DELETE(
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
-        subject: "Appointment Cancellation Confirmation",
+        subject: "Mtax Online Accounting : ยกเลิกการนัดหมาย",
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #333;">Appointment Cancellation</h2>
-            <p>Dear ${name},</p>
-            <p>We regret to inform you that your appointment has been canceled.</p>
+          <div style="font-family: 'Sarabun', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #d32f2f;">ยกเลิกการนัดหมาย</h2>
+            <p>เรียน คุณ${name},</p>
+            <p>ทางเราขออภัยที่ต้องแจ้งให้ทราบว่าการนัดหมายของคุณได้ถูกยกเลิก</p>
             
             <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <h3 style="color: #444; margin-top: 0;">Appointment Details:</h3>
-              <p><strong>Company:</strong> ${company}</p>
-              <p><strong>Date:</strong> ${formattedDate}</p>
-              <p><strong>Time:</strong> ${startTime} - ${endTime}</p>
+              <h3 style="color: #444; margin-top: 0;">รายละเอียดการนัดหมาย:</h3>
+              <p><strong>บริษัท:</strong> ${company}</p>
+              <p><strong>วันที่:</strong> ${formattedDate}</p>
+              <p><strong>เวลา:</strong> ${startTime} - ${endTime}</p>
             </div>
             
-            <p>If you have any questions, please don't hesitate to contact us.</p>
-            <p>Thank you for your understanding.</p>
+            <p>หากคุณมีข้อสงสัยหรือต้องการสอบถามข้อมูลเพิ่มเติม กรุณาติดต่อเราตามช่องทางด้านล่าง</p>
             
+            <div style="background-color: #e8f4f8; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <h4 style="color: #2c3e50; margin-top: 0;">ช่องทางการติดต่อ</h4>
+              <p style="color: #34495e; margin: 5px 0;">
+                <strong>โทรศัพท์:</strong> 02-950-0525 , 089-113-8565<br>
+                <strong>อีเมล:</strong> patinya@mtax.co.th , mtax@outlook.co.th<br>
+                <strong>Line Official:</strong> @Mtax
+              </p>
+            </div>
+
             <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
-              <p style="color: #666; font-size: 12px;">Best regards,<br>MTax Online Accounting<br>Payroll Outsourcing</p>
+              <p style="color: #666; font-size: 12px;">ขอแสดงความนับถือ<br>MTax Online Accounting<br>Payroll Outsourcing</p>
             </div>
           </div>
         `,
@@ -169,48 +177,66 @@ export async function PATCH(
     
       const emailContent = status === "canceled" 
         ? `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #d32f2f;">Appointment Canceled</h2>
-            <p>Dear ${appointment.name},</p>
-            <p>Your appointment has been canceled.</p>
+          <div style="font-family: 'Sarabun', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #d32f2f;">ยกเลิกการนัดหมาย</h2>
+            <p>เรียน คุณ${appointment.name},</p>
+            <p>การนัดหมายของคุณได้ถูกยกเลิก</p>
             
             <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <h3 style="color: #444; margin-top: 0;">Appointment Details:</h3>
-              <p><strong>Date:</strong> ${appointment.date.toLocaleDateString()}</p>
-              <p><strong>Time:</strong> ${appointment.startTime} - ${appointment.endTime}</p>
+              <h3 style="color: #444; margin-top: 0;">รายละเอียดการนัดหมาย:</h3>
+              <p><strong>วันที่:</strong> ${appointment.date.toLocaleDateString('th-TH')}</p>
+              <p><strong>เวลา:</strong> ${appointment.startTime} - ${appointment.endTime}</p>
             </div>
             
-            <p>Please contact us if you need further assistance.</p>
+            <p>หากคุณมีข้อสงสัย กรุณาติดต่อเราตามช่องทางด้านล่าง</p>
             
+            <div style="background-color: #e8f4f8; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <h4 style="color: #2c3e50; margin-top: 0;">ช่องทางการติดต่อ</h4>
+              <p style="color: #34495e; margin: 5px 0;">
+                <strong>โทรศัพท์:</strong> 02-950-0525 , 089-113-8565<br>
+                <strong>อีเมล:</strong> patinya@mtax.co.th , mtax@outlook.co.th<br>
+                <strong>Line Official:</strong> @Mtax
+              </p>
+            </div>
+
             <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
-              <p style="color: #666; font-size: 12px;">Best regards,<br>MTax Online Accounting<br>Payroll Outsourcing</p>
+              <p style="color: #666; font-size: 12px;">ขอแสดงความนับถือ<br>MTax Online Accounting<br>Payroll Outsourcing</p>
             </div>
           </div>
         `
         : `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #2e7d32;">Appointment Confirmed</h2>
-            <p>Dear ${appointment.name},</p>
-            <p>Your appointment has been confirmed.</p>
+          <div style="font-family: 'Sarabun', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #2e7d32;">ยืนยันการนัดหมาย</h2>
+            <p>เรียน คุณ${appointment.name},</p>
+            <p>การนัดหมายของคุณได้รับการยืนยันเรียบร้อยแล้ว</p>
             
             <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <h3 style="color: #444; margin-top: 0;">Appointment Details:</h3>
-              <p><strong>Date:</strong> ${appointment.date.toLocaleDateString()}</p>
-              <p><strong>Time:</strong> ${appointment.startTime} - ${appointment.endTime}</p>
+              <h3 style="color: #444; margin-top: 0;">รายละเอียดการนัดหมาย:</h3>
+              <p><strong>วันที่:</strong> ${appointment.date.toLocaleDateString('th-TH')}</p>
+              <p><strong>เวลา:</strong> ${appointment.startTime} - ${appointment.endTime}</p>
             </div>
             
-            <p>We look forward to seeing you!</p>
+            <p>ขอบคุณที่ไว้วางใจใช้บริการของเรา</p>
             
+            <div style="background-color: #e8f4f8; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <h4 style="color: #2c3e50; margin-top: 0;">ช่องทางการติดต่อ</h4>
+              <p style="color: #34495e; margin: 5px 0;">
+                <strong>โทรศัพท์:</strong> 02-950-0525 , 089-113-8565<br>
+                <strong>อีเมล:</strong> patinya@mtax.co.th , mtax@outlook.co.th<br>
+                <strong>Line Official:</strong> @Mtax
+              </p>
+            </div>
+
             <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
-              <p style="color: #666; font-size: 12px;">Best regards,<br>MTax Online Accounting<br>Payroll Outsourcing</p>
+              <p style="color: #666; font-size: 12px;">ขอแสดงความนับถือ<br>MTax Online Accounting<br>Payroll Outsourcing</p>
             </div>
           </div>
         `;
     
       const mailOptions = {
-        from: process.env.EMAIL_USER, 
-        to: appointment.email, 
-        subject: status === "canceled" ? "Appointment Canceled" : "Appointment Confirmed",
+        from: process.env.EMAIL_USER,
+        to: appointment.email,
+        subject: status === "canceled" ? "Mtax Online Accounting : ยกเลิกการนัดหมาย" : "Mtax Online Accounting : ยืนยันการนัดหมาย",
         html: emailContent,
       };
     

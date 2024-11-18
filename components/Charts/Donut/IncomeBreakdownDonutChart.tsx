@@ -80,6 +80,14 @@ export const IncomeBreakdownDonutChart: React.FC<
     0
   );
 
+  if ( totalIncome === 0) {
+    return (
+      <Card className="w-full h-[450px] flex items-center justify-center">
+        <p className="text-gray-500 text-lg">{t('no_data_available')}</p>
+      </Card>
+    );
+  }
+
   const CustomizedLabel = ({
     cx,
     cy,
@@ -120,14 +128,14 @@ export const IncomeBreakdownDonutChart: React.FC<
   const CustomizedLegend = (props: any) => {
     const { payload } = props;
     return (
-      <ul className="flex flex-wrap justify-center gap-2 text-xs ">
+      <ul className="flex flex-wrap justify-center gap-2 text-[10px] sm:text-xs px-2">
         {payload.map((entry: any, index: any) => (
           <li key={`item-${index}`} className="flex items-center">
             <span
               style={{ backgroundColor: entry.color }}
-              className="inline-block w-3 h-3 mr-1"
+              className="inline-block w-2 h-2 sm:w-3 sm:h-3 mr-1"
             ></span>
-            <span>
+            <span className="whitespace-nowrap">
               {entry.value} (
               {((entry.payload.value / totalIncome) * 100).toFixed(1)}%)
             </span>
@@ -142,12 +150,12 @@ export const IncomeBreakdownDonutChart: React.FC<
       const data = payload[0].payload;
       const percentage = ((data.value / totalIncome) * 100).toFixed(1);
       return (
-        <div className="custom-tooltip bg-white p-4 rounded-lg shadow-md border border-gray-200">
-          <p className="font-semibold text-lg mb-2">{data.name}</p>
-          <p className="text-sm text-gray-600 mb-1">
+        <div className="custom-tooltip bg-white p-2 sm:p-4 rounded-lg shadow-md border border-gray-200 max-w-[200px] sm:max-w-none">
+          <p className="font-semibold text-base sm:text-lg mb-1 sm:mb-2">{data.name}</p>
+          <p className="text-xs sm:text-sm text-gray-600 mb-1">
             {t('amount')}: <span className="font-medium">{formatSalary(data.value)}</span>
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="text-xs sm:text-sm text-gray-600">
             {t('percentage')}: <span className="font-medium">{percentage}%</span>
           </p>
         </div>
@@ -156,14 +164,41 @@ export const IncomeBreakdownDonutChart: React.FC<
     return null;
   };
 
+  // Calculate dynamic chart dimensions based on screen size
+  const getChartDimensions = () => {
+    // Default small screen dimensions
+    let outerRadius = 80;
+    let innerRadius = 40;
+
+    // Adjust for larger screens
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth >= 640) { // sm
+        outerRadius = 100;
+        innerRadius = 50;
+      }
+      if (window.innerWidth >= 768) { // md
+        outerRadius = 120;
+        innerRadius = 60;
+      }
+      if (window.innerWidth >= 1024) { // lg
+        outerRadius = 150;
+        innerRadius = 80;
+      }
+    }
+
+    return { outerRadius, innerRadius };
+  };
+
   return (
     <Card className="flex flex-col h-full">
       <CardHeader className="items-center pb-0">
-        <CardTitle>{t('income_breakdown')}</CardTitle>
-        <CardDescription>{t('employee_income_distribution')}</CardDescription>
+        <CardTitle className="text-lg sm:text-xl text-center">{t('income_breakdown')}</CardTitle>
+        <CardDescription className="text-sm text-center px-2">
+          {t('employee_income_distribution')}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer config={chartConfig} className="w-full h-[450px]">
+        <ChartContainer config={chartConfig} className="w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Tooltip content={<CustomTooltip />} />
@@ -173,8 +208,8 @@ export const IncomeBreakdownDonutChart: React.FC<
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                outerRadius={150}
-                innerRadius={80}
+                outerRadius={getChartDimensions().outerRadius}
+                innerRadius={getChartDimensions().innerRadius}
                 paddingAngle={2}
                 labelLine={false}
                 label={<CustomizedLabel />}
@@ -183,16 +218,17 @@ export const IncomeBreakdownDonutChart: React.FC<
                   <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
               </Pie>
-              <Legend content={<CustomizedLegend />} />
+              <Legend content={<CustomizedLegend />} verticalAlign="bottom" />
             </PieChart>
           </ResponsiveContainer>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm mt-8">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          {t('total_income')}: {formatSalary(totalIncome)} <TrendingUp className="h-4 w-4" />
+      <CardFooter className="flex-col gap-2 text-xs sm:text-sm mt-4 sm:mt-8">
+        <div className="flex items-center gap-2 font-medium leading-none text-center">
+          {t('total_income')}: {formatSalary(totalIncome)} 
+          <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />
         </div>
-        <div className="leading-none text-muted-foreground">
+        <div className="leading-none text-muted-foreground text-center px-2">
           {t('showing_income_breakdown')}
         </div>
       </CardFooter>

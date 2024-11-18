@@ -127,6 +127,14 @@ export default function Component() {
       return;
     }
 
+    Swal.fire({
+      title: t("uploading"),
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     setLoading(true);
 
     const data = new FormData();
@@ -179,7 +187,6 @@ export default function Component() {
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
-          {loading && <div className="loading-indicator">{t("uploading")}</div>}
           <div className="space-y-2">
             <Label htmlFor="companyId">{t("companyLabel")}</Label>
             <Select

@@ -134,9 +134,6 @@ async function uploadToStorage(req: NextRequest) {
       });
     });
 
-    
-    
-
     const batchSize = 100; 
     const batches = chunk(parsedData, batchSize);
     let recordsInserted = 0;

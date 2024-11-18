@@ -211,21 +211,21 @@ export default function Compare({ slug }: { slug: string }) {
         setEmployeeCountGenderByYear(
           mainJsonResponse.employeeCountGenderByYear
         );
-        console.log(
-          mainJsonResponse.employeeCountByYear.map(
-            (item: { year: number; _count: { _all: number } }) =>
-              `${item.year} ${item._count._all}`
-          )
-        );
-        console.log(
-          mainJsonResponse.employeeCountGenderByYear.map(
-            (item: {
-              year: number;
-              gender: string;
-              _count: { _all: number };
-            }) => `${item.year} ${item.gender || "Null"}: ${item._count._all}`
-          )
-        );
+        // console.log(
+        //   mainJsonResponse.employeeCountByYear.map(
+        //     (item: { year: number; _count: { _all: number } }) =>
+        //       `${item.year} ${item._count._all}`
+        //   )
+        // );
+        // console.log(
+        //   mainJsonResponse.employeeCountGenderByYear.map(
+        //     (item: {
+        //       year: number;
+        //       gender: string;
+        //       _count: { _all: number };
+        //     }) => `${item.year} ${item.gender || "Null"}: ${item._count._all}`
+        //   )
+        // );
         // Sort and set data
         const sortedData = data.sort((a: ChartData, b: ChartData) => {
           if (a.year === b.year) {
@@ -262,7 +262,7 @@ export default function Compare({ slug }: { slug: string }) {
 
           // Fetch commission and diligence data for the latest year
           const commissionRes = await fetch(
-            `/api/dashboard/${slug}/commission_sum?companyId=${slug}&year=${latestYear}`
+            `/api/dashboard/${slug}/com-dil?companyId=${slug}&year=${latestYear}`
           );
           const commissionData = await commissionRes.json();
           setRangeCommission(commissionData.commissionRanges);
@@ -454,7 +454,7 @@ export default function Compare({ slug }: { slug: string }) {
     if (selectedMonthYear) {
       // Check if selectedMonthYear is not null
       fetchYears();
-      console.log(selectedMonthYear);
+      
     }
   }, [selectedMonthYear]); // Dependency array to run effect when selectedMonthYear change
 
@@ -482,13 +482,14 @@ export default function Compare({ slug }: { slug: string }) {
   const [rangeCommission, setRangeCommission] = useState<CommissionRange[]>([]);
   const [rangeDiligence, setRangeDiligence] = useState<CommissionRange[]>([]);
   const handleSelectedYearCom = (year: number) => {
+    console.log("year" ,year)
     setSelectedYearCom(year);
   };
 
   useEffect(() => {
     const fetchApi = async () => {
       const response = await fetch(
-        `/api/dashboard/${slug}/commission_sum?year=${selectedYearCom}`
+        `/api/dashboard/${slug}/com-dil?companyId=${slug}&year=${selectedYearCom}`
       );
       const data = await response.json();
       setRangeCommission(data.commissionRanges);
@@ -497,6 +498,10 @@ export default function Compare({ slug }: { slug: string }) {
 
     fetchApi();
   }, [selectedYearCom, slug]);
+
+   console.log("range" ,rangeCommission)
+    
+    console.log("dill" , rangeDiligence)
 
   return (
     <>

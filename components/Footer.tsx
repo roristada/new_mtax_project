@@ -1,5 +1,5 @@
 "use client"
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { SVGProps } from "react"
@@ -8,12 +8,14 @@ import { SVGProps } from "react"
 export default function Footer() {
   const [isClient, setIsClient] = useState(false);
   const locale = useLocale();
+  const t = useTranslations('Footer');
+
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   if (!isClient) {
-    return null; // or some placeholder/loading UI
+    return null; 
   }
 
   return (
@@ -21,64 +23,59 @@ export default function Footer() {
       <div className="container max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         <div className="flex flex-col items-start gap-4">
           <Link href="#" className="flex items-center gap-2" prefetch={false}>
-            
-            <span className="font-bold text-lg">Mtax Online Accounting</span>
+            <span className="font-bold text-lg">{t('companyName')}</span>
           </Link>
           <p className="text-muted-foreground">
-            Providing comprehensive accounting services to businesses of all sizes.
+            {t('tagline')}
           </p>
         </div>
         <div className="grid gap-2">
-          <h3 className="font-semibold">Quick Links</h3>
+          <h3 className="font-semibold">{t('quickLinks')}</h3>
           <Link href="#" className="hover:underline" prefetch={false}>
-            Home
+            {t('home')}
           </Link>
-          <Link href="#" className="hover:underline" prefetch={false}>
-            About
+          <Link href="#about" className="hover:underline" prefetch={false}>
+            {t('about')}
           </Link>
-          <Link href="#" className="hover:underline" prefetch={false}>
-            Services
+          <Link href="#service" className="hover:underline" prefetch={false}>
+            {t('services')}
           </Link>
-          <Link href="#" className="hover:underline" prefetch={false}>
-            Contact
+          <Link href="#contact" className="hover:underline" prefetch={false}>
+            {t('contact')}
           </Link>
         </div>
         <div className="grid gap-2">
-          <h3 className="font-semibold">Services</h3>
-          
+          <h3 className="font-semibold">{t('services')}</h3>
           <Link href={`/${locale}/service/online_accounting`} className="hover:underline" prefetch={false}>
-            Online Accounting
+            {t('onlineAccounting')}
           </Link>
           <Link href={`/${locale}/service/book`} className="hover:underline" prefetch={false}>
-            Bookkeeping Services
+            {t('bookkeepingServices')}
           </Link>
           <Link href={`/${locale}/service/business-startup`} className="hover:underline" prefetch={false}>
-            Business Startup
+            {t('businessStartup')}
           </Link>
           <Link href={`/${locale}/service/payroll`} className="hover:underline" prefetch={false}>
-            Payroll Outsourcing
+            {t('payrollOutsourcing')}
           </Link>
         </div>
         <div className="grid gap-2">
-          <h3 className="font-semibold">Follow Us</h3>
+          <h3 className="font-semibold">{t('followUs')}</h3>
           <div className="flex gap-4">
-            <Link href="#" className="text-muted-foreground hover:text-primary" prefetch={false}>
+            <Link href="https://twitter.com/MtaxOnline" className="text-muted-foreground hover:text-primary" prefetch={false}>
               <TwitterIcon className="w-6 h-6" />
             </Link>
-            <Link href="#" className="text-muted-foreground hover:text-primary" prefetch={false}>
+            <Link href="https://www.facebook.com/mtaxonline/" className="text-muted-foreground hover:text-primary" prefetch={false}>
               <FacebookIcon className="w-6 h-6" />
             </Link>
-            <Link href="#" className="text-muted-foreground hover:text-primary" prefetch={false}>
+            <Link href="http://www.linkedin.com/in/MtaxOnline" className="text-muted-foreground hover:text-primary" prefetch={false}>
               <LinkedinIcon className="w-6 h-6" />
-            </Link>
-            <Link href="#" className="text-muted-foreground hover:text-primary" prefetch={false}>
-              <InstagramIcon className="w-6 h-6" />
             </Link>
           </div>
         </div>
       </div>
       <div className="container max-w-7xl mt-12 border-t pt-6 text-center text-sm text-muted-foreground">
-        &copy; 2024 Mtax. All rights reserved.
+        {t('copyright', { year: new Date().getFullYear() })}
       </div>
     </footer>
   )

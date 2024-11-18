@@ -134,6 +134,7 @@ Table Report {
   problem_report String
   status String [not null, default: 'pending']
   createdAt DateTime [default: `now()`, not null]
+  images String
   user User [not null]
 }
 

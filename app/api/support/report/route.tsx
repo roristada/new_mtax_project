@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import nodemailer from 'nodemailer';
+import { Storage } from '@google-cloud/storage';
+import { v4 as uuidv4 } from 'uuid';
 
 const prisma = new PrismaClient();
 
@@ -12,22 +14,52 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const storage = new Storage({
+  projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+  credentials: {
+    client_email: process.env.GOOGLE_CLOUD_CLIENT_EMAIL,
+    private_key: process.env.GOOGLE_CLOUD_PRIVATE_KEY ? 
+      process.env.GOOGLE_CLOUD_PRIVATE_KEY.replace(/\\n/g, '\n') : 
+      undefined,
+  },
+});
+
+const bucketName = 'mtax-storage-file';
+
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { name, company, email, category, description , userId} = body;
+    const formData = await request.formData();
+    const { name, company, email, category, description, userId } = Object.fromEntries(formData);
+    const images = formData.getAll('images');
 
-    
+    const imageUrls = [];
+    for (const image of images) {
+      if (image instanceof File) {
+        const bucket = storage.bucket(bucketName);
+        const extension = image.name.split('.').pop();
+        const filename = `reports/${uuidv4()}.${extension}`;
+        const file = bucket.file(filename);
+        
+        const buffer = Buffer.from(await image.arrayBuffer());
+        await file.save(buffer, {
+          contentType: image.type,
+        });
+
+        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+        imageUrls.push(publicUrl);
+      }
+    }
+
     const report = await prisma.report.create({
       data: {
-        userId: parseInt(userId),
-        name,
-        company,
-        email,
-        category,
-        description,
+        userId: parseInt(userId as string),
+        name: name as string,
+        company: company as string,
+        email: email as string,
+        category: category as string,
+        description: description as string,
         status: "pending",
-        
+        images: JSON.stringify(imageUrls),
       },
     });
 

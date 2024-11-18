@@ -121,13 +121,13 @@ const Blog_manage = () => {
   const handleDeletepost = (id: number) => {
     if (isMounted) {
       Swal.fire({
-        title: "Delete Post",
-        text: "Are you sure you want to delete this Post?",
+        title: t('alerts.delete.title'),
+        text: t('alerts.delete.text'),
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: t('alerts.delete.confirmButton'),
       }).then(async (result: any) => {
         if (result.isConfirmed) {
           try {
@@ -138,21 +138,21 @@ const Blog_manage = () => {
             if (res.ok) {
               setPosts(posts.filter((posts) => posts.id !== id));
               Swal.fire({
-                title: "Deleted!",
-                text: "Your Post has been deleted.",
+                title: t('alerts.delete.success.title'),
+                text: t('alerts.delete.success.text'),
                 icon: "success",
               });
             } else {
               Swal.fire({
-                title: "Error!",
-                text: "Failed to delete the Post.",
+                title: t('alerts.delete.error.title'),
+                text: t('alerts.delete.error.text'),
                 icon: "error",
               });
             }
           } catch (error) {
             Swal.fire({
-              title: "Error!",
-              text: "An error occurred while deleting the Post.",
+              title: t('alerts.delete.error.title'),
+              text: t('alerts.delete.error.generalError'),
               icon: "error",
             });
             console.error("Failed to delete Post:", error);
@@ -177,7 +177,7 @@ const Blog_manage = () => {
           title: selectedPost.title,
           content: selectedPost.content,
           category: selectedPost.category,
-          status: selectedPost.status, 
+          status: selectedPost.status,
         }),
       });
 
@@ -187,29 +187,28 @@ const Blog_manage = () => {
           const newPosts = prevPosts.map((post) =>
             post.id === updatedPost.id ? { ...post, ...updatedPost } : post
           );
-          console.log("New posts state:", newPosts); 
           return newPosts;
         });
 
         Swal.fire({
-          title: "Success!",
-          text: "Your Post has been updated.",
+          title: t('alerts.edit.success.title'),
+          text: t('alerts.edit.success.text'),
           icon: "success",
         });
         setSelectedPost(null);
-        setIsDialogOpen(false); 
+        setIsDialogOpen(false);
         fetchPosts();
       } else {
         Swal.fire({
-          title: "Error!",
-          text: "Failed to update the Post.",
+          title: t('alerts.edit.error.title'),
+          text: t('alerts.edit.error.text'),
           icon: "error",
         });
       }
     } catch (error) {
       Swal.fire({
-        title: "Error!",
-        text: "An error occurred while updating the Post.",
+        title: t('alerts.edit.error.title'),
+        text: t('alerts.edit.error.generalError'),
         icon: "error",
       });
       console.error("Failed to update Post:", error);

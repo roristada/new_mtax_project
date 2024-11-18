@@ -18,12 +18,13 @@ import { useLocale, useTranslations } from "next-intl";
 import useAuthEffect from "../../../lib/useAuthEffect";
 
 interface FormData {
+  userId: string;
   name: string;
   company: string;
   email: string;
   category: string;
   description: string;
-  userId: string;
+  images: File[];
 }
 
 export default function ProblemReportForm() {
@@ -38,6 +39,7 @@ export default function ProblemReportForm() {
     email: "",
     category: "",
     description: "",
+    images: [],
   });
 
   const route = useRouter();
@@ -71,24 +73,23 @@ export default function ProblemReportForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-
-    setFormData({
-      userId: session?.user?.id || "",
-      name: "",
-      company: "",
-      email: "",
-      category: "",
-      description: "",
+    
+    const formDataToSend = new FormData();
+    formDataToSend.append('userId', formData.userId);
+    formDataToSend.append('name', formData.name);
+    formDataToSend.append('company', formData.company);
+    formDataToSend.append('email', formData.email);
+    formDataToSend.append('category', formData.category);
+    formDataToSend.append('description', formData.description);
+    
+    formData.images.forEach(image => {
+      formDataToSend.append('images', image);
     });
 
     try {
       const res = await fetch(`/api/support/report`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
 
       if (res.ok) {
@@ -131,6 +132,15 @@ export default function ProblemReportForm() {
       ...prevData,
       [id]: value,
     }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFormData(prev => ({
+        ...prev,
+        images: Array.from(e.target.files || []),
+      }));
+    }
   };
 
   return (
@@ -229,6 +239,18 @@ export default function ProblemReportForm() {
               />
             </div>
           )}
+
+          <div className="space-y-2">
+            <Label htmlFor="images">{t('images')}</Label>
+            <Input
+              id="images"
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleFileChange}
+              className="border border-gray-300 rounded-md"
+            />
+          </div>
 
           <Button
             type="submit"

@@ -347,7 +347,7 @@ const Dashboard = () => {
         </div>
       ) : (
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-          <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             <Card x-chunk="dashboard-01-chunk-0">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
@@ -411,33 +411,28 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </div>
-          <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-            <Card
-              className="xl:col-span-2 xl:row-span-2"
-              x-chunk="dashboard-01-chunk-4"
-            >
-              <CardHeader className="flex flex-row items-center">
+          <div className="grid gap-4 md:gap-8 grid-cols-1 xl:grid-cols-3">
+            <Card className="xl:col-span-2">
+              <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <div className="grid gap-2">
                   <CardTitle>{t("company")}</CardTitle>
                   <CardDescription>{t("recentTransactions")}</CardDescription>
                 </div>
-                <div className="ml-auto">
+                <div className="sm:ml-auto">
                   <Link href={`/dashboard/formUpload`}>
                     <Button>{t("uploadFile")}</Button>
                   </Link>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{t("customer")}</TableHead>
-                      <TableHead className="">{t("contact")}</TableHead>
-                      <TableHead className="">{t("name")}</TableHead>
-                      <TableHead className="">{t("date")}</TableHead>
-                      <TableHead className="text-center">
-                        {t("details")}
-                      </TableHead>
+                      <TableHead className="w-[200px]">{t("customer")}</TableHead>
+                      <TableHead className="hidden sm:table-cell">{t("contact")}</TableHead>
+                      <TableHead className="hidden md:table-cell">{t("name")}</TableHead>
+                      <TableHead className="hidden sm:table-cell">{t("date")}</TableHead>
+                      <TableHead className="text-center">{t("details")}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -445,72 +440,74 @@ const Dashboard = () => {
                       <TableRow key={user.id}>
                         <TableCell>
                           <div className="font-medium">{user.company}</div>
-                          <div className="hidden text-sm text-muted-foreground md:inline">
+                          <div className="text-sm text-muted-foreground md:hidden">
                             {user.email}
                           </div>
                         </TableCell>
-                        <TableCell className="">{user.telephone}</TableCell>
-                        <TableCell className="">{user.name}</TableCell>
-                        <TableCell className="">
+                        <TableCell className="hidden sm:table-cell">{user.telephone}</TableCell>
+                        <TableCell className="hidden md:table-cell">{user.name}</TableCell>
+                        <TableCell className="hidden sm:table-cell">
                           {formatDateInThailand(user.createdAt)}
                         </TableCell>
                         <TableCell className="text-center">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="outline" className="p-2 mr-2">
-                                {<ScanSearch className="h-4 w-4 " />}
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuSeparator />
-                              <Link href={`/dashboard/${user.id}`}>
-                                <DropdownMenuItem>
-                                  {t("overview")}
-                                </DropdownMenuItem>
-                              </Link>
+                          <div className="flex justify-center gap-2">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="outline" className="p-2 mr-2">
+                                  {<ScanSearch className="h-4 w-4 " />}
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent>
+                                <DropdownMenuSeparator />
+                                <Link href={`/dashboard/${user.id}`}>
+                                  <DropdownMenuItem>
+                                    {t("overview")}
+                                  </DropdownMenuItem>
+                                </Link>
 
-                              <DropdownMenuSeparator />
-                              <Link href={`/dashboard/${user.id}/employee`}>
-                                <DropdownMenuItem>
-                                  {t("employee")}
-                                </DropdownMenuItem>
-                              </Link>
+                                <DropdownMenuSeparator />
+                                <Link href={`/dashboard/${user.id}/employee`}>
+                                  <DropdownMenuItem>
+                                    {t("employee")}
+                                  </DropdownMenuItem>
+                                </Link>
 
-                              <DropdownMenuSeparator />
-                              <Link
-                                href={`/dashboard/${user.id}/data_details/data_visualization`}
-                              >
-                                <DropdownMenuItem>
-                                  {t("dataVisualization")}
+                                <DropdownMenuSeparator />
+                                <Link
+                                  href={`/dashboard/${user.id}/data_details/data_visualization`}
+                                >
+                                  <DropdownMenuItem>
+                                    {t("dataVisualization")}
+                                  </DropdownMenuItem>
+                                </Link>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="outline" className="p-2 ">
+                                  {<Trash className="h-4 w-4" />}
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onSelect={async (event) => {
+                                  event.preventDefault();
+                                  setSelectedUserId(user.id);
+                                  await fetchYearData(user.id);
+                                  setDeleteDataOpen(true);
+                                }}>
+                                  {t("delete_intable.deleteData")}
                                 </DropdownMenuItem>
-                              </Link>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="outline" className="p-2 ">
-                                {<Trash className="h-4 w-4" />}
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem onSelect={async (event) => {
-                                event.preventDefault();
-                                setSelectedUserId(user.id);
-                                await fetchYearData(user.id);
-                                setDeleteDataOpen(true);
-                              }}>
-                                {t("delete_intable.deleteData")}
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem onSelect={(event) => {
-                                event.preventDefault();
-                                deleteAccount(user.id);
-                              }}>
-                                {t("delete_intable.deleteAccount")}
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onSelect={(event) => {
+                                  event.preventDefault();
+                                  deleteAccount(user.id);
+                                }}>
+                                  {t("delete_intable.deleteAccount")}
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -518,8 +515,8 @@ const Dashboard = () => {
                 </Table>
               </CardContent>
             </Card>
-            <div className=" grid row-span-2 gap-4">
-              <Card x-chunk="dashboard-01-chunk-5">
+            <div className="grid gap-4">
+              <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle>{t("recentBlogs")}</CardTitle>
                   <Link href="/blog/admin">
@@ -528,52 +525,52 @@ const Dashboard = () => {
                     </Button>
                   </Link>
                 </CardHeader>
-                {data?.blog && data.blog.length > 0 ? (
-                  <>
-                    {/* Take only the first 5 blogs using slice(0,5) */}
-                    {data.blog.slice(0, 5).map((blog) => (
-                      <CardContent key={blog.id} className="grid gap-8">
-                        <div className="flex items-center gap-4">
-                          <div className="grid gap-1">
-                            <p className="text-sm font-medium leading-none">
-                              <Link href={`/blog/${blog.id}`}>
-                                {blog.title}
-                              </Link>
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              {blog.createdAt}
-                            </p>
+                <CardContent className="space-y-4">
+                  {data?.blog && data.blog.length > 0 ? (
+                    <>
+                      {/* Take only the first 5 blogs using slice(0,5) */}
+                      {data.blog.slice(0, 5).map((blog) => (
+                        <CardContent key={blog.id} className="grid gap-8">
+                          <div className="flex items-center gap-4">
+                            <div className="grid gap-1">
+                              <p className="text-sm font-medium leading-none">
+                                <Link href={`/blog/${blog.id}`}>
+                                  {blog.title}
+                                </Link>
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {blog.createdAt}
+                              </p>
+                            </div>
+                            <div className="ml-auto font-medium">
+                              {blog.category}
+                            </div>
                           </div>
-                          <div className="ml-auto font-medium">
-                            {blog.category}
-                          </div>
-                        </div>
-                      </CardContent>
-                    ))}
-                  </>
-                ) : (
-                  <CardContent className="grid gap-8">
-                    <p className="text-sm text-muted-foreground">
-                      {t("noBlogs")}
-                    </p>
-                  </CardContent>
-                )}
+                        </CardContent>
+                      ))}
+                    </>
+                  ) : (
+                    <CardContent className="grid gap-8">
+                      <p className="text-sm text-muted-foreground">
+                        {t("noBlogs")}
+                      </p>
+                    </CardContent>
+                  )}
+                </CardContent>
               </Card>
 
-              <Card className="shadow-lg">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-xl font-bold">
-                    {t("calendar")}
-                  </CardTitle>
+                  <CardTitle>{t("calendar")}</CardTitle>
                   <CardDescription>{t("calendarDescription")}</CardDescription>
                 </CardHeader>
-                <CardContent className="w-full grid grid-col-1 lg:grid-cols-1 mx-auto">
-                  <div className="w-full flex ">
+                <CardContent>
+                  <div className="w-full">
                     <Calendar
                       onChange={onDateChange}
                       value={selectedDate}
                       tileContent={getTileContent}
-                      className="rounded-lg shadow-md w-full lg:w-full"
+                      className="rounded-lg shadow-md w-full max-w-full"
                     />
                   </div>
                 </CardContent>

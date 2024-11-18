@@ -106,7 +106,7 @@ export default function Sidebar() {
   // ดึง ID จาก params หรือ session
   const id = params?.slug || (session?.user?.role === 'customer' ? session?.user?.id : '');
 
-  // ตรวจสอบว่า admin กำลังดูข้อมูลของ customer หรือไ���่
+  // ตรวจสอบว่า admin กำลังดูข้อมูลของ customer หรือไ
   const isAdminOnUserDashboard = useMemo(() => {
     const isAdmin = session?.user?.role === 'admin';
     const hasSlug = Boolean(params?.slug);
@@ -160,6 +160,7 @@ export default function Sidebar() {
   const t = useTranslations("Sidebar");
 
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleSubmenu = (id: string) => {
     setOpenSubmenu(openSubmenu === id ? null : id);
@@ -233,63 +234,101 @@ console.log(session?.user?.role);
   return (
     <TooltipProvider>
       <div className="flex min-h-screen w-full flex-col bg-muted/40">
-        <aside className="fixed inset-y-0 left-0 z-10 hidden w-[10%] flex-col border-r bg-background sm:flex">
-          <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
+        {/* Mobile Menu Button - Only visible on small screens */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg sm:hidden"
+        >
+          <PanelLeft className="h-5 w-5" />
+        </button>
+
+        {/* Sidebar - Hidden on mobile by default, shown when menu opened */}
+        <aside className={`
+          fixed inset-y-0 left-0 z-40 
+          w-64 sm:w-[10%] flex-col border-r bg-background
+          transition-transform duration-300 ease-in-out
+          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} 
+          sm:translate-x-0 sm:flex
+        `}>
+          <nav className="flex flex-col items-center gap-4 px-2 py-5">
+            {/* Logo */}
             <Link
               href="/"
-              className={`group flex h-12 w-full max-w-[200px] items-center justify-center rounded-lg px-4 text-xl font-bold text-white transition-all duration-300 ease-in-out hover:from-blue-700 hover:to-purple-700 hover:shadow-lg `}
+              className="group flex h-12 w-full max-w-[200px] items-center justify-center rounded-lg px-4 text-xl font-bold"
             >
               <span className="text-2xl text-blue-500">M</span>
-              <span className="relative">
-                <span className="relative z-10 text-red-500">tax</span>
-                <span className="absolute inset-x-0 bottom-0 h-2 w-full bg-white/20 transform skew-x-12"></span>
-              </span>
-              <span className="sr-only">Mtax</span>
+              <span className="text-red-500">tax</span>
             </Link>
+
+            {/* Navigation Links */}
             {links.map((link) => (
               <div key={link.id} className="w-full">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Link
                       href={link.subMenu ? '#' : getUrl(link.url)}
-                      className={`flex items-center rounded-lg transition-all duration-300 ease-in-out md:w-full p-3 gap-2 relative overflow-hidden ${
-                        isLinkActive(link.url)
-                          ? "bg-gradient-to-r from-blue-200 to-purple-200 text-blue-800 shadow-sm"
-                          : "text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      }`}
-                      onClick={() => link.subMenu && toggleSubmenu(link.id.toString())}
+                      className={`flex items-center rounded-lg p-3 gap-2 relative group
+                        ${isLinkActive(link.url)
+                          ? "bg-gradient-to-r from-blue-200 to-purple-200 text-blue-800"
+                          : "text-gray-600 hover:bg-gray-100"
+                        }
+                      `}
+                      onClick={() => {
+                        if (link.subMenu) {
+                          toggleSubmenu(link.id.toString());
+                        }
+                        if (window.innerWidth < 640) {
+                          setIsMobileMenuOpen(false);
+                        }
+                      }}
                     >
+                      {/* Icon */}
                       {link.icon && (
-                        <link.icon className={`h-5 w-5 ${isLinkActive(link.url) ? 'text-blue-700' : 'text-gray-500'}`} />
+                        <link.icon className={`h-5 w-5 ${
+                          isLinkActive(link.url) ? 'text-blue-700' : 'text-gray-500'
+                        }`} />
                       )}
-                      <span className={`hidden lg:block relative z-10 font-medium ${
-                        isLinkActive(link.url) ? 'text-blue-800' : 'text-gray-700 dark:text-gray-300'
-                      }`}>
+                      
+                      {/* Link Text - แก้ไขส่วนนี้ */}
+                      <span className={`
+                        whitespace-nowrap text-sm
+                        ${isLinkActive(link.url) ? 'text-blue-800' : 'text-gray-700'}
+                        block sm:hidden lg:block
+                      `}>
                         {t(link.title)}
                       </span>
-                      {isLinkActive(link.url) && (
-                        <span className="absolute right-0 top-0 h-full w-1 bg-blue-400 rounded-l"></span>
-                      )}
-                      {link.subMenu && (
-                        <span className={`ml-auto transform transition-transform duration-200 ${openSubmenu === link.id.toString() ? 'rotate-180' : ''}`}>▼</span>
-                      )}
                     </Link>
                   </TooltipTrigger>
-                  <TooltipContent side="right">{t(link.title)}</TooltipContent>
+                  {/* แสดง Tooltip เฉพาะบน tablet */}
+                  <TooltipContent side="right" className="hidden sm:block lg:hidden">
+                    {t(link.title)}
+                  </TooltipContent>
                 </Tooltip>
+
+                {/* Submenu */}
                 {link.subMenu && openSubmenu === link.id.toString() && (
                   <div className="ml-4 mt-2 space-y-2">
                     {link.subMenu.map((subItem) => (
                       <Link
                         key={subItem.id}
                         href={getUrl(subItem.url)}
-                        className={`block rounded-md py-2 px-3 text-sm ${
-                          isLinkActive(subItem.url)
+                        className={`
+                          block rounded-md py-2 px-3
+                          text-sm whitespace-nowrap
+                          ${isLinkActive(subItem.url)
                             ? "bg-blue-100 text-blue-800"
-                            : "text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        }`}
+                            : "text-gray-600 hover:bg-gray-100"
+                          }
+                        `}
+                        onClick={() => {
+                          if (window.innerWidth < 640) {
+                            setIsMobileMenuOpen(false);
+                          }
+                        }}
                       >
-                        {t(subItem.title)}
+                        <span className="block sm:hidden lg:block">
+                          {t(subItem.title)}
+                        </span>
                       </Link>
                     ))}
                   </div>
@@ -297,56 +336,30 @@ console.log(session?.user?.role);
               </div>
             ))}
           </nav>
-          <nav className="mt-auto flex flex-col md:block gap-4 px-2 sm:py-5">
-            <div className="flex items-center mx-auto md:block">
-              <Button
-                className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center gap-2"
-                onClick={() =>
-                  signOut({
-                    callbackUrl: getBaseUrl(),
-                  })
-                }
-              >
-                <LogOut className="w-5 h-5" />
-                <span>Logout</span>
-              </Button>
-            </div>
-          </nav>
+
+          {/* Logout Button */}
+          <div className="mt-auto p-4">
+            <Button
+              className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+              onClick={() => signOut({ callbackUrl: getBaseUrl() })}
+            >
+              <LogOut className="w-5 h-5 mr-2" />
+              <span className="block sm:hidden lg:block">Logout</span>
+            </Button>
+          </div>
         </aside>
-        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-          <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button size="icon" variant="outline" className="sm:hidden">
-                  <PanelLeft className="h-5 w-5" />
-                  <span className="sr-only">Toggle Menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="sm:max-w-xs">
-                <nav className="grid gap-6 text-lg font-medium">
-                  <Link
-                    href="#"
-                    className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                  >
-                    <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-                    <span className="sr-only">Mtax</span>
-                  </Link>
-                  {links.map((link) => (
-                    <Link
-                      key={link.id}
-                      href={getUrl(link.url)}
-                      className={`flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground ${
-                        pathname === getUrl(link.url) && "text-foreground"
-                      }`}
-                    >
-                      <link.icon className="h-5 w-5" />
-                      {link.title}
-                    </Link>
-                  ))}
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </header>
+
+        {/* Overlay - Only visible on mobile when menu is open */}
+        {isMobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-30 sm:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+
+        {/* Main Content */}
+        <div className="flex flex-col sm:pl-[10%]">
+          {/* Your main content here */}
         </div>
       </div>
     </TooltipProvider>

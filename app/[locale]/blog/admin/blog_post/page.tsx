@@ -101,6 +101,16 @@ export default function Component() {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
+    
+    // Show loading state
+    Swal.fire({
+      title: t('submitting'),
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     const formDataToSend = new FormData();
     formDataToSend.append("title", formData.title);
     formDataToSend.append("author", formData.author);
@@ -113,17 +123,17 @@ export default function Component() {
     }
 
     try {
+      setLoading(true);
       const response = await fetch(`/api/blog`, {
         method: "POST",
         body: formDataToSend,
       });
 
-      setLoading(true);
       const data = await response.json();
 
       if (response.ok) {
         Swal.fire({
-          title: "Blog post created successfully!",
+          title: "บล็อกทำการโพสต์เรียบร้อย",
           icon: "success",
         }).then(() => {
           setLoading(false);
@@ -131,7 +141,7 @@ export default function Component() {
         });
       } else {
         Swal.fire({
-          title: "Something went wrong!",
+          title: "เกิดปัญหาในการโพสต์!",
           text: data.error,
           icon: "error",
         });
@@ -139,8 +149,8 @@ export default function Component() {
       }
     } catch (error) {
       Swal.fire({
-        title: "Something went wrong!",
-        text: "Failed to create the blog post.",
+        title: "เกิดปัญหาในการโพสต์",
+        text: "มีปัญหาบางอย่างเกิดขึ้นทำให้ไม่สามารถโพสต์ได้",
         icon: "error",
       });
       setLoading(false);

@@ -49,13 +49,16 @@ import Swal from "sweetalert2";
 import { useTranslations } from "next-intl";
 
 interface SupportCase {
-  id: string; 
+  id: string;
   name: string;
+  company: string;
+  email: string;
   category: string;
   status: string;
   description: string;
   createdAt: string;
-  problem_report?: string; 
+  problem_report?: string;
+  images: string; // JSON string of image URLs
 }
 
 export default function SupportAdmin() {
@@ -74,6 +77,7 @@ export default function SupportAdmin() {
       const data = await response.json();
       setReport(data.data);
       setTotalPages(Math.ceil(data.data.length / entriesPerPage));
+      console.log(data)
     };
 
     fetchSupport();
@@ -341,66 +345,126 @@ export default function SupportAdmin() {
           open={!!selectedCase}
           onOpenChange={() => setSelectedCase(null)}
         >
-          <DialogContent className="p-6 rounded-lg shadow-lg bg-white">
+          <DialogContent className="p-4 rounded-lg shadow-lg bg-white w-[90vw] max-w-3xl max-h-[80vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="text-lg font-semibold text-gray-800">
+              <DialogTitle className="text-xl font-semibold text-gray-800 mb-4">
                 {t('problemResolutionReport')}
               </DialogTitle>
             </DialogHeader>
+            
             <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <span className="text-gray-600">{t('descriptionFor')}</span>
-                <span className="font-bold text-blue-600">
-                  {selectedCase.name}
-                </span>
-              </div>
-              <div className="p-4 border-l-4 border-blue-500 bg-blue-50 rounded">
-                <p className="text-gray-800">{selectedCase.description}</p>
+              {/* Basic Information */}
+              <div className="grid grid-cols-2 gap-3 p-3 bg-gray-50 rounded-lg text-sm">
+                <div>
+                  <h3 className="font-semibold text-gray-700">{t('name')}</h3>
+                  <p>{selectedCase.name}</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-700">{t('company')}</h3>
+                  <p>{selectedCase.company}</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-700">{t('email')}</h3>
+                  <p>{selectedCase.email}</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-700">{t('category')}</h3>
+                  <p>{t(`categories.${selectedCase.category}`)}</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-700">{t('status')}</h3>
+                  <span
+                    className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium 
+                      ${
+                        selectedCase.status === "pending"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : selectedCase.status === "resolved"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                  >
+                    {t(`status.${selectedCase.status}`)}
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-700">{t('createdAt')}</h3>
+                  <p>{new Date(selectedCase.createdAt).toLocaleString()}</p>
+                </div>
               </div>
 
+              {/* Description */}
+              <div className="space-y-1">
+                <h3 className="font-semibold text-gray-700 text-sm">{t('description')}</h3>
+                <div className="p-3 border-l-4 border-blue-500 bg-blue-50 rounded text-sm">
+                  <p className="text-gray-800 whitespace-pre-wrap">{selectedCase.description}</p>
+                </div>
+              </div>
+
+              {/* Images */}
+              {selectedCase.images && JSON.parse(selectedCase.images).length > 0 && (
+                <div className="space-y-1">
+                  <h3 className="font-semibold text-gray-700 text-sm">{t('attachedImages')}</h3>
+                  <div className="grid grid-cols-3 gap-2">
+                    {JSON.parse(selectedCase.images).map((imageUrl: string, index: number) => (
+                      <div key={index} className="relative aspect-video">
+                        <img
+                          src={imageUrl}
+                          alt={`Attached image ${index + 1}`}
+                          className="object-cover w-full h-full rounded cursor-pointer hover:opacity-90"
+                          onClick={() => {
+                            Swal.fire({
+                              imageUrl,
+                              imageAlt: `Attached image ${index + 1}`,
+                              width: 'auto',
+                              padding: '1em',
+                              showConfirmButton: false,
+                              showCloseButton: true,
+                              background: '#fff',
+                              imageWidth: '100%',
+                              imageHeight: 'auto',
+                            });
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Resolution Report Section */}
               {selectedCase.status === "resolved" ? (
-                <>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-gray-600">
-                      {t('resolutionReportFor')}
-                    </span>
-                    <span className="font-bold text-blue-600">
-                      {selectedCase.name}
-                    </span>
+                <div className="space-y-1">
+                  <h3 className="font-semibold text-gray-700 text-sm">{t('resolutionReport')}</h3>
+                  <div className="p-3 border-l-4 border-green-500 bg-green-50 rounded text-sm">
+                    <p className="text-gray-800 whitespace-pre-wrap">{selectedCase.problem_report}</p>
                   </div>
-                  <div className="p-4 border-l-4 border-green-400 bg-blue-50 rounded">
-                    <p className="text-gray-800">
-                      {selectedCase.problem_report}
-                    </p>
-                  </div>
-                </>
+                </div>
               ) : (
-                <>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-gray-600">
-                      {t('enterResolutionReportFor')}
-                    </span>
-                    <span className="font-bold text-blue-600">
-                      {selectedCase.name}
-                    </span>
-                  </div>
+                <div className="space-y-1">
+                  <h3 className="font-semibold text-gray-700 text-sm">{t('enterResolutionReport')}</h3>
                   <Textarea
                     placeholder={t('enterResolutionDetails')}
                     value={problemReport}
                     onChange={(e) => setProblemReport(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg p-2 focus:ring focus:ring-blue-200"
+                    className="w-full h-24 text-sm border border-gray-300 rounded focus:ring focus:ring-blue-200"
                   />
-                </>
+                </div>
               )}
             </div>
-            <DialogFooter className="flex justify-between">
-              <Button variant="outline" onClick={() => setSelectedCase(null)}>
-                {t('cancel')}
+
+            <DialogFooter className="flex justify-between mt-4 pt-2 border-t">
+              <Button 
+                variant="outline" 
+                onClick={() => setSelectedCase(null)}
+                className="text-sm"
+              >
+                {t('close')}
               </Button>
               {selectedCase.status !== "resolved" && (
                 <Button
                   onClick={handleReportSubmit}
-                  className="bg-blue-600 text-white hover:bg-blue-700"
+                  className="bg-blue-600 text-white hover:bg-blue-700 text-sm"
+                  disabled={!problemReport.trim()}
                 >
                   {t('submit')}
                 </Button>

@@ -1,9 +1,12 @@
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
 const Contact = () => {
+  const t = useTranslations('Contact');
+
   return (
     <section id="contact" className="container mx-auto px-5 py-4">
-      <h3 className='flex justify-center opacity-40 -mb-10'>Contact</h3>
+      <h3 className='flex justify-center opacity-40 -mb-10'>{t('title')}</h3>
       <div className="container px-5 py-24 mx-auto flex sm:flex-nowrap flex-wrap">
         <div className="lg:w-2/3 md:w-1/2 bg-black rounded-lg overflow-hidden sm:mr-10 p-1 flex items-end justify-start relative">
           <iframe
@@ -12,31 +15,49 @@ const Contact = () => {
             height="100%"
             loading="lazy"
           ></iframe>
-          </div>
+        </div>
         <div className="lg:w-1/3 md:w-1/2 bg-white flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0">
           <h2 className="text-gray-900 text-lg mb-1 title-font font-semibold underline">
-            ที่อยู่
+            {t('address.title')}
           </h2>
           <p className="leading-relaxed mb-3 text-gray-600">
-            Mtax Online Accounting Co.,Ltd. <br/>
-            บริษัท เอ็มแท็กซ์ บัญชีออนไลน์ จำกัด <br/>
-            92 ซอยนนทบุรี 46 ถนนสนามบินน้ำ ต.ท่าทราย อ.เมือง จ.นนทบุรี 11000
+            {t('address.companyName')}<br/>
+            {t('address.companyAddress')}
           </p>
           <h2 className="text-gray-900 text-lg mb-0 title-font font-semibold underline">
-            Contact
+            {t('contact.title')}
           </h2>
           <p className="leading-relaxed mb-1 text-gray-600">
-            ช่องทางการติดต่อของเรา
+            {t('contact.subtitle')}
           </p>
           <div className="relative mb-1">
-            <h2 className="text-gray-900 text-lg mb-0 title-font font-semibold underline">Email</h2>
-            <p><a href="mailto:patinya@mtax.co.th" className="text-indigo-500 leading-relaxed">patinya@mtax.co.th</a></p>
-            <p><a href="mailto:patinya@mtax.co.th" className="text-indigo-500 leading-relaxed">mtax@outlook.co.th</a></p>
-            <h1 className="text-gray-900 text-lg mb-0 title-font font-semibold underline">Tel.</h1>
-            <p className="">02-950-0525<br></br>089-113-8565</p>
-            <h1 className="text-gray-900 text-lg mb-0 title-font font-semibold underline">Fax.</h1>
-            <p className="">02-950-0470</p>
-            <h1 className="text-gray-900 text-lg mb-0 title-font font-semibold">LineID:@Mtax</h1>
+            <h2 className="text-gray-900 text-lg mb-0 title-font font-semibold underline">
+              {t('email.title')}
+            </h2>
+            <p>
+              <a href={`mailto:${t('email.email1')}`} className="text-indigo-500 leading-relaxed">
+                {t('email.email1')}
+              </a>
+            </p>
+            <p>
+              <a href={`mailto:${t('email.email2')}`} className="text-indigo-500 leading-relaxed">
+                {t('email.email2')}
+              </a>
+            </p>
+            <h1 className="text-gray-900 text-lg mb-0 title-font font-semibold underline">
+              {t('tel.title')}
+            </h1>
+            <p className="">
+              {t('tel.number1')}<br/>
+              {t('tel.number2')}
+            </p>
+            <h1 className="text-gray-900 text-lg mb-0 title-font font-semibold underline">
+              {t('fax.title')}
+            </h1>
+            <p className="">{t('fax.number')}</p>
+            <h1 className="text-gray-900 text-lg mb-0 title-font font-semibold">
+              {t('line.title')}
+            </h1>
           </div>
         </div>
       </div>

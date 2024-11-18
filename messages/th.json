@@ -7,9 +7,22 @@
     "about": "คลิกเพื่อไปยังหน้า about"
   },
   "Header": {
-    "mtax" : "Mtax",
+    "mtax": "Mtax",
     "onlineAccounting": "Online Accounting",
     "describe": "Mtax เราเป็นหนึ่งบริษัทผู้ให้บริการงานบันทึกบัญชีออนไลน์ (Online Accounting), งานด้านบัญชีภาษี (Tax Accounting), งานด้านบัญชีการเงิน (Financial Accounting) งานด้านบัญชีบริหาร (Management Accounting), งานด้านเงินเดือนพนักงาน (Payroll Outsourcing), จัดตั้งบริษัท (Business Startup) เราให้บริการเสมือนเป็นส่วนหนึ่งของทีมกิจการท่าน เราพร้อมก้าวเดินและเติบโตไปพร้อมกัน เราจะเป็นฟันเฟืองตัวหนึ่งของกิจการ เราจะรักษาผลประโยชน์ของกิจการท่านเป็นสิ่งที่เราคำนึงถึงเป็นอันดับแรก เรามีทีมงานที่มีคุณภาพและพัฒนาอย่างต่อเนื่องเพื่อพร้อมให้คำปรึกษาและดูแลงานที่รับผิดชอบอย่างเต็มประสิทธิภาพ"
+  },
+  "Login": {
+    "title": "เข้าสู่ระบบ",
+    "subtitle": "กรุณากรอกอีเมลและรหัสผ่านเพื่อเข้าสู่ระบบ",
+    "email": "อีเมล",
+    "emailPlaceholder": "example@email.com",
+    "password": "รหัสผ่าน",
+    "login": "เข้าสู่ระบบ",
+    "loggingIn": "กำลังเข้าสู่ระบบ...",
+    "resetPassword": "ลืมรหัสผ่าน",
+    "invalidCredentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+    "unexpectedError": "เกิดข้อผิดพลาดที่ไม่คาดคิด",
+    "loginError": "ข้อผิดพลาดในการเข้าสู่ระบบ"
   },
   "Navbar": {
     "home": "หน้าหลัก",
@@ -22,7 +35,8 @@
     "myAccount": "บัญชีของฉัน",
     "dashboard": "แดชบอร์ด",
     "support": "ช่วยเหลือ",
-    "logout": "ออกจากระบบ"
+    "logout": "ออกจากระบบ",
+    "profile": "ข้อมูลส่วนตัว"
   },
   "Services": {
     "title": "บริการ",
@@ -73,17 +87,49 @@
   },
   "Contact": {
     "title": "ติดต่อ",
-    "address": "ที่อยู่",
-    "contactUs": "ช่องทางการติดต่อของเรา",
-    "email": "อีเมล",
-    "tel": "โทร.",
-    "fax": "แฟกซ์"
+    "address": {
+      "title": "ที่อยู่",
+      "companyName": "บริษัท เอ็มแท็กซ์ บัญชีออนไลน์ จำกัด",
+      "companyAddress": "92 ซอยนนทบุรี 46 ถนนสนามบินน้ำ ต.ท่าทราย อ.เมือง จ.นนทบุรี 11000"
+    },
+    "contact": {
+      "title": "ติดต่อ",
+      "subtitle": "ช่องทางการติดต่อของเรา"
+    },
+    "email": {
+      "title": "อีเมล",
+      "email1": "patinya@mtax.co.th",
+      "email2": "mtax@outlook.co.th"
+    },
+    "tel": {
+      "title": "โทร.",
+      "number1": "02-950-0525",
+      "number2": "089-113-8565"
+    },
+    "fax": {
+      "title": "แฟกซ์",
+      "number": "02-950-0470"
+    },
+    "line": {
+      "title": "LineID:@Mtax"
+    }
   },
   "Footer": {
+    "bookkeepingServices": "สำนักงานบัญชี",
+    "payrollOutsourcing": "บัญชีเงินเดือน",
+    "companyName": "Mtax บริการบัญชีออนไลน์",
     "quickLinks": "ลิงก์ด่วน",
     "services": "บริการ",
     "followUs": "ติดตามเรา",
-    "copyright": "© 2024 Acme Accounting สงวนลิขสิทธิ์"
+    "copyright": "© 2024 Mtax Accounting สงวนลิขสิทธิ์",
+    "tagline": "ให้บริการด้านบัญชีครบวงจรสำหรับธุรกิจทุกขนาด",
+    "home": "หน้าแรก",
+    "about": "เกี่ยวกับเรา",
+    "contact": "ติดต่อเรา",
+    "onlineAccounting": "บัญชีออนไลน์",
+    "bookkeeping": "บริการทำบัญชี",
+    "businessStartup": "เริ่มต้นธุรกิจ",
+    "payroll": "บริการจัดทำเงินเดือน"
   },
   "About": {
     "title": "เกี่ยวกับเรา",
@@ -147,7 +193,7 @@
       "canceled": "ยกเลิก",
       "confirmed": "ยืนยัน"
     },
-    
+
     "pagination": {
       "previous": "ก่อนหน้า",
       "next": "ถัดไป",
@@ -188,14 +234,21 @@
       "confirmDelete": "การนัดหมายถูกลบแล้ว"
     }
   },
+
   "AppointmentForm": {
-    "title": "การนัดหมาย",
+    "title": "การนัดหมายให้คำปรึกษา",
     "subtitle": "กรอกรายละเอียดของคุณเพื่อทำการนัดหมาย",
     "tabs": {
       "customer": "ลูกค้า",
       "admin": "ผู้ดูแลระบบ"
     },
-    
+    "importantNote": "โปรดตรวจสอบข้อมูลให้ถูกต้องก่อนทำการจอง",
+    "bookingInstructions": "รายละเอียดการนัดหมาย",
+    "time": "การให้คำปรึกษาจะใช้เวลาประมาณ 1 ชั่วโมง",
+    "fillDetailsInstruction": "กรุณากรอกรายละเอียดให้ครบถ้วน",
+    "bookingTimeLimit": "สามารถนัดหมายล่วงหน้าได้ไม่เกิน 1 เดือน",
+    "confirmationProcess": "หลังจากกรอกฟอร์มเสร็จสิ้นจะได้รับรายละเอียดการนัดหมายที่ Email และรอยืนยันการนัดหมายจากเจ้าหน้าที่",
+
     "fields": {
       "name": "ชื่อ",
       "company": "บริษัท",
@@ -228,7 +281,7 @@
   },
   "Register": {
     "title": "ลงทะเบียน",
-    "subtitle": "กรอกรายละเอียดของคุณเพื่อสร้างบัญชี",
+    "subtitle": "กรอกรายละเอียดของลูกค้าเพื่อสร้างบัญชี",
     "fields": {
       "name": "ชื่อ",
       "company": "บริษัท",
@@ -305,9 +358,38 @@
       "private": "ส่วนตัว"
     },
     "submit": "โพสต์",
-    "submitting": "กำลังส่งโพสต์..."
+    "submitting": "กำลังส่งโพสต์...",
+    "alerts": {
+      "delete": {
+        "title": "ลบบทความ",
+        "text": "คุณแน่ใจหรือไม่ที่จะลบบทความนี้?",
+        "confirmButton": "ใช่, ลบเลย!",
+        "success": {
+          "title": "ลบแล้ว!",
+          "text": "บทความของคุณถูกลบแล้ว"
+        },
+        "error": {
+          "title": "ผิดพลาด!",
+          "text": "ไม่สามารถลบบทความได้",
+          "generalError": "เกิดข้อผิดพลาดขณะลบบทความ"
+        }
+      },
+      "edit": {
+        "success": {
+          "title": "อัพเดทบทความเรียบร้อย",
+          "text": "บทความของคุณถูกอัปเดตแล้ว"
+        },
+        "error": {
+          "title": "ผิดพลาด!",
+          "text": "ไม่สามารถอัปเดตบทความได้",
+          "generalError": "เกิดข้อผิดพลาดขณะอัปเดตบทความ"
+        }
+      }
+    }
+    
   },
   "PieChartIncome": {
+    "noDataAvailable": "ไม่พบข้อมูล",
     "percentage": "เปอร์เซ็นต์",
     "labels": {
       "salary": "เงินเดือน",
@@ -370,7 +452,6 @@
       "totalexpense": "ค่าใช้จ่าย",
       "totalincome": "รายได้",
       "totaltax": "ภาษี"
-      
     },
     "currency": "฿",
     "amount": "จำนวนเงิน",
@@ -670,7 +751,7 @@
     },
     "year": "ปี",
     "delete": "ลบข้อมูล",
-    "delete_intable" :{
+    "delete_intable": {
       "noDataFound": "ไม่พบข้อมูล",
       "noDataFoundDescription": "ไม่พบข้อมูลหรือไฟล์ที่มีอยู่สำหรับบริษัทนี้",
       "deleteSuccessMessage": "การลบข้อมูลปี {year} สำเร็จ",
@@ -739,7 +820,13 @@
     "uploadErrorTitle": "Oops...",
     "uploadErrorText": "มีข้อผิดพลาดเกิดขึ้น!",
     "uploadFailedTitle": "อัปโหลดเสียหาย",
-    "uploadFailedText": "การอัปโหลดไฟล์เสียหายเนื่องจากข้อผิดพลาดของเครือข่ายหรือเซิร์ฟเวอร์"
+    "uploadFailedText": "การอัปโหลดไฟล์เสียหายเนื่องจากข้อผิดพลาดของเครือข่ายหรือเซิร์ฟเวอร์",
+    "dataAlreadyExistsError": "มีข้อมูลของบริษัทและปีนี้อยู่แล้ว กรุณาอัปเดตข้อมูลที่มีอยู่",
+    "invalidFileError": "ไฟล์ที่อัปโหลดไม่ถูกต้องหรือไม่มีไฟล์",
+    "missingFieldsError": "กรุณาเลือกบริษัทและปี",
+    "userNotFoundError": "ไม่พบข้อมูลบริษัทในระบบ",
+    "networkError": "เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง",
+    "okButton": "ตกลง"
   },
   "Radian": {
     "employeeCount": "จำนวนพนักงาน",
@@ -792,11 +879,36 @@
     "noEmployeesInRange": "ไม่มีพนักงานในช่วงนี้",
     "close": "ปิด"
   },
+  "Blog": {
+    "title": "แบ่งปันความรู้ เสริมสร้างปัญญา",
+    "subtitle": "สำรวจบทความที่น่าสนใจของเราและขยายความเข้าใจในหัวข้อต่างๆ",
+    "viewPosts": "ดูบทความ",
+    "filterByCategory": "กรองตามหมวดหมู่",
+    "clearAll": "ล้างทั้งหมด",
+    "categories": {
+      "basic_accounting": "การจัดการบัญชีพื้นฐาน",
+      "tax_plan": "การวางแผนและจัดการภาษี",
+      "financial_plan": "การวางแผนการเงินและกลยุทธ์ทางธุรกิจ",
+      "financial_news": "ข่าวสารทางการเงินและการอัปเดตกฎหมาย",
+      "tips": "คำแนะนำจากผู้เชี่ยวชาญและเคล็ดลับ",
+      "other": "อื่นๆ",
+      "services": "บริการ"
+    }
+  },
   "SupportAdmin": {
     "title": "การจัดการรายงานปัญหา",
     "description": "จัดการรายงานปัญหาและดูรายละเอียด",
     "searchPlaceholder": "ค้นหาตามชื่อหรือหมวดหมู่...",
     "noSupportCases": "ไม่พบรายงานปัญหา",
+    "name": "ชื่อ",
+    "email": "อีเมล",
+    "status1": "สถานะ",
+    "company": "บริษัท",
+    "category": "หมวดหมู่",
+    "createdAt": "วันที่สร้าง",
+    "attachedImages": "ภาพประกอบ",
+    "resolutionReport": "รายงานการแก้ไขปัญหา",
+    "close": "ปิด",
     "tableHeaders": {
       "name": "ชื่อ",
       "category": "หมวดหมู่",
@@ -881,14 +993,14 @@
     "errorTitle": "เกิดข้อผิดพลาด",
     "errorText": "เกิดข้อผิดพลาดในการส่งรายงาน กรุณาลองอีกครั้ง"
   },
-  "Support":{
+  "Support": {
     "title": "การสนับสนุน",
     "description": "สนับสนุนลูกค้าและติดต่อกับทีมงาน",
     "report": "รายงาน",
     "chat": "แชท",
     "search": "ค้นหา..."
   },
-  "Topbar":{
+  "Topbar": {
     "welcome": "ยินดีต้อนรับ",
     "companyPlaceholder": "บริษัท: {name}",
     "namePlaceholder": "ชื่อ: {name}",
@@ -1019,5 +1131,4 @@
     "employeeDetails": "รายละเอียดพนักงาน",
     "resetFilter": "ยกเลิกการกรอง"
   }
-
 }

@@ -60,45 +60,63 @@ export async function POST(request: NextRequest) {
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
-        subject: "Mtax Online Accounting : Appointment Request Received",
+        subject: "Mtax Online Accounting : ได้รับคำขอการนัดหมายของคุณแล้ว",
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #2c3e50;">Appointment Request Received</h2>
-            <p style="color: #34495e;">Dear ${name},</p>
-            <p style="color: #34495e;">Thank you for submitting your appointment request. Our staff will review your request and contact you to confirm the appointment.</p>
+          <div style="font-family: 'Sarabun', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #2c3e50;">ได้รับคำขอการนัดหมายแล้ว</h2>
+            <p style="color: #34495e;">เรียน คุณ${name},</p>
+            <p style="color: #34495e;">ขอบคุณที่ส่งคำขอนัดหมายมายังเรา ทางเจ้าหน้าที่จะตรวจสอบคำขอของคุณและติดต่อกลับเพื่อยืนยันการนัดหมาย</p>
             
             <div style="background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
-              <h3 style="color: #2c3e50; margin-top: 0;">Appointment Details</h3>
+              <h3 style="color: #2c3e50; margin-top: 0;">รายละเอียดการนัดหมาย</h3>
               <table style="width: 100%; color: #34495e;">
                 <tr>
-                  <td style="padding: 8px 0;"><strong>Company:</strong></td>
+                  <td style="padding: 8px 0;"><strong>บริษัท:</strong></td>
                   <td>${company}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 8px 0;"><strong>Date:</strong></td>
+                  <td style="padding: 8px 0;"><strong>วันที่:</strong></td>
                   <td>${formattedDate}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 8px 0;"><strong>Start Time:</strong></td>
+                  <td style="padding: 8px 0;"><strong>เวลาเริ่ม:</strong></td>
                   <td>${startTime}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 8px 0;"><strong>End Time:</strong></td>
+                  <td style="padding: 8px 0;"><strong>เวลาสิ้นสุด:</strong></td>
                   <td>${endTime}</td>
                 </tr>
+                ${note ? `
+                <tr>
+                  <td style="padding: 8px 0;"><strong>หมายเหตุ:</strong></td>
+                  <td>${note}</td>
+                </tr>
+                ` : ''}
               </table>
             </div>
             
             <div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #ffc107;">
               <p style="color: #856404; margin: 0;">
-                <strong>Note:</strong> This is not a confirmation of your appointment. 
-                Our staff will review your request and contact you shortly to confirm the appointment.
+                <strong>หมายเหตุ:</strong> อีเมลนี้ยังไม่ใช่การยืนยันการนัดหมาย 
+                ทางเจ้าหน้าที่จะตรวจสอบคำขอของคุณและติดต่อกลับเพื่อยืนยันการนัดหมายอีกครั้ง
               </p>
             </div>
 
-            <p style="color: #34495e;">If you have any urgent questions, please contact us directly.</p>
-            <hr style="border: 1px solid #eee; margin: 20px 0;">
+            <p style="color: #34495e;">หากคุณมีคำถามเร่งด่วน กรุณาติดต่อเราโดยตรงตามช่องทางด้านล่างนี้</p>
             
+            <div style="background-color: #e8f4f8; padding: 15px; border-radius: 5px; margin: 20px 0;">
+              <h4 style="color: #2c3e50; margin-top: 0;">ช่องทางการติดต่อ</h4>
+              <p style="color: #34495e; margin: 5px 0;">
+                <strong>โทรศัพท์:</strong> 02-950-0525 , 089-113-8565<br>
+                <strong>อีเมล:</strong> patinya@mtax.co.th , mtax@outlook.co.th<br>
+                <strong>Line Official:</strong> @Mtax
+              </p>
+            </div>
+
+            <hr style="border: 1px solid #eee; margin: 20px 0;">
+            <p style="color: #666; font-size: 12px; text-align: center;">
+              © 2024 Mtax Online Accounting. All rights reserved.
+            </p>
           </div>
         `,
       };

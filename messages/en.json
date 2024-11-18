@@ -9,8 +9,25 @@
   "Header": {
     "mtax": "Mtax",
     "onlineAccounting": "Online Accounting",
-    "describe":"Mtax is a leading service provider specializing in Online Accounting, Tax Accounting, Financial Accounting, Management Accounting, Payroll Outsourcing, and Business Startup services. We provide services as if we are part of your business team. We are ready to grow and develop alongside you. We will be a vital cog in your business operations. Protecting your business interests is our top priority. We have a quality team that continuously develops to be ready to provide consultation and manage responsibilities with full efficiency."
+    "describe": "Mtax is a leading service provider specializing in Online Accounting, Tax Accounting, Financial Accounting, Management Accounting, Payroll Outsourcing, and Business Startup services. We provide services as if we are part of your business team. We are ready to grow and develop alongside you. We will be a vital cog in your business operations. Protecting your business interests is our top priority. We have a quality team that continuously develops to be ready to provide consultation and manage responsibilities with full efficiency."
   },
+  "Blog": {
+    "title": "Sharing Knowledge, Empowering Minds",
+    "subtitle": "Explore our collection of insightful blog posts and expand your understanding on a wide range of topics.",
+    "viewPosts": "View Blog Posts",
+    "filterByCategory": "Filter by Category",
+    "clearAll": "Clear All",
+    "categories": {
+      "basic_accounting": "Basic Accounting Management",
+      "tax_plan": "Tax Planning and Management",
+      "financial_plan": "Financial Planning and Business Strategy",
+      "financial_news": "Financial News and Legal Updates",
+      "tips": "Expert Advice and Tips",
+      "other": "Other",
+      "services": "Services"
+    }
+  },
+
   "Navbar": {
     "home": "Home",
     "about": "About",
@@ -22,7 +39,8 @@
     "myAccount": "My Account",
     "dashboard": "Dashboard",
     "support": "Support",
-    "logout": "Logout"
+    "logout": "Logout",
+    "profile": "Profile"
   },
   "Services": {
     "title": "Service",
@@ -73,11 +91,32 @@
   },
   "Contact": {
     "title": "Contact",
-    "address": "Address",
-    "contactUs": "Contact Us",
-    "email": "Email",
-    "tel": "Tel.",
-    "fax": "Fax."
+    "address": {
+      "title": "Address",
+      "companyName": "Mtax Online Accounting Co.,Ltd.",
+      "companyAddress": "92 Soi Nonthaburi 46, Sanambin Nam Road, Tha Sai Subdistrict, Mueang District, Nonthaburi Province 11000"
+    },
+    "contact": {
+      "title": "Contact",
+      "subtitle": "Contact Channels"
+    },
+    "email": {
+      "title": "Email",
+      "email1": "patinya@mtax.co.th",
+      "email2": "mtax@outlook.co.th"
+    },
+    "tel": {
+      "title": "Tel.",
+      "number1": "02-950-0525",
+      "number2": "089-113-8565"
+    },
+    "fax": {
+      "title": "Fax.",
+      "number": "02-950-0470"
+    },
+    "line": {
+      "title": "LineID:@Mtax"
+    }
   },
   "Footer": {
     "quickLinks": "Quick Links",
@@ -204,7 +243,14 @@
       "customer": "Customer",
       "admin": "Admin"
     },
-    
+
+    "bookingInstructions": "Appointment",
+    "fillDetailsInstruction": "Please fill in all required details completely",
+    "bookingTimeLimit": "You can make appointments up to 1 month in advance",
+    "time": "The consultation will take approximately 1 hour.",
+    "confirmationProcess": "After completing the form, you will receive appointment details via email and await confirmation from our staff",
+    "importantNote": "Important: Please ensure all information is accurate before submitting",
+
     "fields": {
       "name": "Name",
       "company": "Company",
@@ -230,7 +276,7 @@
       "message": "Your appointment has been successfully created. Please check your email for confirmation from us.",
       "messageAdmin": "Your appointment has been successfully created."
     },
-    
+
     "error": {
       "title": "Something went wrong!",
       "message": "An error occurred while creating the appointment"
@@ -238,7 +284,7 @@
   },
   "Register": {
     "title": "Register",
-    "subtitle": "Enter your details to create an account.",
+    "subtitle": "Enter customer details to create an account.",
     "fields": {
       "name": "Name",
       "company": "Company",
@@ -315,9 +361,37 @@
       "private": "Private"
     },
     "submit": "Submit Post",
-    "submitting": "Posting a blog..."
+    "submitting": "Posting a blog...",
+    "alerts": {
+      "delete": {
+        "title": "Delete Post",
+        "text": "Are you sure you want to delete this Post?",
+        "confirmButton": "Yes, delete it!",
+        "success": {
+          "title": "Deleted!",
+          "text": "Your Post has been deleted."
+        },
+        "error": {
+          "title": "Error!",
+          "text": "Failed to delete the Post.",
+          "generalError": "An error occurred while deleting the Post."
+        }
+      },
+      "edit": {
+        "success": {
+          "title": "Success!",
+          "text": "Your Post has been updated."
+        },
+        "error": {
+          "title": "Error!",
+          "text": "Failed to update the Post.",
+          "generalError": "An error occurred while updating the Post."
+        }
+      }
+    }
   },
   "PieChartIncome": {
+    "noDataAvailable": "No data available",
     "percentage": "Percentage",
     "labels": {
       "salary": "Salary",
@@ -343,6 +417,16 @@
     "value": "Value",
     "other": "Other",
     "otherItems": "Other items"
+  },
+  "Login": {
+    "title": "Login",
+    "subtitle": "Please enter your email and password to log in.",
+    "email": "Email",
+    "emailPlaceholder": "example@email.com",
+    "password": "Password",
+    "login": "Login",
+    "loggingIn": "Logging in...",
+    "resetPassword": "Forgot Password"
   },
   "Charts": {
     "income_expense": "Income - Expense",
@@ -585,8 +669,18 @@
     "footerTitle": "Financial Breakdown & Summary",
     "allYears": "All Years",
     "months": [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
     ],
     "tooltip": {
       "income": "Income",
@@ -662,7 +756,7 @@
   "DashboardAdmin": {
     "year": "Year",
     "delete": "Delete Data",
-    "delete_intable" :{
+    "delete_intable": {
       "noDataFound": "No Data Found",
       "noDataFoundDescription": "There is no data or files available for this company.",
       "deleteSuccessMessage": "Delete Success",
@@ -743,7 +837,13 @@
     "uploadErrorTitle": "Oops...",
     "uploadErrorText": "Something went wrong!",
     "uploadFailedTitle": "Upload Failed",
-    "uploadFailedText": "Failed to upload file due to a network or server error."
+    "uploadFailedText": "Failed to upload file due to a network or server error.",
+    "dataAlreadyExistsError": "Data for this company and year already exists. Please update the existing records.",
+    "invalidFileError": "The uploaded file is invalid or missing.",
+    "missingFieldsError": "Please select both company and year.",
+    "userNotFoundError": "Company not found in the system.",
+    "networkError": "Network error occurred. Please try again.",
+    "okButton": "OK"
   },
   "Radian": {
     "employeeCount": "Employee Count",
@@ -755,7 +855,7 @@
     "totalEmployees": "Total Employees: {count} in {year}",
     "total": "Total",
     "gender": "Gender",
-    "people":"People"
+    "people": "People"
   },
   "RangeCommission": {
     "employees": "Employees",
@@ -796,7 +896,7 @@
     "noEmployeesInRange": "No employees in this range.",
     "close": "Close"
   },
-  "Support":{
+  "Support": {
     "report": "Report",
     "chat": "Chat",
     "search": "Search...",
@@ -808,6 +908,15 @@
     "description": "Manage report problems and view details",
     "searchPlaceholder": "Search by name or category...",
     "noSupportCases": "No support cases found.",
+    "name": "Name",
+    "email": "Email",
+    "status1": "Status",
+    "company": "Company",
+    "category": "Category",
+    "createdAt": "Created At",
+    "attachedImages": "Attached Images",
+    "resolutionReport": "Resolution",
+    "close": "Close",
     "tableHeaders": {
       "name": "Name",
       "category": "Category",
@@ -862,9 +971,6 @@
     "submitSuccessText": "The report has been submitted successfully!",
     "deleteSuccessTitle": "Delete Success",
     "deleteSuccessText": "The report has been deleted successfully!"
-    
-    
-    
   },
   "ProblemReportForm": {
     "title": "Problem Report Form",
@@ -1025,5 +1131,4 @@
     "employeeDetails": "Employee Details",
     "resetFilter": "Reset Filter"
   }
-  
 }

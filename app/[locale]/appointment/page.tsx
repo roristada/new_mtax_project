@@ -189,8 +189,88 @@ export default function Appointment() {
           <div className="space-y-2 text-center">
             <h1 className="text-3xl font-bold">{t('title')}</h1>
             <p className="text-muted-foreground">
-              {t('subtitle')}
+              {/* {t('subtitle')} */}
             </p>
+          </div>
+
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 shadow-sm border border-blue-100">
+            <div className="flex items-center gap-2 mb-4">
+              <svg 
+                className="w-5 h-5 text-blue-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <h2 className="font-semibold text-lg text-gray-800">
+                {t('bookingInstructions')}
+              </h2>
+            </div>
+            
+            <ul className="space-y-3">
+              <li className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-blue-100">
+                  <span className="text-blue-600 text-sm">1</span>
+                </div>
+                <span className="text-gray-600">
+                  {t('fillDetailsInstruction')}
+                </span>
+              </li>
+              
+              <li className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-blue-100">
+                  <span className="text-blue-600 text-sm">2</span>
+                </div>
+                <span className="text-gray-600">
+                  {t('bookingTimeLimit')}
+                </span>
+              </li>
+              
+              <li className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-blue-100">
+                  <span className="text-blue-600 text-sm">3</span>
+                </div>
+                <span className="text-gray-600">
+                  {t('time')}
+                </span>
+              </li>
+              
+              <li className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-blue-100">
+                  <span className="text-blue-600 text-sm">4</span>
+                </div>
+                <span className="text-gray-600">
+                  {t('confirmationProcess')}
+                </span>
+              </li>
+            </ul>
+            
+            <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-100">
+              <div className="flex items-center gap-2 text-yellow-700">
+                <svg 
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+                <span className="text-sm font-medium">
+                  {t('importantNote')}
+                </span>
+              </div>
+            </div>
           </div>
 
           <form onSubmit={handleAppointment}>

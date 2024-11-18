@@ -9,9 +9,11 @@ import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale ,  useTranslations } from "next-intl";
+
 
 export default function Login() {
+  const t = useTranslations("Login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -39,13 +41,13 @@ export default function Login() {
         console.error(result.error);
         setError(
           result.error.includes("Credentials")
-            ? "Invalid email or password"
-            : "An unexpected error occurred"
+            ? t("invalidCredentials")
+            : t("unexpectedError")
         );
         Swal.fire({
           icon: "error",
-          title: "Login",
-          text: "Invalid email or password",
+          title: t("loginError"),
+          text: t("invalidCredentials"),
         });
       } else {
         router.push("/"); 
@@ -54,8 +56,8 @@ export default function Login() {
       setLoading(false);
       Swal.fire({
         icon: "error",
-        title: "Login",
-        text: "An unexpected error occurred",
+        title: t("loginError"),
+        text: t("unexpectedError"),
       }); 
     }
   };
@@ -66,19 +68,19 @@ export default function Login() {
       <div className="flex min-h-[80dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-md space-y-6 border p-12 rounded-lg shadow-md">
           <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-bold">Login</h1>
+            <h1 className="text-3xl font-bold">{t("title")}</h1>
             <p className="text-muted-foreground">
-              Enter your email and password to access your account.
+              {t("subtitle")}
             </p>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("email")}</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder={t("emailPlaceholder")}
                   onChange={(e) => setEmail(e.target.value)}
                   value={email}
                   required
@@ -86,8 +88,7 @@ export default function Login() {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  
+                  <Label htmlFor="password">{t("password")}</Label>
                 </div>
                 <Input
                   id="password"
@@ -98,12 +99,14 @@ export default function Login() {
                 />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Logging in..." : "Login"}
+                {loading ? t("loggingIn") : t("login")}
               </Button>
             </div>
           </form>
 
-          <Link className="text-sm text-muted-foreground hover:underline" href={`/${locale}/resetpassword`}>Reset Password</Link>
+          <Link className="text-sm text-muted-foreground hover:underline" href={`/${locale}/resetpassword`}>
+            {t("resetPassword")}
+          </Link>
         </div>
       </div>
     </>

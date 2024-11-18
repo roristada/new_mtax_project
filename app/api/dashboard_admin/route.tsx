@@ -49,8 +49,6 @@ export async function GET(req: NextRequest) {
         }));
 
         
-
-
         return NextResponse.json({
             message: "Fetch customer success",
             totalCustomer,

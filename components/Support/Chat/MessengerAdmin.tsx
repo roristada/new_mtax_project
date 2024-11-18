@@ -15,6 +15,7 @@ import { Input } from "../../../components/ui/input";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import { useSession } from "next-auth/react";
 import { Send } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type Message = {
   id: number;
@@ -53,7 +54,7 @@ export default function MessengerAdmin({ selectedRoom }: MessengerAdminProps) {
   const messageEndRef = useRef<HTMLDivElement>(null);
   const { data: session, status } = useSession();
   const adminId = session?.user?.id ? Number(session.user.id) : undefined;
-
+  const t = useTranslations('Chat');
   useEffect(() => {
     if (selectedRoom) {
       fetch(`/api/support/messages/admin?userId=${selectedRoom.customer.id}`)
@@ -113,7 +114,7 @@ export default function MessengerAdmin({ selectedRoom }: MessengerAdminProps) {
 
   if (!selectedRoom) {
     return (
-      <div className="text-center">Please select a room to start chatting.</div>
+      <div className="text-center">{t('noRoom')}</div>
     );
   }
 

@@ -850,7 +850,16 @@
     "dataVisualization": "Data Visualization",
     "overview": "Overview",
     "employee": "Employee",
-    "name": "Name"
+    "name": "Name",
+    "categories": {
+      "basic_accounting": "Basic Accounting Management",
+      "tax_plan": "Tax Planning and Management",
+      "financial_plan": "Financial Planning and Business Strategy",
+      "financial_news": "Financial News and Legal Updates",
+      "tips": "Expert Advice and Tips",
+      "other": "Other",
+      "services": "Services"
+    }
   },
   "Uploadcsv": {
     "cardTitle": "Upload CSV File",
@@ -937,7 +946,12 @@
     "title": "Support",
     "description": "Support customers and contact the team."
   },
+  "Chat": {
+    "noRoom": "Please select a User to start chatting."
+  },
   "SupportAdmin": {
+    "filterByStatus": "Filter by Status",
+    "allStatuses": "All Statuses",
     "title": "Manage Report Problems",
     "description": "Manage report problems and view details",
     "searchPlaceholder": "Search by name or category...",

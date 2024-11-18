@@ -70,6 +70,8 @@ export default function SupportAdmin() {
   const [selectedCase, setSelectedCase] = useState<SupportCase | null>(null); 
   const [problemReport, setProblemReport] = useState(""); 
   const [searchQuery, setSearchQuery] = useState(""); 
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   useEffect(() => {
     const fetchSupport = async () => {
@@ -84,13 +86,20 @@ export default function SupportAdmin() {
   }, [entriesPerPage]);
 
   const filteredReport = report.filter((caseItem) => {
-    const categoryMatch = caseItem.category
+    const searchMatch = caseItem.category
       .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const dateMatch = new Date(caseItem.createdAt)
-      .toLocaleDateString()
-      .includes(searchQuery);
-    return categoryMatch || dateMatch;
+      .includes(searchQuery.toLowerCase()) ||
+      new Date(caseItem.createdAt)
+        .toLocaleDateString()
+        .includes(searchQuery);
+    
+    const statusMatch = statusFilter === 'all' || caseItem.status === statusFilter;
+    
+    return searchMatch && statusMatch;
+  }).sort((a, b) => {
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
+    return sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
   });
 
   const startIndex = (currentPage - 1) * entriesPerPage;
@@ -187,6 +196,10 @@ export default function SupportAdmin() {
     }
   };
 
+  const toggleSort = () => {
+    setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+  };
+
   return (
     <Card className="w-full max-w-7xl mx-auto p-6 md:p-8">
       <div className="w-full space-y-6">
@@ -199,6 +212,21 @@ export default function SupportAdmin() {
             </span>
           </h2>
           <div className="flex items-center space-x-2 mt-4 md:mt-0">
+            {/* Status Filter */}
+            <Select
+              value={statusFilter}
+              onValueChange={setStatusFilter}
+            >
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder={t('filterByStatus')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('allStatuses')}</SelectItem>
+                <SelectItem value="pending">{t('status.pending')}</SelectItem>
+                <SelectItem value="resolved">{t('status.resolved')}</SelectItem>
+              </SelectContent>
+            </Select>
+
             {/* Search Bar */}
             <div className="relative">
               <Search className="absolute left-2 top-2.5 h-5 w-5 text-gray-400" />
@@ -209,9 +237,6 @@ export default function SupportAdmin() {
                 className="pl-10 w-64 rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
               />
             </div>
-            {/* <Button variant="outline" size="icon" className="ml-2">
-              <Filter className="h-5 w-5" />
-            </Button> */}
           </div>
         </div>
 
@@ -223,7 +248,15 @@ export default function SupportAdmin() {
                 <TableHead className="w-[300px] text-left">
                   {t('tableHeaders.category')}
                 </TableHead>
-                <TableHead>{t('tableHeaders.createdAt')}</TableHead>
+                <TableHead 
+                  className="cursor-pointer hover:bg-gray-50"
+                  onClick={toggleSort}
+                >
+                  {t('tableHeaders.createdAt')}
+                  <span className="ml-2">
+                    {sortDirection === 'asc' ? '↑' : '↓'}
+                  </span>
+                </TableHead>
                 <TableHead>{t('tableHeaders.status')}</TableHead>
                 <TableHead>{t('tableHeaders.name')}</TableHead>
                 <TableHead className="w-[50px]"></TableHead>

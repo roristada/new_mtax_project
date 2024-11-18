@@ -527,34 +527,35 @@ const Dashboard = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {data?.blog && data.blog.length > 0 ? (
-                    <>
-                      {/* Take only the first 5 blogs using slice(0,5) */}
+                    <div className="space-y-2">
                       {data.blog.slice(0, 5).map((blog) => (
-                        <CardContent key={blog.id} className="grid gap-8">
-                          <div className="flex items-center gap-4">
-                            <div className="grid gap-1">
-                              <p className="text-sm font-medium leading-none">
-                                <Link href={`/blog/${blog.id}`}>
-                                  {blog.title}
-                                </Link>
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                {blog.createdAt}
-                              </p>
-                            </div>
-                            <div className="ml-auto font-medium">
-                              {blog.category}
+                        <div 
+                          key={blog.id} 
+                          className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                          <div className="space-y-1 min-w-0 flex-1 mr-4">
+                            <Link 
+                              href={`/blog/${blog.id}`}
+                              className="text-sm font-medium leading-none hover:underline line-clamp-1"
+                            >
+                              {blog.title}
+                            </Link>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <span>{formatDateInThailand(blog.createdAt)}</span>
                             </div>
                           </div>
-                        </CardContent>
+                          <Badge variant="secondary" className="whitespace-nowrap">
+                            {t(`categories.${blog.category}`)}
+                          </Badge>
+                        </div>
                       ))}
-                    </>
+                    </div>
                   ) : (
-                    <CardContent className="grid gap-8">
+                    <div className="py-8 text-center">
                       <p className="text-sm text-muted-foreground">
                         {t("noBlogs")}
                       </p>
-                    </CardContent>
+                    </div>
                   )}
                 </CardContent>
               </Card>

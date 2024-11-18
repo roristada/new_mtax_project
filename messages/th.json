@@ -204,7 +204,12 @@
       "company": "บริษัท",
       "email": "อีเมล",
       "telephone": "โทรศัพท์",
-      "note": "หมายเหตุ"
+      "note": "หมายเหตุ",
+      "customerInfo": "ข้อมูลลูกค้า",
+      "appointmentDetails": "รายละเอียดการนัดหมาย",
+      "date": "วันที่",
+      "time": "เวลา",
+      "status": "สถานะการนัดหมาย"
     },
     "deleteAppointment": "ลบการนัดหมาย",
     "deleteAppointmentText": "คุณแน่ใจหรือไม่ที่จะลบการนัดหมายนี้?",
@@ -578,7 +583,7 @@
       "lastName": "นามสกุล",
       "gender": "เพศ",
       "currentSalary": "เงินเดือนปัจจุบัน",
-      "workingYear": "ปีที่ทำงาน",
+      "workingYear": "ปีของข้อมูล",
       "actions": "เมนูตัวเลือก",
       "year": "ปี"
     },
@@ -635,7 +640,7 @@
     "socialSecurityEmployee": "ประกันสังคม (พนักงาน)",
     "socialSecurityCompany": "ประกันสังคม (บริษัท)",
     "providentFund": "กองทุนสำรองเลี้ยงชีพ",
-    "workingYear": "ปีที่ทำงาน",
+    "workingYear": "ปีของข้อมูล",
     "loan": "เงินกู้",
     "salaryAdvance": "เงินเดือนล่วงหน้า",
     "commissionDeduction": "การหักค่าคอมมิชชั่น",
@@ -660,7 +665,7 @@
     "name-lastName": "ชื่อ-นามสกุล",
     "gender": "เพศ",
     "currentSalary": "เงินเดือนปัจจุบัน",
-    "workingYear": "ปีที่ทำงาน",
+    "workingYear": "ปีของข้อมูล",
 
     "tabs": {
       "income": "รายได้",
@@ -730,6 +735,13 @@
       "M": "ชาย",
       "F": "หญิง",
       "Not Specified": "ไม่ระบุ"
+    },
+    "Dashboard":{
+      "labels":{
+        "income": "รายได้",
+        "expense": "ค่าใช้จ่าย",
+        "tax": "ภาษี"
+      }
     }
   },
   "Dashboard": {

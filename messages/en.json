@@ -211,7 +211,12 @@
       "company": "Company",
       "email": "Email",
       "telephone": "Telephone",
-      "note": "Note"
+      "note": "Note",
+      "customerInfo": "Customer Information",
+      "appointmentDetails": "Appointment Details",
+      "date": "Date",
+      "time": "Time",
+      "status": "Status"
     },
     "deleteAppointment": "Delete appointment",
     "deleteAppointmentText": "Are you sure to delete this appointment?",
@@ -602,7 +607,7 @@
       "lastName": "Last Name",
       "gender": "Gender",
       "currentSalary": "Current Salary",
-      "workingYear": "Working Year",
+      "workingYear": "Data Year",
       "actions": "Actions",
       "year": "Year"
     },
@@ -665,7 +670,7 @@
     "socialSecurityEmployee": "Social Security (Employee)",
     "socialSecurityCompany": "Social Security (Company)",
     "providentFund": "Provident Fund",
-    "workingYear": "Working Year",
+    "workingYear": "Data Year",
     "loan": "Loan",
     "salaryAdvance": "Salary Advance",
     "commissionDeduction": "Commission Deduction",
@@ -684,7 +689,7 @@
     "name-lastName": "Name-Surname",
     "gender": "Gender",
     "currentSalary": "Current Salary",
-    "workingYear": "Working Year",
+    "workingYear": "Data Year",
     "viewSummaryAllOrders": "View a summary of all orders",
     "tabs": {
       "income": "Income",

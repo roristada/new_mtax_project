@@ -562,43 +562,94 @@ const AppointmentsManage = () => {
       </main>
       {selectedAppointment && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[525px]">
             <DialogHeader>
-              <DialogTitle>{t("dialog.title")}</DialogTitle>
+              <DialogTitle className="text-2xl font-bold mb-2">{t("dialog.title")}</DialogTitle>
               <DialogDescription>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="font-medium text-black">
-                      {selectedAppointment.name}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {selectedAppointment.company}
-                    </p>
+                {/* Customer Information Section */}
+                <div className="space-y-6">
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h3 className="font-semibold text-lg mb-3">{t("dialog.customerInfo")}</h3>
+                    <div className="grid gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-primary/10 p-2 rounded-full">
+                          <BuildingIcon className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-lg">{selectedAppointment.name}</p>
+                          <p className="text-sm text-muted-foreground">{selectedAppointment.company}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="bg-primary/10 p-2 rounded-full">
+                          <AtSignIcon className="h-5 w-5 text-primary" />
+                        </div>
+                        <p>{selectedAppointment.email}</p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="bg-primary/10 p-2 rounded-full">
+                          <PhoneIcon className="h-5 w-5 text-primary" />
+                        </div>
+                        <p>{selectedAppointment.telephone}</p>
+                      </div>
+                    </div>
                   </div>
-                  <AtSignIcon className="h-5 w-5 text-muted-foreground" />
-                  <p className="text-black">{selectedAppointment.email}</p>
-                  <PhoneIcon className="h-5 w-5 text-muted-foreground" />
-                  <p className="text-black">{selectedAppointment.telephone}</p>
-                  <FileTextIcon className="h-5 w-5 text-muted-foreground" />
-                  <p className="text-sm text-black">
-                    {selectedAppointment.note}
-                  </p>
-                  <ClockIcon className="my-auto h-5 w-5 text-muted-foreground" />
-                  <Badge
-                    className={`py-2 px-2  ${
-                      selectedAppointment.status === "pending"
-                        ? "bg-yellow-500 text-white"
-                        : selectedAppointment.status === "completed"
-                        ? "bg-green-500 text-white"
-                        : selectedAppointment.status === "canceled"
-                        ? "bg-red-500 text-white"
-                        : selectedAppointment.status === "confirmed"
-                        ? "bg-blue-500 text-white"
-                        : ""
-                    }}`}
-                  >
-                    {t(`status.${selectedAppointment.status}`)}
-                  </Badge>
+
+                  {/* Appointment Details Section */}
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h3 className="font-semibold text-lg mb-3">{t("dialog.appointmentDetails")}</h3>
+                    <div className="grid gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-primary/10 p-2 rounded-full">
+                          <CalendarIcon className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">{t("dialog.date")}</p>
+                          <p className="font-medium">
+                            {new Date(selectedAppointment.date).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="bg-primary/10 p-2 rounded-full">
+                          <ClockIcon className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">{t("dialog.time")}</p>
+                          <p className="font-medium">
+                            {selectedAppointment.startTime} - {selectedAppointment.endTime}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="bg-primary/10 p-2 rounded-full">
+                          <FileTextIcon className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">{t("dialog.note")}</p>
+                          <p className="font-medium">{selectedAppointment.note || "-"}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Status Badge */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium">{t("dialog.status")}</span>
+                    <Badge
+                      className={`px-4 py-1.5 text-sm font-medium ${
+                        selectedAppointment.status === "pending"
+                          ? "bg-yellow-500 text-white"
+                          : selectedAppointment.status === "completed"
+                          ? "bg-green-500 text-white"
+                          : selectedAppointment.status === "canceled"
+                          ? "bg-red-500 text-white"
+                          : "bg-blue-500 text-white"
+                      }`}
+                    >
+                      {t(`status.${selectedAppointment.status}`)}
+                    </Badge>
+                  </div>
                 </div>
               </DialogDescription>
             </DialogHeader>

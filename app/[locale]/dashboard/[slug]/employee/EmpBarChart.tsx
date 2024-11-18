@@ -1,5 +1,5 @@
 import React from "react";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, TrendingDown, Receipt, Wallet } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -413,6 +413,7 @@ const EmployeeChart: React.FC<EmployeeChartDialogProps> = ({
   const totalTax = filteredData?.reduce((acc, data) => acc + data.tax, 0) || 0;
   const netResult = totalIncome - totalExpense - totalTax;
 
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-full lg:max-w-7xl p-6 overflow-y-auto max-h-[80vh]">
@@ -500,14 +501,29 @@ const EmployeeChart: React.FC<EmployeeChartDialogProps> = ({
                           dataKey="income"
                           fill="var(--color-income)"
                           radius={4}
+                          name={t('Dashboard.labels.income')}
                         />
                         <Bar
                           dataKey="expense"
                           fill="var(--color-expense)"
                           radius={4}
+                          name={t('Dashboard.labels.expense')}
                         />
-                        <Bar dataKey="tax" fill="var(--color-tax)" radius={4} />
-                        <Legend />
+                        <Bar 
+                          dataKey="tax" 
+                          fill="var(--color-tax)" 
+                          radius={4}
+                          name={t('Dashboard.labels.tax')}
+                        />
+                        <Legend 
+                          verticalAlign="bottom"
+                          height={36}
+                          iconType="circle"
+                          iconSize={10}
+                          wrapperStyle={{
+                            paddingTop: '20px'
+                          }}
+                        />
                       </BarChart>
                     </ChartContainer>
                   </CardContent>
@@ -612,9 +628,9 @@ const EmployeeChart: React.FC<EmployeeChartDialogProps> = ({
             <TabsContent value="net">
               <Card className="flex flex-col">
                 <CardHeader>
-                  <CardTitle>{t('financialOverview', { ns: 'Compare' })}</CardTitle> {/* Translated */}
+                  <CardTitle>{t('financialOverview', { ns: 'Compare' })}</CardTitle> 
                   <CardDescription>
-                    {t('yearlySummary', { ns: 'Compare', year: employee.year })} {/* Translated */}
+                    {t('yearlySummary', { ns: 'Compare', year: employee.year })} 
                   </CardDescription>
                   <Select
                     onValueChange={(value) =>
@@ -625,11 +641,11 @@ const EmployeeChart: React.FC<EmployeeChartDialogProps> = ({
                     defaultValue="all"
                   >
                     <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder={t('month', { ns: 'Compare' })} /> {/* Translated */}
+                      <SelectValue placeholder={t('month', { ns: 'Compare' })} /> 
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem value="all">{t('allYears')}</SelectItem> {/* Translated */}
+                        <SelectItem value="all">{t('allYears')}</SelectItem> 
                         {combinedData?.map((data) => (
                           <SelectItem
                             key={data.monthNumber}
@@ -642,20 +658,58 @@ const EmployeeChart: React.FC<EmployeeChartDialogProps> = ({
                     </SelectContent>
                   </Select>
                 </CardHeader>
-                <CardContent className="w-full pb-0">
-                  <div className="grid grid-cols-2 gap-4 m-8">
-                    <div>
-                      <strong>{t('labels.totalincome', { ns: 'Charts' })}:</strong> {formatSalary(totalIncome)} {/* Translated */}
+                <CardContent className="w-full p-6">
+                  <div className="grid grid-cols-2 gap-6">
+                    {/* Income Card */}
+                    <div className="rounded-lg bg-green-50 p-4 shadow-sm transition-all hover:shadow-md">
+                      <div className="flex items-center gap-3">
+                        <div className="rounded-full bg-green-100 p-2">
+                          <TrendingUp className="h-5 w-5 text-green-600" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-green-600">{t('labels.totalincome', { ns: 'Charts' })}</p>
+                          <p className="text-xl font-bold text-green-700">{formatSalary(totalIncome)}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <strong>{t('labels.totalexpense', { ns: 'Charts' })}:</strong>{" "} {/* Translated */}
-                      {formatSalary(totalExpense)}
+
+                    {/* Expense Card */}
+                    <div className="rounded-lg bg-red-50 p-4 shadow-sm transition-all hover:shadow-md">
+                      <div className="flex items-center gap-3">
+                        <div className="rounded-full bg-red-100 p-2">
+                          <TrendingDown className="h-5 w-5 text-red-600" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-red-600">{t('labels.totalexpense', { ns: 'Charts' })}</p>
+                          <p className="text-xl font-bold text-red-700">{formatSalary(totalExpense)}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <strong>{t('labels.totaltax', { ns: 'Charts' })}:</strong> {formatSalary(totalTax)} {/* Translated */}
+
+                    {/* Tax Card */}
+                    <div className="rounded-lg bg-blue-50 p-4 shadow-sm transition-all hover:shadow-md">
+                      <div className="flex items-center gap-3">
+                        <div className="rounded-full bg-blue-100 p-2">
+                          <Receipt className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-blue-600">{t('labels.totaltax', { ns: 'Charts' })}</p>
+                          <p className="text-xl font-bold text-blue-700">{formatSalary(totalTax)}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <strong>{t('labels.netincome', { ns: 'Charts' })}:</strong> {formatSalary(netResult)} {/* Translated */}
+
+                    {/* Net Income Card */}
+                    <div className="rounded-lg bg-purple-50 p-4 shadow-sm transition-all hover:shadow-md">
+                      <div className="flex items-center gap-3">
+                        <div className="rounded-full bg-purple-100 p-2">
+                          <Wallet className="h-5 w-5 text-purple-600" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-purple-600">{t('labels.netincome', { ns: 'Charts' })}</p>
+                          <p className="text-xl font-bold text-purple-700">{formatSalary(netResult)}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </CardContent>

@@ -372,7 +372,7 @@ export default function SupportAdmin() {
                   <p>{t(`categories.${selectedCase.category}`)}</p>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-700">{t('status')}</h3>
+                  <h3 className="font-semibold text-gray-700">{t('status1')}</h3>
                   <span
                     className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium 
                       ${

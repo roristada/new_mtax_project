@@ -937,6 +937,7 @@
     "description": "Manage report problems and view details",
     "searchPlaceholder": "Search by name or category...",
     "noSupportCases": "No support cases found.",
+    "enterResolutionReport": "Enter Resolution Report",
     "name": "Name",
     "email": "Email",
     "status1": "Status",
@@ -1002,6 +1003,7 @@
     "deleteSuccessText": "The report has been deleted successfully!"
   },
   "ProblemReportForm": {
+    "images": "Images",
     "title": "Problem Report Form",
     "name": "Name",
     "company": "Company",

@@ -928,6 +928,7 @@
     "description": "จัดการรายงานปัญหาและดูรายละเอียด",
     "searchPlaceholder": "ค้นหาตามชื่อหรือหมวดหมู่...",
     "noSupportCases": "ไม่พบรายงานปัญหา",
+    "enterResolutionReport": "รายงานการแก้ไข",
     "name": "ชื่อ",
     "email": "อีเมล",
     "status1": "สถานะ",
@@ -993,6 +994,7 @@
     "confirmDeleteButton": "ลบ"
   },
   "ProblemReportForm": {
+    "images": "ภาพประกอบ",
     "title": "แบบฟอร์มรายงานปัญหา",
     "name": "ชื่อ",
     "company": "บริษัท",

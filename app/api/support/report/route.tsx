@@ -34,15 +34,14 @@ export async function POST(request: Request) {
 
     const imageUrls = [];
     for (const image of images) {
-      if (image instanceof File) {
+      if (image && typeof image === 'object' && 'arrayBuffer' in image) {
         const bucket = storage.bucket(bucketName);
-        const extension = image.name.split('.').pop();
-        const filename = `reports/${uuidv4()}.${extension}`;
+        const filename = `reports/${uuidv4()}${image.name ? '.' + image.name.split('.').pop() : ''}`;
         const file = bucket.file(filename);
         
         const buffer = Buffer.from(await image.arrayBuffer());
         await file.save(buffer, {
-          contentType: image.type,
+          contentType: image.type || 'application/octet-stream',
         });
 
         const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
@@ -64,8 +63,11 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ message: "Report submitted successfully", report });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error submitting report:", error);
+    if (error instanceof Error) {
+      return NextResponse.json({ message: "Error submitting report", error: error.message }, { status: 500 });
+    }
     return NextResponse.json({ message: "Error submitting report" }, { status: 500 });
   }
 }

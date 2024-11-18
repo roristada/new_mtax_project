@@ -159,7 +159,7 @@ export default function Component() {
         Swal.fire({
           icon: "success",
           title: t("uploadSuccessTitle"),
-          text: responseData.data.message || t("uploadSuccessText"),
+          text: t("uploadSuccessText"),
         });
       } else {
         throw new Error(responseData.message || t("uploadErrorText"));

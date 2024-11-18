@@ -36,6 +36,10 @@ export async function DELETE(req: NextRequest) {
 
         // 2. ลบข้อมูลทั้งหมดจาก Database
         await prisma.$transaction(async (tx) => {
+
+            await tx.report.deleteMany({
+                where: { userId: Number(userId) }
+            });
             
             await tx.passwordResetToken.deleteMany({
                 where: { userId: Number(userId) }
@@ -59,9 +63,6 @@ export async function DELETE(req: NextRequest) {
             await tx.employee.deleteMany({
                 where: { companyId: Number(userId) }
             });
-
-            // ลบข้อมูลจากตาราง appointment
-            
 
             // ลบข้อมูลจากตาราง chat
             await tx.message.deleteMany({

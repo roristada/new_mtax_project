@@ -353,7 +353,7 @@ export default function SupportAdmin() {
             </DialogHeader>
             
             <div className="space-y-4">
-              {/* Basic Information */}
+              
               <div className="grid grid-cols-2 gap-3 p-3 bg-gray-50 rounded-lg text-sm">
                 <div>
                   <h3 className="font-semibold text-gray-700">{t('name')}</h3>

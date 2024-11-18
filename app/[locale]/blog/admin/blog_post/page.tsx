@@ -25,11 +25,14 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Switch } from "../../../../../components/ui/switch";
 import { Separator } from "../../../../../components/ui/separator";
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from "next-intl";
 
-const TextEditer = dynamic(() => import("../../../../../components/TextEditer/TextEditer"), {
-  ssr: false,
-});
+const TextEditer = dynamic(
+  () => import("../../../../../components/TextEditer/TextEditer"),
+  {
+    ssr: false,
+  }
+);
 
 interface FormData {
   title: string;
@@ -38,11 +41,11 @@ interface FormData {
   email: string;
   category: string;
   picture: File | null;
-  status: string; 
+  status: string;
 }
 
 export default function Component() {
-  const t = useTranslations('BlogManage');
+  const t = useTranslations("BlogManage");
   const router = useRouter();
   const locale = useLocale();
   const { data: session, status } = useSession();
@@ -53,12 +56,12 @@ export default function Component() {
     content: "",
     email: "",
     category: "",
-    picture: null, 
+    picture: null,
     status: "",
   });
 
   const [isPublished, setIsPublished] = useState(false);
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -91,20 +94,47 @@ export default function Component() {
     }));
   };
 
-  const handlePictureChange = (event: any) => {
-    const file = event.target.files[0];
-    setFormData((prevData) => ({
-      ...prevData,
-      picture: file,
-    }));
+  const handlePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // ตรวจสอบประเภทไฟล์
+      const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+      if (!validImageTypes.includes(file.type)) {
+        Swal.fire({
+          icon: "error",
+          title: t('dialog.fileValidation.invalidTypeTitle'),
+          text: t('dialog.fileValidation.invalidTypeText')
+        });
+        e.target.value = ''; // รีเซ็ตค่า input
+        return;
+      }
+
+      // ตรวจสอบขนาดไฟล์ (5MB = 5 * 1024 * 1024 bytes)
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        Swal.fire({
+          icon: "error",
+          title: t('dialog.fileValidation.fileSizeTitle'),
+          text: t('dialog.fileValidation.fileSizeText')
+        });
+        e.target.value = ''; // รีเซ็ตค่า input
+        return;
+      }
+
+      // ถ้าผ่านการตรวจสอบทั้งหมด
+      setFormData(prev => ({
+        ...prev,
+        picture: file
+      }));
+    }
   };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    
+
     // Show loading state
     Swal.fire({
-      title: t('submitting'),
+      title: t("submitting"),
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();
@@ -133,7 +163,7 @@ export default function Component() {
 
       if (response.ok) {
         Swal.fire({
-          title: "บล็อกทำการโพสต์เรียบร้อย",
+          title: t("success"),
           icon: "success",
         }).then(() => {
           setLoading(false);
@@ -161,18 +191,15 @@ export default function Component() {
     setIsPublished(checked);
     setFormData((prevData) => ({
       ...prevData,
-      status: checked ? "Published" : "Private", 
+      status: checked ? "Published" : "Private",
     }));
   };
-
 
   return (
     <Card className="w-full max-w-2xl mx-auto my-auto mt-20">
       <CardHeader>
-        <CardTitle>{t('addPost')}</CardTitle>
-        <CardDescription>
-          {t('dialog.editDescription')}
-        </CardDescription>
+        <CardTitle>{t("addPost")}</CardTitle>
+        <CardDescription>{t("dialog.editDescription")}</CardDescription>
       </CardHeader>
       <form
         onSubmit={handleSubmit}
@@ -182,26 +209,31 @@ export default function Component() {
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="title">{t('dialog.fields.title')}</Label>
+              <Label htmlFor="title">{t("dialog.fields.title")}</Label>
               <Input
                 id="title"
-                placeholder={t('dialog.fields.title')}
+                placeholder={t("dialog.fields.title")}
                 value={formData.title}
                 onChange={handleInputChange}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="author">{t('tableHeaders.author')}</Label>
+              <Label htmlFor="author">{t("tableHeaders.author")}</Label>
               <Input id="author" value={session?.user?.company} readOnly />
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="picture">{t('dialog.fields.picture')}</Label>
-            <Input id="picture" type="file" onChange={handlePictureChange} />
+            <Label htmlFor="picture">{t("dialog.fields.picture")}</Label>
+            <Input
+              id="picture"
+              type="file"
+              accept="image/jpeg,image/jpg,image/png,image/gif"
+              onChange={handlePictureChange}
+            />
           </div>
           <div className="space-y-2 mt-5">
-            <Label htmlFor="content">{t('dialog.fields.content')}</Label>
+            <Label htmlFor="content">{t("dialog.fields.content")}</Label>
             <TextEditer
               value={content}
               onChange={(newContent: string) => {
@@ -210,17 +242,17 @@ export default function Component() {
             />
           </div>
           <div className="space-y-2 mt-5">
-            <Label htmlFor="category">{t('dialog.fields.category')}</Label>
+            <Label htmlFor="category">{t("dialog.fields.category")}</Label>
             <Select
               value={formData.category}
               onValueChange={handleCategoryChange}
               required
             >
               <SelectTrigger>
-                <SelectValue placeholder={t('dialog.fields.category')} />
+                <SelectValue placeholder={t("dialog.fields.category")} />
               </SelectTrigger>
               <SelectContent>
-                {Object.entries(t.raw('categories')).map(([key, value]) => (
+                {Object.entries(t.raw("categories")).map(([key, value]) => (
                   <SelectItem key={key} value={key}>
                     {value as string}
                   </SelectItem>
@@ -235,13 +267,13 @@ export default function Component() {
               onCheckedChange={handleToggle}
             />
             <Label className="ml-2" htmlFor="status">
-              {isPublished ? t('status.published') : t('status.private')}
+              {isPublished ? t("status.published") : t("status.private")}
             </Label>
           </div>
         </CardContent>
         <CardFooter className="flex justify-end">
           <Button type="submit" disabled={loading}>
-            {loading ? t('submitting') : t('submit')}
+            {loading ? t("submitting") : t("submit")}
           </Button>
         </CardFooter>
       </form>

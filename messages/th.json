@@ -320,6 +320,8 @@
   "BlogManage": {
     "title": "จัดการบล็อก",
     "addPost": "เพิ่มโพสต์ใหม่",
+    "success": "เพิ่มโพสต์ใหม่สำเร็จ",
+    
     "tableHeaders": {
       "title": "หัวข้อ",
       "date": "วันที่",
@@ -333,6 +335,12 @@
       "delete": "ลบ"
     },
     "dialog": {
+      "fileValidation": {
+      "invalidTypeTitle": "ประเภทไฟล์ไม่ถูกต้อง",
+      "invalidTypeText": "กรุณาเลือกไฟล์รูปภาพเท่านั้น (รองรับ JPG, JPEG, PNG, หรือ GIF)",
+      "fileSizeTitle": "ไฟล์มีขนาดใหญ่เกินไป",
+      "fileSizeText": "ขนาดรูปภาพต้องไม่เกิน 5MB"
+    },
       "editTitle": "แก้ไขโพสต์",
       "editDescription": "ทำการเปลี่ยนแปลงโพสต์ของคุณที่นี่ คลิกบันทึกเมื่อเสร็จสิ้น",
       "fields": {
@@ -369,7 +377,7 @@
           "text": "บทความของคุณถูกลบแล้ว"
         },
         "error": {
-          "title": "ผิดพลาด!",
+          "title": "เกิดข้อผิดพลาด!",
           "text": "ไม่สามารถลบบทความได้",
           "generalError": "เกิดข้อผิดพลาดขณะลบบทความ"
         }
@@ -386,7 +394,16 @@
         }
       }
     }
-    
+  },
+  "TextEditor": {
+    "imageValidation": {
+      "invalidTypeTitle": "ประเภทไฟล์ไม่ถูกต้อง",
+      "invalidTypeText": "กรุณาเลือกไฟล์รูปภาพเท่านั้น (รองรับ JPG, JPEG, PNG, หรือ GIF)",
+      "fileSizeTitle": "ไฟล์มีขนาดใหญ่เกินไป",
+      "fileSizeText": "ขนาดรูปภาพต้องไม่เกิน 5MB",
+      "uploadErrorTitle": "อัปโหลดผิดพลาด",
+      "uploadErrorText": "ไม่สามารถอัปโหลดรูปภาพได้ กรุณาลองใหม่อีกครั้ง"
+    }
   },
   "PieChartIncome": {
     "noDataAvailable": "ไม่พบข้อมูล",
@@ -817,7 +834,7 @@
     "noFileSelectedText": "กรุณาเลือกไฟล์เพื่ออัปโหลด",
     "uploadSuccessTitle": "อัปโหลดสำเร็จ",
     "uploadSuccessText": "ไฟล์ถูกอัปโหลดสำเร็จแล้ว!",
-    "uploadErrorTitle": "Oops...",
+    "uploadErrorTitle": "เกิดข้อผิดพลาดในการอัพโหลด",
     "uploadErrorText": "มีข้อผิดพลาดเกิดขึ้น!",
     "uploadFailedTitle": "อัปโหลดเสียหาย",
     "uploadFailedText": "การอัปโหลดไฟล์เสียหายเนื่องจากข้อผิดพลาดของเครือข่ายหรือเซิร์ฟเวอร์",
@@ -893,6 +910,17 @@
       "tips": "คำแนะนำจากผู้เชี่ยวชาญและเคล็ดลับ",
       "other": "อื่นๆ",
       "services": "บริการ"
+    },
+    "dialog": {
+      "fields": {
+        "picture": "รูปภาพ"
+      },
+      "fileValidation": {
+        "invalidTypeTitle": "ประเภทไฟล์ไม่ถูกต้อง",
+        "invalidTypeText": "กรุณาเลือกไฟล์รูปภาพเท่านั้น (รองรับ JPG, JPEG, PNG, หรือ GIF)",
+        "fileSizeTitle": "ไฟล์มีขนาดใหญ่เกินไป",
+        "fileSizeText": "ขนาดรูปภาพต้องไม่เกิน 5MB"
+      }
     }
   },
   "SupportAdmin": {

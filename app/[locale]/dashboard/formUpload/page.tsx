@@ -89,12 +89,23 @@ export default function Component() {
     fetchCompanies();
   }, []);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, files } = e.target;
     if (files) {
-      setFormData((prev) => ({ ...prev, [id]: files[0] }));
+      const file = files[0];
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+      
+      if (fileExtension !== 'csv') {
+        Swal.fire({
+          icon: "error",
+          title: t("invalidFileTypeTitle"),
+          text: t("invalidFileTypeText"),
+        });
+        e.target.value = '';
+        return;
+      }
+      
+      setFormData((prev) => ({ ...prev, [id]: file }));
     } else {
       setFormData((prev) => ({ ...prev, [id]: e.target.value }));
     }
@@ -117,7 +128,8 @@ export default function Component() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+  
+    
     if (!formData.file) {
       Swal.fire({
         icon: "warning",
@@ -126,53 +138,38 @@ export default function Component() {
       });
       return;
     }
-
+  
     Swal.fire({
       title: t("uploading"),
       allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
+      didOpen: () => Swal.showLoading(),
     });
-
+  
     setLoading(true);
-
+  
     const data = new FormData();
     data.append("companyId", formData.companyId);
     data.append("year", formData.year);
     data.append("file", formData.file);
-
-    console.log("Form Data:", formData);
-
+  
     try {
-      const res = await fetch(`/api/upload`, {
-        method: "POST",
-        body: data,
-      });
-
-      if (res.ok) {
-        const responseData = await res.json();
-        console.log("Response Data:", responseData);
+      const res = await fetch(`/api/upload`, { method: "POST", body: data });
+      const responseData = await res.json();
+  
+      if (res.ok && responseData.status === "success") {
         Swal.fire({
           icon: "success",
           title: t("uploadSuccessTitle"),
-          text: t("uploadSuccessText"),
+          text: responseData.message || t("uploadSuccessText"),
         });
       } else {
-        const errorData = await res.json();
-        console.error("Upload Failed:", errorData);
-        Swal.fire({
-          icon: "error",
-          title: t("uploadErrorTitle"),
-          text: t("uploadErrorText"),
-        });
+        throw new Error(responseData.message || t("uploadErrorText"));
       }
     } catch (error) {
-      console.error("Fetch Error:", error);
       Swal.fire({
         icon: "error",
-        title: t("uploadFailedTitle"),
-        text: t("uploadFailedText"),
+        title: t("uploadErrorTitle"),
+        text: (error as Error).message || t("uploadFailedText"),
       });
     } finally {
       setLoading(false);
@@ -230,7 +227,7 @@ export default function Component() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="file">{t("csvFileLabel")}</Label>
-            <Input id="file" type="file" onChange={handleChange} />
+            <Input id="file" type="file" accept=".csv" onChange={handleChange} />
           </div>
         </CardContent>
         <CardFooter>

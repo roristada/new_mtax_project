@@ -70,7 +70,6 @@ async function uploadToStorage(req: NextRequest) {
     const yearString = formData.get("year");
     const companyIdString = formData.get("companyId");
     const file = formData.get("file");
-    console.log("file", file)
 
     if (!file || !(file instanceof Blob)) {
       throw new Error("File is missing or invalid");
@@ -105,11 +104,8 @@ async function uploadToStorage(req: NextRequest) {
     });
 
     if (existingRecords.length > 0) {
-      console.error(
-        `Data for company ID ${companyId} and year ${year} already exists.`
-      );
       throw new Error(
-        "Data for this company and year already exists. Please update the existing records."
+        `Data already exists for company ID ${companyId} and year ${year}.`
       );
     }
 
@@ -244,7 +240,9 @@ async function uploadToStorage(req: NextRequest) {
 
   } catch (error) {
     console.error("Error handling request:", error);
-    throw new Error("Internal Server Error");
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred."
+    );
   }
 }
 
@@ -254,7 +252,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: "OK", data }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { message: "Error", error: error },
+      { status: "error", message: (error as Error).message },
       { status: 500 }
     );
   }

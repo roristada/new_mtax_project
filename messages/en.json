@@ -26,6 +26,7 @@
       "other": "Other",
       "services": "Services"
     }
+    
   },
 
   "Navbar": {
@@ -119,7 +120,17 @@
     }
   },
   "Footer": {
-    "quickLinks": "Quick Links",
+    "bookkeepingServices": "Bookkeeping Services",
+    "payrollOutsourcing": "Payroll Outsourcing",
+    "companyName": "Mtax Online Accounting Co.,Ltd.",
+    "tagline": "",
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "onlineAccounting": "Online Accounting",
+    "bookkeeping": "Bookkeeping",
+    "businessStartup": "Business Startup",
+    "payroll": "Payroll",
     "services": "Services",
     "followUs": "Follow Us",
     "copyright": "© 2024 Acme Accounting. All rights reserved."
@@ -154,7 +165,7 @@
     "logout": "Logout",
     "financialOverview": "Financial Overview",
     "financialBreakdown": "Financial Breakdown",
-    "commissionDiligence": "Commission & Diligence",
+    "commissionDiligence": "Commission&Diligence",
     "dataVisualization": "Data Visualization"
   },
   "AppointmentsManage": {
@@ -323,6 +334,8 @@
   "BlogManage": {
     "title": "Blog Management",
     "addPost": "Add New Post",
+    "success":"Blog Post Successfully",
+    
     "tableHeaders": {
       "title": "Title",
       "date": "Date",
@@ -344,6 +357,12 @@
         "content": "Content",
         "status": "Status",
         "picture": "Picture"
+      },
+      "fileValidation": {
+        "invalidTypeTitle": "Invalid File Type",
+        "invalidTypeText": "Please select an image file (JPG, JPEG, PNG, or GIF only)",
+        "fileSizeTitle": "File Too Large",
+        "fileSizeText": "Image size should be less than 5MB"
       },
       "saveChanges": "Save changes"
     },
@@ -388,6 +407,16 @@
           "generalError": "An error occurred while updating the Post."
         }
       }
+    }
+  },
+  "TextEditor": {
+    "imageValidation": {
+      "invalidTypeTitle": "Invalid File Type",
+      "invalidTypeText": "Please select an image file (JPG, JPEG, PNG, or GIF only)",
+      "fileSizeTitle": "File Too Large",
+      "fileSizeText": "Image size should be less than 5MB",
+      "uploadErrorTitle": "Upload Error",
+      "uploadErrorText": "Failed to upload image. Please try again."
     }
   },
   "PieChartIncome": {
@@ -834,7 +863,7 @@
     "noFileSelectedText": "Please select a file to upload.",
     "uploadSuccessTitle": "Upload Successful",
     "uploadSuccessText": "The file has been uploaded successfully!",
-    "uploadErrorTitle": "Oops...",
+    "uploadErrorTitle": "Upload Failed",
     "uploadErrorText": "Something went wrong!",
     "uploadFailedTitle": "Upload Failed",
     "uploadFailedText": "Failed to upload file due to a network or server error.",

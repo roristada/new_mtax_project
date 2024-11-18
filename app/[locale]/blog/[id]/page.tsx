@@ -205,26 +205,6 @@ export default function BlogDetailWithSidebar({
                   </Link>
                 </CardFooter>
               </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Categories</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {categories.length > 0 ? (
-                      categories.map((category) => (
-                        <Badge key={category} variant="secondary">
-                          {categoryMapping[category] || category}{" "}
-                          {/* Use mapping here */}
-                        </Badge>
-                      ))
-                    ) : (
-                      <p>No categories available</p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
             </aside>
           </div>
         )}

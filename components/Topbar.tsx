@@ -34,7 +34,8 @@ const Topbar = () => {
     return session?.user?.role === 'admin' && 
            pathname.includes('/dashboard/') && 
            pathname !== '/dashboard' &&
-           !pathname.includes('/dashboard/admin');
+           !pathname.includes('/dashboard/admin') &&
+           !pathname.includes('/dashboard/formUpload');
   };
 
   const getCompanyIdFromPath = () => {

@@ -2,6 +2,8 @@
 import React, { useEffect, useRef, useMemo, useCallback } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
+import { useTranslations } from 'next-intl';
+import Swal from 'sweetalert2';
 
 // Interface for props
 interface TextEditerProps {
@@ -12,6 +14,7 @@ interface TextEditerProps {
 const TextEditer: React.FC<TextEditerProps> = ({ value, onChange }) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const quillRef = useRef<Quill>();
+  const t = useTranslations('TextEditor');
 
   const myColors = useMemo(() => [
     "purple",
@@ -23,15 +26,46 @@ const TextEditer: React.FC<TextEditerProps> = ({ value, onChange }) => {
     "white",
   ], []);
 
+  const validateImage = (file: File): boolean => {
+    // ตรวจสอบประเภทไฟล์
+    const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+    if (!validImageTypes.includes(file.type)) {
+      Swal.fire({
+        icon: "error",
+        title: t('imageValidation.invalidTypeTitle'),
+        text: t('imageValidation.invalidTypeText')
+      });
+      return false;
+    }
+
+    // ตรวจสอบขนาดไฟล์ (5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      Swal.fire({
+        icon: "error",
+        title: t('imageValidation.fileSizeTitle'),
+        text: t('imageValidation.fileSizeText')
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   const handleImageUpload = useCallback(async () => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
+    input.setAttribute("accept", "image/jpeg,image/jpg,image/png,image/gif");
     input.click();
 
     input.onchange = async () => {
       const file = input.files ? input.files[0] : null;
       if (file) {
+        // ตรวจสอบไฟล์ก่อนอัปโหลด
+        if (!validateImage(file)) {
+          return;
+        }
+
         const formData = new FormData();
         formData.append("image", file);
 
@@ -40,18 +74,26 @@ const TextEditer: React.FC<TextEditerProps> = ({ value, onChange }) => {
             method: "POST",
             body: formData,
           });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
           const data = await response.json();
 
           const range = quillRef.current?.getSelection();
-          if (range) {
-            quillRef.current?.insertEmbed(range.index, "image", data.url);
+          if (range && quillRef.current) {
+            quillRef.current.insertEmbed(range.index, "image", data.url);
           }
         } catch (error) {
           console.error("Error uploading image:", error);
+          Swal.fire({
+            icon: "error",
+            title: t('imageValidation.uploadErrorTitle'),
+            text: t('imageValidation.uploadErrorText')
+          });
         }
       }
     };
-  }, []);
+  }, [t]);
 
   const modules = useMemo(() => ({
     toolbar: {

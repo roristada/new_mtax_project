@@ -70,13 +70,13 @@ export async function POST(request: NextRequest) {
       html: `
         <div style="font-family: 'Prompt', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
           <div style="background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <h1 style="color: #333333; text-align: center; margin-bottom: 30px;">ยินดีต้อนรับสู่ระบบ</h1>
+            <h1 style="color: #333333; text-align: center; margin-bottom: 30px;">ยินดีต้อนรับเข้าสู่ระบบ</h1>
             
             <p style="color: #666666; font-size: 16px; line-height: 1.6;">สวัสดีคุณ ${name},</p>
             
             <div style="margin: 20px 0;">
               <p style="color: #666666; font-size: 16px; line-height: 1.6;">
-                ขอบคุณที่ลงทะเบียนใช้งานระบบ ข้อมูลการเข้าสู่ระบบของคุณ:
+                ทางบริษัท Mtax Online Accounting ได้ทำการสร้างบัญชีผู้ใช้งานให้คุณเรียบร้อยแล้ว ข้อมูลการเข้าสู่ระบบของคุณ:
               </p>
               <p style="color: #666666; font-size: 16px; line-height: 1.6;">
                 อีเมล: <strong>${email}</strong>
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
             </p>
 
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eeeeee; text-align: center; color: #999999; font-size: 14px;">
-              <p>หากคุณไม่ได้ทำการลงทะเบียน กรุณาละเว้นอีเมลฉบับนี้</p>
+              <p>หากคุณไม่ได้ติดต่อทำการลงทะเบียนกับบริษัท Mtax Online Accounting กรุณาละเว้นอีเมลฉบับนี้</p>
               <p>© ${new Date().getFullYear()} Mtax Online Accounting: Payroll Outsourcing .</p>
             </div>
           </div>

@@ -10,6 +10,7 @@ export default function SetPassword() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [email, setEmail] = useState('');
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
@@ -18,7 +19,28 @@ export default function SetPassword() {
   useEffect(() => {
     if (!token) {
       router.push('/reset-password');
+      return;
     }
+
+    const verifyToken = async () => {
+      try {
+        const response = await fetch(`/api/register/verify-token?token=${token}`);
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Token ไม่ถูกต้องหรือหมดอายุ');
+        }
+        
+        setEmail(data.email);
+      } catch (err: any) {
+        setError(err.message);
+        setTimeout(() => {
+          router.push('/reset-password');
+        }, 2000);
+      }
+    };
+
+    verifyToken();
   }, [token, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -73,6 +95,11 @@ export default function SetPassword() {
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             ตั้งรหัสผ่านใหม่
           </h2>
+          {email && (
+            <p className="mt-2 text-center text-sm text-gray-600">
+              สำหรับอีเมล: {email}
+            </p>
+          )}
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">

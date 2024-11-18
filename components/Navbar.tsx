@@ -6,7 +6,7 @@ import { signOut, useSession } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { useLocale } from 'next-intl'
 import { Link } from '../i18n/routing'
-import { Button } from '@/components/ui/button'
+import { Button } from '../components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +14,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '../components/ui/dropdown-menu'
 import { Menu, X, User, ChevronDown } from 'lucide-react'
 
 export default function Navbar() {
